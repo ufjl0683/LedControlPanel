@@ -1,0 +1,128 @@
+﻿<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+  <edmx:DataServices xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" m:DataServiceVersion="1.0">
+    <Schema Namespace="LEDProjecctModel" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityType Name="tblDevice">
+        <Key>
+          <PropertyRef Name="ProjectID" />
+          <PropertyRef Name="GroupID" />
+          <PropertyRef Name="SectionID" />
+          <PropertyRef Name="DeviceID" />
+        </Key>
+        <Property Name="ProjectID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="GroupID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="SectionID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="DeviceID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Shape" Type="Edm.String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+        <Property Name="Rotation" Type="Edm.Double" Nullable="false" />
+        <Property Name="DevType" Type="Edm.String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+        <Property Name="ZeeBeeID" Type="Edm.Int32" Nullable="true" />
+        <Property Name="X" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Y" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ColorType" Type="Edm.String" Nullable="true" MaxLength="10" Unicode="true" FixedLength="false" />
+        <Property Name="MAC" Type="Edm.String" Nullable="true" MaxLength="50" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="tblProjectGroupSection" Relationship="LEDProjecctModel.FK_tblDevice_tblProjectGroupSection" FromRole="tblDevice" ToRole="tblProjectGroupSection" />
+      </EntityType>
+      <EntityType Name="tblProject">
+        <Key>
+          <PropertyRef Name="ProjectID" />
+        </Key>
+        <Property Name="ProjectID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="ProjectName" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="tblProjectGroup" Relationship="LEDProjecctModel.FK_tblProjectGroup_tblProject" FromRole="tblProject" ToRole="tblProjectGroup" />
+      </EntityType>
+      <EntityType Name="tblProjectGroup">
+        <Key>
+          <PropertyRef Name="ProjectID" />
+          <PropertyRef Name="GroupID" />
+        </Key>
+        <Property Name="ProjectID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="GroupID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="GroupName" Type="Edm.String" Nullable="true" MaxLength="50" Unicode="true" FixedLength="false" />
+        <Property Name="GroupPicture" Type="Edm.String" Nullable="true" MaxLength="100" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="tblProject" Relationship="LEDProjecctModel.FK_tblProjectGroup_tblProject" FromRole="tblProjectGroup" ToRole="tblProject" />
+        <NavigationProperty Name="tblProjectGroupSection" Relationship="LEDProjecctModel.FK_tblProjectGroupSection_tblProjectGroup" FromRole="tblProjectGroup" ToRole="tblProjectGroupSection" />
+      </EntityType>
+      <EntityType Name="tblProjectGroupSection">
+        <Key>
+          <PropertyRef Name="ProjectID" />
+          <PropertyRef Name="GroupID" />
+          <PropertyRef Name="SectionID" />
+        </Key>
+        <Property Name="ProjectID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="GroupID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="SectionID" Type="Edm.Int32" Nullable="false" p8:StoreGeneratedPattern="Identity" xmlns:p8="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+        <Property Name="SectionName" Type="Edm.String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+        <NavigationProperty Name="tblDevice" Relationship="LEDProjecctModel.FK_tblDevice_tblProjectGroupSection" FromRole="tblProjectGroupSection" ToRole="tblDevice" />
+        <NavigationProperty Name="tblProjectGroup" Relationship="LEDProjecctModel.FK_tblProjectGroupSection_tblProjectGroup" FromRole="tblProjectGroupSection" ToRole="tblProjectGroup" />
+      </EntityType>
+      <Association Name="FK_tblDevice_tblProjectGroupSection">
+        <End Role="tblProjectGroupSection" Type="LEDProjecctModel.tblProjectGroupSection" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="tblDevice" Type="LEDProjecctModel.tblDevice" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="tblProjectGroupSection">
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+          </Principal>
+          <Dependent Role="tblDevice">
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FK_tblProjectGroup_tblProject">
+        <End Role="tblProject" Type="LEDProjecctModel.tblProject" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="tblProjectGroup" Type="LEDProjecctModel.tblProjectGroup" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="tblProject">
+            <PropertyRef Name="ProjectID" />
+          </Principal>
+          <Dependent Role="tblProjectGroup">
+            <PropertyRef Name="ProjectID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+      <Association Name="FK_tblProjectGroupSection_tblProjectGroup">
+        <End Role="tblProjectGroup" Type="LEDProjecctModel.tblProjectGroup" Multiplicity="1">
+          <OnDelete Action="Cascade" />
+        </End>
+        <End Role="tblProjectGroupSection" Type="LEDProjecctModel.tblProjectGroupSection" Multiplicity="*" />
+        <ReferentialConstraint>
+          <Principal Role="tblProjectGroup">
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+          </Principal>
+          <Dependent Role="tblProjectGroupSection">
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+          </Dependent>
+        </ReferentialConstraint>
+      </Association>
+    </Schema>
+    <Schema Namespace="LedDataService" xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+      <EntityContainer Name="DB" p7:LazyLoadingEnabled="true" m:IsDefaultEntityContainer="true" xmlns:p7="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntitySet Name="tblDevice" EntityType="LEDProjecctModel.tblDevice" />
+        <EntitySet Name="tblProject" EntityType="LEDProjecctModel.tblProject" />
+        <EntitySet Name="tblProjectGroup" EntityType="LEDProjecctModel.tblProjectGroup" />
+        <EntitySet Name="tblProjectGroupSection" EntityType="LEDProjecctModel.tblProjectGroupSection" />
+        <AssociationSet Name="FK_tblDevice_tblProjectGroupSection" Association="LEDProjecctModel.FK_tblDevice_tblProjectGroupSection">
+          <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+          <End Role="tblDevice" EntitySet="tblDevice" />
+        </AssociationSet>
+        <AssociationSet Name="FK_tblProjectGroup_tblProject" Association="LEDProjecctModel.FK_tblProjectGroup_tblProject">
+          <End Role="tblProject" EntitySet="tblProject" />
+          <End Role="tblProjectGroup" EntitySet="tblProjectGroup" />
+        </AssociationSet>
+        <AssociationSet Name="FK_tblProjectGroupSection_tblProjectGroup" Association="LEDProjecctModel.FK_tblProjectGroupSection_tblProjectGroup">
+          <End Role="tblProjectGroup" EntitySet="tblProjectGroup" />
+          <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+        </AssociationSet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

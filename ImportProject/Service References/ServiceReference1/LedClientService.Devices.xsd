@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/LedClientService.Devices" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/LedClientService.Devices" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="ArrayOfLedOutputData">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LedOutputData" nillable="true" type="tns:LedOutputData" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfLedOutputData" nillable="true" type="tns:ArrayOfLedOutputData" />
+  <xs:complexType name="LedOutputData">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="B" type="xs:int" />
+      <xs:element minOccurs="0" name="G" type="xs:int" />
+      <xs:element minOccurs="0" name="Priority" type="tns:OutputPriority" />
+      <xs:element minOccurs="0" name="R" type="xs:int" />
+      <xs:element minOccurs="0" name="SectionID" type="xs:int" />
+      <xs:element minOccurs="0" name="W" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="LedOutputData" nillable="true" type="tns:LedOutputData" />
+  <xs:simpleType name="OutputPriority">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">-2</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="Scheduled">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">-1</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="OneTime">
+        <xs:annotation>
+          <xs:appinfo>
+            <EnumerationValue xmlns="http://schemas.microsoft.com/2003/10/Serialization/">0</EnumerationValue>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="OutputPriority" nillable="true" type="tns:OutputPriority" />
+</xs:schema>

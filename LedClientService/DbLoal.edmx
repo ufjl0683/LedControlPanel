@@ -1,0 +1,527 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="LedLocalModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="LedLocalModelStoreContainer">
+          <EntitySet Name="tblDevice" EntityType="LedLocalModel.Store.tblDevice" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="tblProject" EntityType="LedLocalModel.Store.tblProject" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="tblProjectGroup" EntityType="LedLocalModel.Store.tblProjectGroup" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="tblProjectGroupSection" EntityType="LedLocalModel.Store.tblProjectGroupSection" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="tblSectionLedOneTimePlan" EntityType="LedLocalModel.Store.tblSectionLedOneTimePlan" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <EntitySet Name="tblSectionLedPlan" EntityType="LedLocalModel.Store.tblSectionLedPlan" store:Type="Tables" Schema="dbo" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" />
+          <AssociationSet Name="FK_tblDevice_tblProjectGroupSection" Association="LedLocalModel.Store.FK_tblDevice_tblProjectGroupSection">
+            <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+            <End Role="tblDevice" EntitySet="tblDevice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblProjectGroup_tblProject" Association="LedLocalModel.Store.FK_tblProjectGroup_tblProject">
+            <End Role="tblProject" EntitySet="tblProject" />
+            <End Role="tblProjectGroup" EntitySet="tblProjectGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblProjectGroupSection_tblProjectGroup" Association="LedLocalModel.Store.FK_tblProjectGroupSection_tblProjectGroup">
+            <End Role="tblProjectGroup" EntitySet="tblProjectGroup" />
+            <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSectionDailyPlan_tblProjectGroupSection" Association="LedLocalModel.Store.FK_tblSectionDailyPlan_tblProjectGroupSection">
+            <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+            <End Role="tblSectionLedPlan" EntitySet="tblSectionLedPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSectionLedOneTimePlan_tblProjectGroupSection" Association="LedLocalModel.Store.FK_tblSectionLedOneTimePlan_tblProjectGroupSection">
+            <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+            <End Role="tblSectionLedOneTimePlan" EntitySet="tblSectionLedOneTimePlan" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="tblDevice">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+            <PropertyRef Name="DeviceID" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+          <Property Name="SectionID" Type="int" Nullable="false" />
+          <Property Name="DeviceID" Type="int" Nullable="false" />
+          <Property Name="Shape" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="Rotation" Type="float" Nullable="false" />
+          <Property Name="DevType" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="ZeeBeeID" Type="int" />
+          <Property Name="MAC" Type="nvarchar" MaxLength="50" />
+          <Property Name="X" Type="int" Nullable="false" />
+          <Property Name="Y" Type="int" Nullable="false" />
+          <Property Name="ColorType" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="tblProject">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="ProjectName" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tblProjectGroup">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="50" />
+          <Property Name="GroupPicture" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tblProjectGroupSection">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+          <Property Name="SectionID" Type="int" Nullable="false" />
+          <Property Name="SectionName" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="tblSectionLedOneTimePlan">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+            <PropertyRef Name="PlanID" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+          <Property Name="SectionID" Type="int" Nullable="false" />
+          <Property Name="PlanID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="W" Type="int" Nullable="false" />
+          <Property Name="R" Type="int" Nullable="false" />
+          <Property Name="G" Type="int" Nullable="false" />
+          <Property Name="B" Type="int" Nullable="false" />
+          <Property Name="BeginTime" Type="smalldatetime" Nullable="false" />
+          <Property Name="DurationMin" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="tblSectionLedPlan">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+            <PropertyRef Name="PlanID" />
+          </Key>
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+          <Property Name="SectionID" Type="int" Nullable="false" />
+          <Property Name="PlanID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="BeginTime" Type="smalldatetime" Nullable="false" />
+          <Property Name="W" Type="int" Nullable="false" />
+          <Property Name="R" Type="int" Nullable="false" />
+          <Property Name="G" Type="int" Nullable="false" />
+          <Property Name="B" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_tblDevice_tblProjectGroupSection">
+          <End Role="tblProjectGroupSection" Type="LedLocalModel.Store.tblProjectGroupSection" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblDevice" Type="LedLocalModel.Store.tblDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProjectGroupSection">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="tblDevice">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblProjectGroup_tblProject">
+          <End Role="tblProject" Type="LedLocalModel.Store.tblProject" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblProjectGroup" Type="LedLocalModel.Store.tblProjectGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="tblProjectGroup">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblProjectGroupSection_tblProjectGroup">
+          <End Role="tblProjectGroup" Type="LedLocalModel.Store.tblProjectGroup" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblProjectGroupSection" Type="LedLocalModel.Store.tblProjectGroupSection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProjectGroup">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+            </Principal>
+            <Dependent Role="tblProjectGroupSection">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSectionDailyPlan_tblProjectGroupSection">
+          <End Role="tblProjectGroupSection" Type="LedLocalModel.Store.tblProjectGroupSection" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblSectionLedPlan" Type="LedLocalModel.Store.tblSectionLedPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProjectGroupSection">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="tblSectionLedPlan">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSectionLedOneTimePlan_tblProjectGroupSection">
+          <End Role="tblProjectGroupSection" Type="LedLocalModel.Store.tblProjectGroupSection" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblSectionLedOneTimePlan" Type="LedLocalModel.Store.tblSectionLedOneTimePlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProjectGroupSection">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="tblSectionLedOneTimePlan">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="LedLocalModel" Alias="Self" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="LedLocalDb" annotation:LazyLoadingEnabled="true" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+          <EntitySet Name="tblDevice" EntityType="LedLocalModel.tblDevice" />
+          <EntitySet Name="tblProject" EntityType="LedLocalModel.tblProject" />
+          <EntitySet Name="tblProjectGroup" EntityType="LedLocalModel.tblProjectGroup" />
+          <EntitySet Name="tblProjectGroupSection" EntityType="LedLocalModel.tblProjectGroupSection" />
+          <AssociationSet Name="FK_tblDevice_tblProjectGroupSection" Association="LedLocalModel.FK_tblDevice_tblProjectGroupSection">
+            <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+            <End Role="tblDevice" EntitySet="tblDevice" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblProjectGroup_tblProject" Association="LedLocalModel.FK_tblProjectGroup_tblProject">
+            <End Role="tblProject" EntitySet="tblProject" />
+            <End Role="tblProjectGroup" EntitySet="tblProjectGroup" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblProjectGroupSection_tblProjectGroup" Association="LedLocalModel.FK_tblProjectGroupSection_tblProjectGroup">
+            <End Role="tblProjectGroup" EntitySet="tblProjectGroup" />
+            <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+          </AssociationSet>
+          <EntitySet Name="tblSectionLedOneTimePlan" EntityType="LedLocalModel.tblSectionLedOneTimePlan" />
+          <EntitySet Name="tblSectionLedPlan" EntityType="LedLocalModel.tblSectionLedPlan" />
+          <AssociationSet Name="FK_tblSectionDailyPlan_tblProjectGroupSection" Association="LedLocalModel.FK_tblSectionDailyPlan_tblProjectGroupSection">
+            <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+            <End Role="tblSectionLedPlan" EntitySet="tblSectionLedPlan" />
+          </AssociationSet>
+          <AssociationSet Name="FK_tblSectionLedOneTimePlan_tblProjectGroupSection" Association="LedLocalModel.FK_tblSectionLedOneTimePlan_tblProjectGroupSection">
+            <End Role="tblProjectGroupSection" EntitySet="tblProjectGroupSection" />
+            <End Role="tblSectionLedOneTimePlan" EntitySet="tblSectionLedOneTimePlan" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="tblDevice">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+            <PropertyRef Name="DeviceID" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <Property Name="SectionID" Type="Int32" Nullable="false" />
+          <Property Name="DeviceID" Type="Int32" Nullable="false" />
+          <Property Name="Shape" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="Rotation" Type="Double" Nullable="false" />
+          <Property Name="DevType" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <Property Name="ZeeBeeID" Type="Int32" />
+          <Property Name="X" Type="Int32" Nullable="false" />
+          <Property Name="Y" Type="Int32" Nullable="false" />
+          <Property Name="ColorType" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="tblProjectGroupSection" Relationship="LedLocalModel.FK_tblDevice_tblProjectGroupSection" FromRole="tblDevice" ToRole="tblProjectGroupSection" />
+          <Property Type="String" Name="MAC" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="tblProject">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="ProjectName" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="tblProjectGroup" Relationship="LedLocalModel.FK_tblProjectGroup_tblProject" FromRole="tblProject" ToRole="tblProjectGroup" />
+        </EntityType>
+        <EntityType Name="tblProjectGroup">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <Property Name="GroupName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="GroupPicture" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="tblProject" Relationship="LedLocalModel.FK_tblProjectGroup_tblProject" FromRole="tblProjectGroup" ToRole="tblProject" />
+          <NavigationProperty Name="tblProjectGroupSection" Relationship="LedLocalModel.FK_tblProjectGroupSection_tblProjectGroup" FromRole="tblProjectGroup" ToRole="tblProjectGroupSection" />
+        </EntityType>
+        <EntityType Name="tblProjectGroupSection">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+          </Key>
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <Property Name="SectionID" Type="Int32" Nullable="false" />
+          <Property Name="SectionName" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="tblDevice" Relationship="LedLocalModel.FK_tblDevice_tblProjectGroupSection" FromRole="tblProjectGroupSection" ToRole="tblDevice" />
+          <NavigationProperty Name="tblProjectGroup" Relationship="LedLocalModel.FK_tblProjectGroupSection_tblProjectGroup" FromRole="tblProjectGroupSection" ToRole="tblProjectGroup" />
+          <NavigationProperty Name="tblSectionLedPlan" Relationship="LedLocalModel.FK_tblSectionDailyPlan_tblProjectGroupSection" FromRole="tblProjectGroupSection" ToRole="tblSectionLedPlan" />
+          <NavigationProperty Name="tblSectionLedOneTimePlan" Relationship="LedLocalModel.FK_tblSectionLedOneTimePlan_tblProjectGroupSection" FromRole="tblProjectGroupSection" ToRole="tblSectionLedOneTimePlan" />
+        </EntityType>
+        <Association Name="FK_tblDevice_tblProjectGroupSection">
+          <End Role="tblProjectGroupSection" Type="LedLocalModel.tblProjectGroupSection" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblDevice" Type="LedLocalModel.tblDevice" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProjectGroupSection">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="tblDevice">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblProjectGroup_tblProject">
+          <End Role="tblProject" Type="LedLocalModel.tblProject" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblProjectGroup" Type="LedLocalModel.tblProjectGroup" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProject">
+              <PropertyRef Name="ProjectID" />
+            </Principal>
+            <Dependent Role="tblProjectGroup">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblProjectGroupSection_tblProjectGroup">
+          <End Role="tblProjectGroup" Type="LedLocalModel.tblProjectGroup" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="tblProjectGroupSection" Type="LedLocalModel.tblProjectGroupSection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProjectGroup">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+            </Principal>
+            <Dependent Role="tblProjectGroupSection">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="tblSectionLedOneTimePlan">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+            <PropertyRef Name="PlanID" />
+          </Key>
+          <Property Type="Int32" Name="ProjectID" Nullable="false" />
+          <Property Type="Int32" Name="GroupID" Nullable="false" />
+          <Property Type="Int32" Name="SectionID" Nullable="false" />
+          <Property Type="Int32" Name="PlanID" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="Int32" Name="W" Nullable="false" />
+          <Property Type="Int32" Name="R" Nullable="false" />
+          <Property Type="Int32" Name="G" Nullable="false" />
+          <Property Type="Int32" Name="B" Nullable="false" />
+          <Property Type="DateTime" Name="BeginTime" Nullable="false" />
+          <Property Type="Int32" Name="DurationMin" Nullable="false" />
+          <NavigationProperty Name="tblProjectGroupSection" Relationship="LedLocalModel.FK_tblSectionLedOneTimePlan_tblProjectGroupSection" FromRole="tblSectionLedOneTimePlan" ToRole="tblProjectGroupSection" />
+        </EntityType>
+        <EntityType Name="tblSectionLedPlan">
+          <Key>
+            <PropertyRef Name="ProjectID" />
+            <PropertyRef Name="GroupID" />
+            <PropertyRef Name="SectionID" />
+            <PropertyRef Name="PlanID" />
+          </Key>
+          <Property Type="Int32" Name="ProjectID" Nullable="false" />
+          <Property Type="Int32" Name="GroupID" Nullable="false" />
+          <Property Type="Int32" Name="SectionID" Nullable="false" />
+          <Property Type="Int32" Name="PlanID" Nullable="false" annotation:StoreGeneratedPattern="Identity" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" />
+          <Property Type="DateTime" Name="BeginTime" Nullable="false" />
+          <Property Type="Int32" Name="W" Nullable="false" />
+          <Property Type="Int32" Name="R" Nullable="false" />
+          <Property Type="Int32" Name="G" Nullable="false" />
+          <Property Type="Int32" Name="B" Nullable="false" />
+          <NavigationProperty Name="tblProjectGroupSection" Relationship="LedLocalModel.FK_tblSectionDailyPlan_tblProjectGroupSection" FromRole="tblSectionLedPlan" ToRole="tblProjectGroupSection" />
+        </EntityType>
+        <Association Name="FK_tblSectionDailyPlan_tblProjectGroupSection">
+          <End Type="LedLocalModel.tblProjectGroupSection" Role="tblProjectGroupSection" Multiplicity="1" />
+          <End Type="LedLocalModel.tblSectionLedPlan" Role="tblSectionLedPlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProjectGroupSection">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="tblSectionLedPlan">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_tblSectionLedOneTimePlan_tblProjectGroupSection">
+          <End Type="LedLocalModel.tblProjectGroupSection" Role="tblProjectGroupSection" Multiplicity="1" />
+          <End Type="LedLocalModel.tblSectionLedOneTimePlan" Role="tblSectionLedOneTimePlan" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="tblProjectGroupSection">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Principal>
+            <Dependent Role="tblSectionLedOneTimePlan">
+              <PropertyRef Name="ProjectID" />
+              <PropertyRef Name="GroupID" />
+              <PropertyRef Name="SectionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="LedLocalModelStoreContainer" CdmEntityContainer="LedLocalDb">
+          <EntitySetMapping Name="tblDevice"><EntityTypeMapping TypeName="LedLocalModel.tblDevice"><MappingFragment StoreEntitySet="tblDevice">
+            <ScalarProperty Name="MAC" ColumnName="MAC" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+            <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+            <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+            <ScalarProperty Name="DeviceID" ColumnName="DeviceID" />
+            <ScalarProperty Name="Shape" ColumnName="Shape" />
+            <ScalarProperty Name="Rotation" ColumnName="Rotation" />
+            <ScalarProperty Name="DevType" ColumnName="DevType" />
+            <ScalarProperty Name="ZeeBeeID" ColumnName="ZeeBeeID" />
+            <ScalarProperty Name="X" ColumnName="X" />
+            <ScalarProperty Name="Y" ColumnName="Y" />
+            <ScalarProperty Name="ColorType" ColumnName="ColorType" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="tblProject"><EntityTypeMapping TypeName="LedLocalModel.tblProject"><MappingFragment StoreEntitySet="tblProject">
+            <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+            <ScalarProperty Name="ProjectName" ColumnName="ProjectName" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="tblProjectGroup"><EntityTypeMapping TypeName="LedLocalModel.tblProjectGroup"><MappingFragment StoreEntitySet="tblProjectGroup">
+            <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+            <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+            <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+            <ScalarProperty Name="GroupPicture" ColumnName="GroupPicture" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="tblProjectGroupSection"><EntityTypeMapping TypeName="LedLocalModel.tblProjectGroupSection"><MappingFragment StoreEntitySet="tblProjectGroupSection">
+            <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+            <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+            <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+            <ScalarProperty Name="SectionName" ColumnName="SectionName" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="tblSectionLedOneTimePlan">
+            <EntityTypeMapping TypeName="LedLocalModel.tblSectionLedOneTimePlan">
+              <MappingFragment StoreEntitySet="tblSectionLedOneTimePlan">
+                <ScalarProperty Name="DurationMin" ColumnName="DurationMin" />
+                <ScalarProperty Name="BeginTime" ColumnName="BeginTime" />
+                <ScalarProperty Name="B" ColumnName="B" />
+                <ScalarProperty Name="G" ColumnName="G" />
+                <ScalarProperty Name="R" ColumnName="R" />
+                <ScalarProperty Name="W" ColumnName="W" />
+                <ScalarProperty Name="PlanID" ColumnName="PlanID" />
+                <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tblSectionLedPlan">
+            <EntityTypeMapping TypeName="LedLocalModel.tblSectionLedPlan">
+              <MappingFragment StoreEntitySet="tblSectionLedPlan">
+                <ScalarProperty Name="B" ColumnName="B" />
+                <ScalarProperty Name="G" ColumnName="G" />
+                <ScalarProperty Name="R" ColumnName="R" />
+                <ScalarProperty Name="W" ColumnName="W" />
+                <ScalarProperty Name="BeginTime" ColumnName="BeginTime" />
+                <ScalarProperty Name="PlanID" ColumnName="PlanID" />
+                <ScalarProperty Name="SectionID" ColumnName="SectionID" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="DbLoal">
+        <EntityTypeShape EntityType="LedLocalModel.tblDevice" Width="1.5" PointX="7.5" PointY="1" Height="3.3263964843749996" IsExpanded="true" />
+        <EntityTypeShape EntityType="LedLocalModel.tblProject" Width="1.5" PointX="0.75" PointY="1.875" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="LedLocalModel.tblProjectGroup" Width="1.5" PointX="3" PointY="1.625" Height="2.1725878906249996" IsExpanded="true" />
+        <EntityTypeShape EntityType="LedLocalModel.tblProjectGroupSection" Width="1.5" PointX="5.25" PointY="1.625" Height="2.1725878906249996" IsExpanded="true" />
+        <AssociationConnector Association="LedLocalModel.FK_tblDevice_tblProjectGroupSection" ManuallyRouted="false">
+          <ConnectorPoint PointX="6.75" PointY="2.9035953776041663" />
+          <ConnectorPoint PointX="7.5" PointY="2.9035953776041663" />
+        </AssociationConnector>
+        <AssociationConnector Association="LedLocalModel.FK_tblProjectGroup_tblProject" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="2.672841796875" />
+          <ConnectorPoint PointX="3" PointY="2.672841796875" />
+        </AssociationConnector>
+        <AssociationConnector Association="LedLocalModel.FK_tblProjectGroupSection_tblProjectGroup" ManuallyRouted="false">
+          <ConnectorPoint PointX="4.5" PointY="1.96875" />
+          <ConnectorPoint PointX="5.25" PointY="1.96875" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="LedLocalModel.tblSectionLedOneTimePlan" Width="1.5" PointX="7.125" PointY="5.125" Height="3.1340950520833317" />
+        <EntityTypeShape EntityType="LedLocalModel.tblSectionLedPlan" Width="1.5" PointX="7.125" PointY="9" Height="2.9417936197916674" />
+        <AssociationConnector Association="LedLocalModel.FK_tblSectionDailyPlan_tblProjectGroupSection">
+          <ConnectorPoint PointX="6" PointY="4.1821907552083326" />
+          <ConnectorPoint PointX="6" PointY="10.470896809895834" />
+          <ConnectorPoint PointX="7.125" PointY="10.470896809895834" />
+        </AssociationConnector>
+        <AssociationConnector Association="LedLocalModel.FK_tblSectionLedOneTimePlan_tblProjectGroupSection">
+          <ConnectorPoint PointX="6.4062525" PointY="4.1821907552083326" />
+          <ConnectorPoint PointX="6.4062525" PointY="6.6920475260416659" />
+          <ConnectorPoint PointX="7.125" PointY="6.6920475260416659" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

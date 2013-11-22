@@ -1,0 +1,34 @@
+﻿<Page x:Class="wpfPanel.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="400"
+	Title="MainPage" Loaded="Page_Loaded">
+
+    <Grid>
+        <ListBox x:Name="listButton"     ItemTemplate="{DynamicResource DataTemplate1}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" SelectionChanged="listButton_SelectionChanged" TouchDown="listButton_TouchDown">
+            <ListBox.Resources>
+                <DataTemplate x:Key="DataTemplate1">
+                    <Grid d:DesignWidth="230.4" d:DesignHeight="144.8" Margin="10"  >
+                        <Grid.Effect>
+                            <DropShadowEffect ShadowDepth="10"/>
+                        </Grid.Effect>
+                        <Button Background="Wheat" Click="Button_Click" TouchDown="Button_TouchDown"  >
+                            <StackPanel>
+                                <Image Height="84" Width="164"/>
+                                <TextBlock Margin="0,10,0,0" FontSize="20" Text="{Binding GroupName}" TextAlignment="Center" />
+                                <TextBlock Text="{Binding DimLevel}" TextAlignment="Center"/>
+                            </StackPanel>
+
+                        </Button>
+                    </Grid>
+                </DataTemplate>
+                <ItemsPanelTemplate x:Key="ItemsPanelTemplate1">
+                    <WrapPanel IsItemsHost="True" MaxWidth="600" />
+                </ItemsPanelTemplate>
+            </ListBox.Resources>
+        </ListBox>
+    </Grid>
+</Page>

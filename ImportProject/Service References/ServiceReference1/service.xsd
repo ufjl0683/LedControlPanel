@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/LedClientService.Devices" />
+  <xs:element name="ImportProject">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="serverIP" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="projectid" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ImportProjectResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ToServerSayHello">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ToServerSayHelloResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Regist">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RegistResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReloadSchedule">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReloadScheduleResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllLEDDeviceOutput">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetAllLEDDeviceOutputResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/LedClientService.Devices" minOccurs="0" name="GetAllLEDDeviceOutputResult" nillable="true" type="q1:ArrayOfLedOutputData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ImportDevices">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="serverIP" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="projectID" type="xs:int" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ImportDevicesResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ToClientSayHello">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="hello" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ToClientNotifyLedDisplayChange">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="DeviceID" type="xs:int" />
+        <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/LedClientService.Devices" minOccurs="0" name="outdata" nillable="true" type="q2:LedOutputData" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -1,0 +1,10 @@
+﻿<Window x:Class="shschool.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="秀峰高中"  ResizeMode="NoResize" WindowState="Maximized" Activated="Window_Activated" WindowStartupLocation="CenterScreen" UseLayoutRounding="False" SizeChanged="Window_SizeChanged" >
+   
+    <Grid>
+        <Frame Content="Frame" Source="/shschool;component/Main.xaml" NavigationUIVisibility="Hidden"/>
+
+    </Grid>
+</Window>

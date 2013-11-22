@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://tempuri.org/" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ControlService" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="CustomBinding_IControlService_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1" />
+        <wsaw:UsingAddressing />
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/LedClientService.Devices" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IControlService_ImportProject_InputMessage">
+    <wsdl:part name="parameters" element="tns:ImportProject" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ImportProject_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ImportProjectResponse" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ToServerSayHello_InputMessage">
+    <wsdl:part name="parameters" element="tns:ToServerSayHello" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ToServerSayHello_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ToServerSayHelloResponse" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_Regist_InputMessage">
+    <wsdl:part name="parameters" element="tns:Regist" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_Regist_OutputMessage">
+    <wsdl:part name="parameters" element="tns:RegistResponse" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ReloadSchedule_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReloadSchedule" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ReloadSchedule_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ReloadScheduleResponse" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_GetAllLEDDeviceOutput_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllLEDDeviceOutput" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_GetAllLEDDeviceOutput_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAllLEDDeviceOutputResponse" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ImportDevices_InputMessage">
+    <wsdl:part name="parameters" element="tns:ImportDevices" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ImportDevices_OutputMessage">
+    <wsdl:part name="parameters" element="tns:ImportDevicesResponse" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ToClientSayHello_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:ToClientSayHello" />
+  </wsdl:message>
+  <wsdl:message name="IControlService_ToClientNotifyLedDisplayChange_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:ToClientNotifyLedDisplayChange" />
+  </wsdl:message>
+  <wsdl:portType name="IControlService">
+    <wsdl:operation name="ImportProject">
+      <wsdl:input wsaw:Action="http://tempuri.org/IControlService/ImportProject" message="tns:IControlService_ImportProject_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IControlService/ImportProjectResponse" message="tns:IControlService_ImportProject_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ToServerSayHello">
+      <wsdl:input wsaw:Action="http://tempuri.org/IControlService/ToServerSayHello" message="tns:IControlService_ToServerSayHello_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IControlService/ToServerSayHelloResponse" message="tns:IControlService_ToServerSayHello_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Regist">
+      <wsdl:input wsaw:Action="http://tempuri.org/IControlService/Regist" message="tns:IControlService_Regist_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IControlService/RegistResponse" message="tns:IControlService_Regist_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReloadSchedule">
+      <wsdl:input wsaw:Action="http://tempuri.org/IControlService/ReloadSchedule" message="tns:IControlService_ReloadSchedule_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IControlService/ReloadScheduleResponse" message="tns:IControlService_ReloadSchedule_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAllLEDDeviceOutput">
+      <wsdl:input wsaw:Action="http://tempuri.org/IControlService/GetAllLEDDeviceOutput" message="tns:IControlService_GetAllLEDDeviceOutput_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IControlService/GetAllLEDDeviceOutputResponse" message="tns:IControlService_GetAllLEDDeviceOutput_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ImportDevices">
+      <wsdl:input wsaw:Action="http://tempuri.org/IControlService/ImportDevices" message="tns:IControlService_ImportDevices_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IControlService/ImportDevicesResponse" message="tns:IControlService_ImportDevices_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ToClientSayHello">
+      <wsdl:output wsaw:Action="http://tempuri.org/IControlService/ToClientSayHello" message="tns:IControlService_ToClientSayHello_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ToClientNotifyLedDisplayChange">
+      <wsdl:output wsaw:Action="http://tempuri.org/IControlService/ToClientNotifyLedDisplayChange" message="tns:IControlService_ToClientNotifyLedDisplayChange_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CustomBinding_IControlService" type="tns:IControlService">
+    <wsp:PolicyReference URI="#CustomBinding_IControlService_policy" />
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="ImportProject">
+      <soap12:operation soapAction="http://tempuri.org/IControlService/ImportProject" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ToServerSayHello">
+      <soap12:operation soapAction="http://tempuri.org/IControlService/ToServerSayHello" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Regist">
+      <soap12:operation soapAction="http://tempuri.org/IControlService/Regist" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReloadSchedule">
+      <soap12:operation soapAction="http://tempuri.org/IControlService/ReloadSchedule" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAllLEDDeviceOutput">
+      <soap12:operation soapAction="http://tempuri.org/IControlService/GetAllLEDDeviceOutput" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImportDevices">
+      <soap12:operation soapAction="http://tempuri.org/IControlService/ImportDevices" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ToClientSayHello">
+      <soap12:operation soapAction="http://tempuri.org/IControlService/ToClientSayHello" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ToClientNotifyLedDisplayChange">
+      <soap12:operation soapAction="http://tempuri.org/IControlService/ToClientNotifyLedDisplayChange" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ControlService">
+    <wsdl:port name="CustomBinding_IControlService" binding="tns:CustomBinding_IControlService">
+      <soap12:address location="net.tcp://localhost:4502/ControlService" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:4502/ControlService</wsa10:Address>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

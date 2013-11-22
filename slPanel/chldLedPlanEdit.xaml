@@ -1,0 +1,37 @@
+﻿<controls:ChildWindow x:Class="slPanel.chldLedPlanEdit"
+           xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+           xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+           xmlns:local="clr-namespace:slPanel"
+           xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+           Width="477" Height="491" 
+           Title="排程編輯" xmlns:sdk="http://schemas.microsoft.com/winfx/2006/xaml/presentation/sdk" FontSize="14" xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit">
+    <controls:ChildWindow.Resources>
+        <local:IDailyPlanDateTimeConverter x:Key="IDailyPlanDateTimeConverter" />
+    </controls:ChildWindow.Resources>
+        <Grid x:Name="LayoutRoot" Margin="2">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Button x:Name="CancelButton" Content="取消" Click="CancelButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,0,0" Grid.Row="1" />
+        <Button x:Name="OKButton" Content="確定" Click="OKButton_Click" Width="75" Height="23" HorizontalAlignment="Right" Margin="0,12,79,0" Grid.Row="1" />
+        <sdk:DataGrid ItemsSource="{Binding tblSectionLedPlan}" AutoGenerateColumns="True" Margin="12,30,16,0" Name="dataGrid1" Height="195" VerticalAlignment="Top">
+            <sdk:DataGrid.Columns>
+                <sdk:DataGridTextColumn Binding="{Binding BeginTime,Converter={StaticResource IDailyPlanDateTimeConverter},NotifyOnValidationError=True,ValidatesOnExceptions=True}"  CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="Auto" />
+            </sdk:DataGrid.Columns>
+        </sdk:DataGrid>
+        <HyperlinkButton  Content="新增" Height="20" HorizontalAlignment="Left" Margin="117,6,0,0" Name="hyperlinkButton1" VerticalAlignment="Top" Width="35" Click="hyperlinkButton1_Click" />
+        <sdk:DataGrid  ItemsSource="{Binding tblSectionLedOneTimePlan }"  AutoGenerateColumns="True" Height="146" HorizontalAlignment="Left" Margin="12,257,0,0" Name="dataGrid2" VerticalAlignment="Top" Width="427" >
+            <sdk:DataGrid.Columns>
+                <sdk:DataGridTextColumn Binding="{Binding BeginTime,NotifyOnValidationError=True,ValidatesOnExceptions=True,StringFormat=\{0:s\}}"  CanUserReorder="True" CanUserResize="True" CanUserSort="True" Width="Auto" />
+            </sdk:DataGrid.Columns>
+        </sdk:DataGrid>
+        <HyperlinkButton Content="刪除" Height="20" HorizontalAlignment="Left" Margin="178,6,0,0" Name="hyperlinkButton2" VerticalAlignment="Top" Width="42" Click="hyperlinkButton2_Click" />
+        <HyperlinkButton Content="新增" Height="20" HorizontalAlignment="Left" Margin="117,231,0,0" Name="hyperlinkButton3" VerticalAlignment="Top" Width="35" Click="hyperlinkButton3_Click" />
+        <HyperlinkButton Content="刪除" Height="20" HorizontalAlignment="Left" Margin="178,231,0,0" Name="hyperlinkButton4" VerticalAlignment="Top" Width="42" Click="hyperlinkButton4_Click" />
+        <TextBlock Height="22" HorizontalAlignment="Left" Margin="17,3,0,0" Name="textBlock1" Text="每日排程" VerticalAlignment="Top" Width="74" />
+        <TextBlock Height="22" HorizontalAlignment="Left" Margin="17,231,0,0" Name="textBlock2" Text="一次性排程" VerticalAlignment="Top" Width="74" />
+        <toolkit:TimePicker Height="24" HorizontalAlignment="Left" Margin="271,231,0,0" Name="timePicker1" VerticalAlignment="Top" Width="172" />
+    </Grid>
+</controls:ChildWindow>

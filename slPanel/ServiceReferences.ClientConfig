@@ -1,0 +1,17 @@
+﻿<configuration>
+    <system.serviceModel>
+        <bindings>
+            <customBinding>
+                <binding name="CustomBinding_IControlService">
+                    <binaryMessageEncoding />
+                    <tcpTransport maxReceivedMessageSize="2147483647" maxBufferSize="2147483647" />
+                </binding>
+            </customBinding>
+        </bindings>
+        <client>
+            <endpoint address="net.tcp://localhost:4502/ControlService" binding="customBinding"
+                bindingConfiguration="CustomBinding_IControlService" contract="ControlService.IControlService"
+                name="CustomBinding_IControlService" />
+        </client>
+    </system.serviceModel>
+</configuration>

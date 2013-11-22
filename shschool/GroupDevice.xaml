@@ -1,0 +1,55 @@
+﻿<Page
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="shschool.GroupDevice" 
+      mc:Ignorable="d" 
+      d:DesignHeight="480" d:DesignWidth="640"
+	Title="GroupDevice" Unloaded="Page_Unloaded" Loaded="Page_Loaded">
+
+    <Grid>
+        <Slider x:Name="DimmAdjust"  Value="{Binding DimLevel,Mode=TwoWay,Delay=1000}"  HorizontalAlignment="Left" Height="32" Margin="290,170,0,0" VerticalAlignment="Top" Width="197" RenderTransformOrigin="0.5,0.5" Maximum="100" LargeChange="10" SmallChange="1" ValueChanged="DimmAdjust_ValueChanged" ManipulationCompleted="DimmAdjust_ManipulationCompleted" TouchUp="DimmAdjust_TouchUp" Minimum="20">
+            <Slider.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="2.5" ScaleY="2.5"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Slider.RenderTransform>
+        </Slider>
+        <TextBlock HorizontalAlignment="Left" Height="34" Margin="34,158,0,0" TextWrapping="Wrap" Text="亮度%:" VerticalAlignment="Top" Width="71" FontSize="20"/>
+        <TextBlock HorizontalAlignment="Left" Height="31" Margin="106,158,0,0" TextWrapping="Wrap" Text="{Binding ElementName=DimmAdjust,Path=Value,StringFormat=\{0:0\}}" VerticalAlignment="Top" Width="41" FontSize="20"/>
+        <TextBlock HorizontalAlignment="Left" Height="34" Margin="0,22,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="630" FontSize="20" TextDecorations="Underline" TextAlignment="Center"/>
+        <Button HorizontalAlignment="Left" Height="54" Margin="15,23,0,0" VerticalAlignment="Top" Width="108" FontSize="20" Click="Button_Click" TouchDown="Button_TouchDown" Background="{x:Null}" BorderBrush="{x:Null}">
+            <ed:BlockArrow Fill="#FF1BADEE" HorizontalAlignment="Left" Height="53" Orientation="Left" VerticalAlignment="Top" Width="81"/>
+        </Button>
+        <DataGrid Margin="32,242,29,10"  x:Name="grid"  AutoGenerateColumns="False" FontSize="20"  >
+            <DataGrid.Columns>
+                <DataGridTextColumn   Binding="{Binding RmkID}" Header="RmkID"/>
+                <DataGridTextColumn   Binding="{Binding V}" Header="電壓"/>
+                <DataGridTextColumn    Binding="{Binding A}" Header="電流"/>
+                <DataGridTextColumn   Binding="{Binding W}" Header="瓦數"/>
+                <DataGridTextColumn   Binding="{Binding F}" Header="頻率"/>
+                <DataGridTextColumn   Binding="{Binding PF}" Header="功率因數"/>
+                <DataGridTextColumn   Binding="{Binding CurrentDimLevel}" Header="%" />
+                <DataGridTextColumn   Binding="{Binding KWHP}" Header="KWHP"/>
+                <DataGridTextColumn   Binding="{Binding KWHN}" Header="KWHN"/>
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <CheckBox x:Name="chkAuto" Content="自動更新" HorizontalAlignment="Left" Height="24" Margin="302,61,0,0" VerticalAlignment="Top" Width="94" FontSize="18" RenderTransformOrigin="0.463,-0.1" Checked="CheckBox_Checked">
+            <CheckBox.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="2" ScaleY="2"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </CheckBox.RenderTransform>
+        </CheckBox>
+        <Button Content="更新" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="471,67,0,0" Height="34" Click="Button_Click_1" FontSize="24"/>
+
+    </Grid>
+</Page>

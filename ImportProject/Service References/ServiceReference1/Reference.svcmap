@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="69319e0c-0e14-427d-9615-d8ac25b02258" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8080/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="8803f6a7-7685-4dfb-a9b7-62ae5fd3f0cf" SourceId="1" SourceUrl="http://localhost:8080/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="d3b21786-db70-4665-a61b-11b416a72e7a" SourceId="1" SourceUrl="http://localhost:8080/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="0e5f217b-936f-47c6-bcff-e225e4dce2e5" SourceId="1" SourceUrl="http://localhost:8080/mex" />
+    <MetadataFile FileName="LedClientService.Devices.xsd" MetadataType="Schema" ID="d8bc3f09-7761-495d-86c4-eae505ca460b" SourceId="1" SourceUrl="http://localhost:8080/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

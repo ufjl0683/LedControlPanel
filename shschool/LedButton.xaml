@@ -1,0 +1,18 @@
+﻿<UserControl  
+    x:Class="shschool.LedButton"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+    d:DesignHeight="100"
+    d:DesignWidth="73"  Loaded="UserControl_Loaded"  IsEnabledChanged="userControl_IsEnabledChanged" MouseDown="Grid_MouseDown"     >
+
+    <Grid      >
+        <Image Source="on.jpg" x:Name="imgon"  Stretch="Fill" Margin="0,0,0,27"/>
+        <Image Source="off.jpg" x:Name="imgoff" Stretch="Fill" Margin="0,0,-0.2,27"/>
+        <TextBlock x:Name="TextBlock" TextWrapping="Wrap"     Height="27" VerticalAlignment="Bottom" FontFamily="Global User Interface" FontSize="{Binding FontSize, ElementName=userControl}" TextAlignment="Center"/>
+        <CheckBox x:Name="checkBox"  IsEnabled="False" IsChecked="False" IsThreeState="False" Checked="checkBox_Checked" Visibility="Collapsed" Content="" Height="90" VerticalAlignment="Top" Width="73" Margin="0,5,0,0" HorizontalAlignment="Left"   Unchecked="checkBox_Unchecked"  />
+
+    </Grid>
+</UserControl>
