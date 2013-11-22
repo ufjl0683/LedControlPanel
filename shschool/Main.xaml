@@ -54,7 +54,7 @@
         </ItemsPanelTemplate>
         <DataTemplate x:Key="DataTemplate1">
             <Grid d:DesignWidth="284" d:DesignHeight="130.4" Height="100" Width="200" Background="#FFDA5C5C" Margin="10"  MouseDown="Grid_MouseDown" >
-                <TextBlock HorizontalAlignment="Stretch" Margin="0,32.533,0,36.267" TextWrapping="Wrap" Text="{Binding SceneName}" VerticalAlignment="Center" Width="Auto" TextAlignment="Center" FontSize="21.333"/>
+                <TextBlock HorizontalAlignment="Stretch" Margin="0,32.533,0,36.267" TextWrapping="Wrap" Text="{Binding SceneName}" VerticalAlignment="Center" Width="Auto" Foreground="White" TextAlignment="Center" FontSize="21.333"/>
             </Grid>
         </DataTemplate>
     </Page.Resources>
@@ -128,7 +128,7 @@
             </CheckBox>
         </Grid>
         <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content="全亮" HorizontalAlignment="Right" Height="40" Margin="0,434,48,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_3"/>
-        <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content="全滅" HorizontalAlignment="Right" Height="40" Margin="0,505,47,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_4"/>
+        <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content="全暗" HorizontalAlignment="Right" Height="40" Margin="0,505,47,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_4"/>
         <Button x:Name="btnSaveScene" RenderTransform="{StaticResource ButtonSizeSetting}"  Content="儲存情境" HorizontalAlignment="Right" Height="40" Margin="0,573,48,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="btnSaveScene_Click"/>
         <Button x:Name="btnUnselect" RenderTransform="{StaticResource ButtonSizeSetting}"  Content=" 取消選取" HorizontalAlignment="Right" Height="40" Margin="0,288,46,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Unselect_click"/>
 

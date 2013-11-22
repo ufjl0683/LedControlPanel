@@ -49,6 +49,7 @@ namespace shschool
                     if (data.IsEnable)
                     {
                         data.DimLevel = bindingDataGroup.DimLevel;
+
                         ceraDev.SetDeviceDimLevel(data.DevID, data.DimLevel);
                     }
                 }

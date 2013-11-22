@@ -42,5 +42,10 @@ namespace shschool
         {
             this.DialogResult = false;
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(@"C:\Program Files\Common Files\microsoft shared\ink\TabTip.exe");
+        }
     }
 }

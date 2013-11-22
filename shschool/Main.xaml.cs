@@ -436,6 +436,8 @@ namespace shschool
 
         private void btnSaveScene_Click(object sender, RoutedEventArgs e)
         {
+
+            
             wndSelectSceneName dialog = new wndSelectSceneName();
 
             if (dialog.ShowDialog() == true)
@@ -524,7 +526,7 @@ namespace shschool
                         {
                             try
                             {
-                                coor.SetDeviceDimLevelAsync(data.DevID, data.DimLevel);
+                                coor.SetDeviceDimLevel(data.DevID, data.DimLevel);
                             }
                             catch { ;}
                         }
@@ -541,13 +543,13 @@ namespace shschool
             }
         }
 
-       async void CheckLedOutput()
+         void CheckLedOutput()
        {
            StreetLightInfo[] infos=null;
 
             try
             {
-                 infos = await coor.GetStreetLightListAsync();
+                 infos =  coor.GetStreetLightList();
             }
             catch
             {
@@ -556,11 +558,14 @@ namespace shschool
            if(infos!=null)
             foreach (StreetLightInfo data in infos)
             {
-                if (data.CurrentDimLevel != (dictStreetLightBindingInfos[data.DevID]).DimLevel)
+                if (!dictStreetLightBindingInfos.ContainsKey(data.DevID))
+                    continue;
+               
+                if (  data.CurrentDimLevel != (dictStreetLightBindingInfos[data.DevID]).DimLevel    )
                 {
                     try
                     {
-                        coor.SetDeviceDimLevelAsync(data.DevID, (dictStreetLightBindingInfos[data.DevID]).DimLevel);
+                        coor.SetDeviceDimLevel(data.DevID, (dictStreetLightBindingInfos[data.DevID]).DimLevel);
                     }
                     catch { ;}
                 }

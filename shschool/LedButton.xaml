@@ -11,7 +11,7 @@
     <Grid      >
         <Image Source="on.jpg" x:Name="imgon"  Stretch="Fill" Margin="0,0,0,27"/>
         <Image Source="off.jpg" x:Name="imgoff" Stretch="Fill" Margin="0,0,-0.2,27"/>
-        <TextBlock x:Name="TextBlock" TextWrapping="Wrap"     Height="27" VerticalAlignment="Bottom" FontFamily="Global User Interface" FontSize="{Binding FontSize, ElementName=userControl}" TextAlignment="Center"/>
+        <TextBlock x:Name="TextBlock" TextWrapping="Wrap"     Height="27" VerticalAlignment="Bottom" FontFamily="Global User Interface"   FontSize="{Binding FontSize, ElementName=userControl}" TextAlignment="Center"/>
         <CheckBox x:Name="checkBox"  IsEnabled="False" IsChecked="False" IsThreeState="False" Checked="checkBox_Checked" Visibility="Collapsed" Content="" Height="90" VerticalAlignment="Top" Width="73" Margin="0,5,0,0" HorizontalAlignment="Left"   Unchecked="checkBox_Unchecked"  />
 
     </Grid>
