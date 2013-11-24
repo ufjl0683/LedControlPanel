@@ -152,7 +152,7 @@ namespace shschool
             }
 
 
-            foreach (DeviceInfo info in infos)
+            foreach (DeviceInfo info in infos )
             {
                 if (info == null)
                     continue;
@@ -526,7 +526,7 @@ namespace shschool
                         {
                             try
                             {
-                                coor.SetDeviceDimLevel(data.DevID, data.DimLevel);
+                                coor.SetDeviceDimLevel(outputled.DevID, data.DimLevel);
                             }
                             catch { ;}
                         }
@@ -561,7 +561,7 @@ namespace shschool
                 if (!dictStreetLightBindingInfos.ContainsKey(data.DevID))
                     continue;
                
-                if (  data.CurrentDimLevel != (dictStreetLightBindingInfos[data.DevID]).DimLevel    )
+                if ( (dictStreetLightBindingInfos[data.DevID]).IsEnable && data.CurrentDimLevel != (dictStreetLightBindingInfos[data.DevID]).DimLevel    )
                 {
                     try
                     {

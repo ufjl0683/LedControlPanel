@@ -24,26 +24,38 @@ namespace CommTest
             Config.WriteXml(config,"config.xml");
             
            CeraDevices.CoordinatorDevice cdev = new CeraDevices.CoordinatorDevice("10.10.1.1", 8080);
-           CeraDevices.CorrdinatorInfo info= cdev.GetDeviceInfo();
+           
+        //   CeraDevices.CorrdinatorInfo info= cdev.GetDeviceInfo();
+         // StreetLightInfo[] list= cdev.GetStreetLightList();
 
-           CeraDevices.DeviceManager mgr = new DeviceManager(new CoordinatorDevice[] { cdev });
+        //   CeraDevices.DeviceManager mgr = new DeviceManager(new CoordinatorDevice[] { cdev });
             
             
            //Console.WriteLine(info.ToString());
            //CeraDevices.DeviceInfo[] infos = cdev.GetDeviceList();
            //cdev.SetStreetLightRemark("8814","AABBCC");
 
-            mgr["aabb"].SetDeviceDimLevel(mgr.GetDeviceID("aabb"), 80);
+          //  mgr["aabb"].SetDeviceDimLevel(mgr.GetDeviceID("aabb"), 80);
          //   mgr["aabb"].SetDeviceDimLevel(mgr.GetDeviceID("aabb"), 0);
        
            // CeraDevices.CoordinatorDevice.PermitJoinNode(60);
           
-           
+           cdev.SetDeviceSchedule("*", "0,180,1190,1210,1235,0,0,0,0,0", "20,40,60,20,100,255,255,255,255,255");
             cdev.SetDeviceRTC("*", DateTime.Now);
      //       cdev.SetDeviceEnableSch("8814", true);
+
+            cdev.SetDeviceScheduleEnable("*", true);
+
             CeraDevices.StreetLightInfo[] stifos = cdev.GetStreetLightList();
 
 Console.ReadKey();
+cdev.SetDeviceScheduleEnable("*", false);
+foreach (StreetLightInfo info in stifos)
+{
+    cdev.SetDeviceDimLevel(info.DevID, 100);
+}
+Console.ReadKey();
+
         }
 
 

@@ -39,16 +39,16 @@ namespace CeraDevices
            return retInfo;
        }
 
-      public void SetDeviceEnableSch(string devid,bool enable)
-      {
-          MyWebClient wc = new MyWebClient();
+      //public void SetDeviceEnableSch(string devid,bool enable)
+      //{
+      //    MyWebClient wc = new MyWebClient();
 
-          using (Stream stream = wc.OpenRead(UriBase + "/sstreet_light.set_dev_schedule?dev=" + devid + "&enable=" + (enable ? 1 : 0)))
-          {
-              while (stream.ReadByte() != -1) ;
-          }
-        //  10.10.1.1:8080/street_light.set_dev_schedule?dev=081f&enable=0 
-      }
+      //    using (Stream stream = wc.OpenRead(UriBase + "/sstreet_light.set_dev_schedule?dev=" + devid + "&enable=" + (enable ? 1 : 0)))
+      //    {
+      //        while (stream.ReadByte() != -1) ;
+      //    }
+      //  //  10.10.1.1:8080/street_light.set_dev_schedule?dev=081f&enable=0 
+      //}
 
       public void SetDeviceRTC(string devid, DateTime dt)
       {
@@ -64,6 +64,46 @@ namespace CeraDevices
                stream.Close();
                stream.Dispose();
 
+      }
+
+
+      public void SetDeviceSchedule(string devid, string timeStr, string levelStr)
+      {
+
+            MyWebClient wc = new MyWebClient();
+               Stream stream;
+               if (devid == "*")
+               {
+                   stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?time=" + timeStr+"&level="+levelStr);
+               }
+               else
+               {
+                   stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?dev="+devid+"&time=" + timeStr + "&level=" + levelStr);
+               }
+               while (stream.ReadByte() != -1) ;
+               stream.Close();
+               stream.Dispose();
+
+      }
+
+
+      public void  SetDeviceScheduleEnable(string devid,bool enable)
+      {
+          //10.10.1.1:8080/street_light.set_dev_schedule?dev=081f&enable=0 
+
+          MyWebClient wc = new MyWebClient();
+               Stream stream;
+               if (devid == "*")
+               {
+                   stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?enable="+(enable?"1":"0") );
+               }
+               else
+               {
+                   stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?dev="+devid+"&enable=" +(enable?"1":"0"));
+               }
+               while (stream.ReadByte() != -1) ;
+               stream.Close();
+               stream.Dispose();
       }
       public   void PermitJoinNode(int secs)
       {
@@ -220,10 +260,15 @@ namespace CeraDevices
       public void SetDeviceDimLevel(string devid, int level)
       {
           MyWebClient client = new MyWebClient();
-          using (Stream stream =   client.OpenRead(new Uri(UriBase + "/street_light.set_dim_level?dev=" + devid + "&level=" + level, UriKind.Absolute)))
+          string args;
+          //if(devid=="*")
+          //    args = "/street_light.set_dim_level?level=" + level;
+          //else
+           args=  "/street_light.set_dim_level?dev=" + devid + "&level=" + level;
+          using (Stream stream =   client.OpenRead(new Uri(UriBase + args, UriKind.Absolute)))
           {
-              //  while (stream.ReadByte() != -1) ;
-              System.Diagnostics.Debug.Print(UriBase + "/street_light.set_dim_level?dev=" + devid + "&level=" + level);
+               while (stream.ReadByte() != -1) ;
+          //    System.Diagnostics.Debug.Print(UriBase + "/street_light.set_dim_level?dev=" + devid + "&level=" + level);
 
           }
       }
@@ -242,14 +287,18 @@ namespace CeraDevices
           //        while (stream.ReadByte() != -1) ;
           //    }
           //else
-
+          string args;
           //lock (this)
           //{
              MyWebClient client = new MyWebClient();
-              using (Stream stream =  await client.OpenReadTaskAsync(new Uri(UriBase + "/street_light.set_dim_level?dev=" + devid + "&level=" + level, UriKind.Absolute)))
+             //if (devid == "*")
+             //    args = "/street_light.set_dim_level?level=" + level;
+             //else
+                 args = "/street_light.set_dim_level?dev=" + devid + "&level=" + level;
+              using (Stream stream =  await client.OpenReadTaskAsync(new Uri(UriBase + args, UriKind.Absolute)))
               {
-                         //  while (stream.ReadByte() != -1) ;
-                  System.Diagnostics.Debug.Print(UriBase + "/street_light.set_dim_level?dev=" + devid + "&level=" + level);
+                          while (stream.ReadByte() != -1) ;
+                 // System.Diagnostics.Debug.Print(UriBase + "/street_light.set_dim_level?dev=" + devid + "&level=" + level);
 
               }
              
@@ -450,13 +499,42 @@ namespace CeraDevices
         [DataContract]
         public class Schedule
         {
+
+           
            //  enable: 0,      time: [0,...],      level: [0,...]  
             [DataMember]
-            public bool enable { get; set; }
+            public bool en { get; set; }
               [DataMember]
-            public int?[] time { get; set; }
+            public int? [] time { get; set; }
               [DataMember]
-            public int?[] level { get; set; }
+            public int? [] level { get; set; }
+
+            public ScheduleSegnment[] Segnments
+            {
+                get
+                {
+                    if (time == null || level == null || time.Length == 0 || level.Length == 0)
+                        return new ScheduleSegnment[0];
+                    else
+                    {
+                        ScheduleSegnment[] segs = new ScheduleSegnment[time.Length];
+                        for (int i = 0; i < time.Length; i++)
+                        {
+                            if(time[i]!=null)
+                            segs[i] = new ScheduleSegnment() { time= (int)time[i], level=(int)level[i] };
+                        }
+
+                        return segs;
+                    }
+                }
+            }
+        }
+
+        public class ScheduleSegnment 
+        {
+            public int time { get; set; }
+            public int level { get; set; }
+            
         }
 
   [DataContract]
@@ -497,5 +575,8 @@ namespace CeraDevices
         public string rf_channel { get; set; }
 
     }
+
+    
+    
     
 }
