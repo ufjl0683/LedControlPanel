@@ -1,0 +1,26 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WpfScheduleTest" xmlns:Custom="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="WpfScheduleTest.MainWindow"
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded">
+    <Window.Resources>
+        <local:ITimeSegToTimeConverter x:Key="ITimeSegToTimeConverter"/>
+    </Window.Resources>
+    <Grid>
+        <ListBox HorizontalAlignment="Left" Margin="10,10,0,9.8" Width="117"  x:Name="lstStreetLight"   >
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock  Text="{Binding DevID}"  />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Custom:DataGrid x:Name="grdSchedule" HorizontalAlignment="Left" AutoGenerateColumns="False" Height="301" Margin="143,10,0,0" VerticalAlignment="Top" Width="218">
+            <Custom:DataGrid.Columns>
+                <Custom:DataGridTextColumn Binding="{Binding Time, Converter={StaticResource ITimeSegToTimeConverter},  ValidatesOnExceptions=True}" Header="Time"/>
+                <Custom:DataGridTextColumn Binding="{Binding Level, Mode=TwoWay,  ValidatesOnExceptions=True}"   Header="Level"/>
+                </Custom:DataGrid.Columns>
+            </Custom:DataGrid>
+        <Button Content="傳送" HorizontalAlignment="Left" Height="34" Margin="386,51,0,0" VerticalAlignment="Top" Width="110" Click="Button_Click"/>
+
+    </Grid>
+</Window>

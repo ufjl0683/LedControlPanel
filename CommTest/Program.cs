@@ -40,7 +40,7 @@ namespace CommTest
        
            // CeraDevices.CoordinatorDevice.PermitJoinNode(60);
           
-           cdev.SetDeviceSchedule("*", "0,180,1190,1210,1235,0,0,0,0,0", "20,40,60,20,100,255,255,255,255,255");
+           cdev.SetDeviceSchedule("*", "0,180,1190,1210,1235,0,0,0,0,0", "20,40,60,20,20,255,255,255,255,255");
             cdev.SetDeviceRTC("*", DateTime.Now);
      //       cdev.SetDeviceEnableSch("8814", true);
 

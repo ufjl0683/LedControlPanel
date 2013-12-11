@@ -4,7 +4,7 @@
         Title="秀峰高中"  ResizeMode="NoResize" WindowState="Maximized" Activated="Window_Activated" WindowStartupLocation="CenterScreen" UseLayoutRounding="False" SizeChanged="Window_SizeChanged" >
    
     <Grid>
-        <Frame Content="Frame" Source="/shschool;component/Main.xaml" NavigationUIVisibility="Hidden"/>
+        <Frame Content="Frame" Source="/shschool;component/FongNanMain.xaml" NavigationUIVisibility="Hidden"/>
 
     </Grid>
 </Window>

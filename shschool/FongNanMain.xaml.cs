@@ -18,18 +18,21 @@ using System.Windows.Shapes;
 namespace shschool
 {
     /// <summary>
-    /// Main.xaml 的互動邏輯
+    /// FongNanMain.xaml 的互動邏輯
     /// </summary>
-    public partial class Main : Page
+    public partial class FongNanMain : Page
     {
-
-        CeraDevices.CoordinatorDevice coor;
+        //public FongNanMain()
+        //{
+        //    InitializeComponent();
+        //}
+           CeraDevices.CoordinatorDevice coor;
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfos = new Dictionary<string, StreetLightBindingData>();
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfosOriginal = new Dictionary<string, StreetLightBindingData>();
         IValueConverter converter = new IsEnableToColorConverter();
         System.Windows.Threading.DispatcherTimer tmr = new System.Windows.Threading.DispatcherTimer();
         Config LedConfig;
-        public Main()
+        public FongNanMain()
         {
             InitializeComponent();
             coor = ((App.Current) as App).dev;
@@ -45,7 +48,7 @@ namespace shschool
         async void Initial()
         {
             #if !DEBUG
-          
+            coor.SetDeviceScheduleEnable("*", false);
                await   GetDeviceInfoAndSetBindingData();
                if ((App.Current as App).IsStart)
                {
@@ -86,12 +89,10 @@ namespace shschool
             {
                
                 IsinSetting = true;
-               
                 foreach (StreetLightBindingData data in this.dictStreetLightBindingInfos.Values)
                 {
                     if (data.IsEnable)
                     {
-                        
                         coor.SetDeviceDimLevel(data.DevID, 100);
                         data.DimLevel = 100;
                     }
@@ -600,7 +601,5 @@ namespace shschool
            myWrapnel = sender as WrapPanel;
            myWrapnel.Width = listScene.ActualWidth;
        }
-
-       
     }
 }

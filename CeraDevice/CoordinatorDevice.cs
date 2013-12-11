@@ -50,6 +50,18 @@ namespace CeraDevices
       //  //  10.10.1.1:8080/street_light.set_dev_schedule?dev=081f&enable=0 
       //}
 
+
+      public StreetLightInfo[]  GetVisibleStreetLightList()
+      {
+          DeviceInfo[] devlist = GetDeviceList();
+
+          devlist = devlist.Where(n =>n!=null&& n.visibility).ToArray();
+          StreetLightInfo[] streetlist = GetStreetLightList().ToArray();
+
+          StreetLightInfo[] retList = (from m in streetlist join n in devlist on m.DevID equals n.addr select m).ToArray();
+
+          return retList;
+      }
       public void SetDeviceRTC(string devid, DateTime dt)
       {
          //10.10.1.1:8080/street_light.set_rtc? dev=8201&rtc=13-08-31-12-10-11 
@@ -180,7 +192,7 @@ namespace CeraDevices
           {
               infolist = jsonsr.ReadObject(stream) as DeviceInfoList; ;
           }
-          return infolist.list;
+          return infolist.list.Where(n=>n!=null).ToArray();
 
       }
 
@@ -202,7 +214,7 @@ namespace CeraDevices
           {
               infolist = jsonsr.ReadObject(stream) as DeviceInfoList; ;
           }
-          return infolist.list;
+          return infolist.list.Where(n => n != null).ToArray();
 
       }
 
