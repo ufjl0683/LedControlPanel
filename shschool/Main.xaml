@@ -64,7 +64,7 @@
 
 
     <Grid x:Name="LayoutRoot">
-        <Image Stretch="None" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="800" Width="1280" Source="Center.jpg" Margin="0"  />
+        <Image Stretch="None" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="800" Width="1280" Source="Center.jpg"  />
        
         <local:LedButton  FontSize="20"   Text="0123" Margin="145,269,0,0"   Foreground="#FFF5F3F3" HorizontalAlignment="Left" Width="79" Height="85" VerticalAlignment="Top" RenderTransformOrigin="-1,0.5"  />
         <local:LedButton  IsChecked="{Binding IsChecked,Mode=TwoWay}" FontSize="20"   Text="0124" Margin="145,461,0,0"   Foreground="#FFF5F3F3" HorizontalAlignment="Left" Width="79" Height="85" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5"  />
@@ -105,6 +105,9 @@
         <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content="設定 " HorizontalAlignment="Right" Height="40" Margin="0,145,46,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_1"/>
         <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content=" 選取全部" HorizontalAlignment="Right" Height="40" Margin="0,216.4,48.2,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_All"/>
         <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content=" 選取反轉" HorizontalAlignment="Right" Height="40" Margin="0,365,46,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_Inverse"/>
+        <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content="全亮" HorizontalAlignment="Right" Height="40" Margin="0,434,48,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_3"/>
+        <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content="全暗" HorizontalAlignment="Right" Height="40" Margin="0,505,47,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_4"/>
+
         <Grid x:Name="grdScenarior" HorizontalAlignment="Left" Height="800" VerticalAlignment="Top" Width="1280" Margin="0,-739.2,0,0" RenderTransformOrigin="0.5,0.5" Background="#FFFFFBFB">
             <Grid.RenderTransform>
                 <TransformGroup>
@@ -128,8 +131,6 @@
                 </CheckBox.RenderTransform>
             </CheckBox>
         </Grid>
-        <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content="全亮" HorizontalAlignment="Right" Height="40" Margin="0,434,48,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_3"/>
-        <Button RenderTransform="{StaticResource ButtonSizeSetting}"  Content="全暗" HorizontalAlignment="Right" Height="40" Margin="0,505,47,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Button_Click_4"/>
         <Button x:Name="btnSaveScene" RenderTransform="{StaticResource ButtonSizeSetting}"  Content="儲存情境" HorizontalAlignment="Right" Height="40" Margin="0,573,48,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="btnSaveScene_Click"/>
         <Button x:Name="btnUnselect" RenderTransform="{StaticResource ButtonSizeSetting}"  Content=" 取消選取" HorizontalAlignment="Right" Height="40" Margin="0,288,46,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="0.5,0.5" Click="Unselect_click"/>
 

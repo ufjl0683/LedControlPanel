@@ -26,6 +26,7 @@ namespace shschool
         //{
         //    InitializeComponent();
         //}
+        
            CeraDevices.CoordinatorDevice coor;
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfos = new Dictionary<string, StreetLightBindingData>();
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfosOriginal = new Dictionary<string, StreetLightBindingData>();
@@ -40,7 +41,7 @@ namespace shschool
           //this.ledBtn.Text = this.ledBtn.Text;
           //  this.ledBtn.Foreground = this.ledBtn.Foreground;
          
-
+          
         }
 
        
@@ -55,7 +56,7 @@ namespace shschool
                    SetAllDeviceTo100();
                    (App.Current as App).IsStart = false;
                }
-            tmr.Interval = TimeSpan.FromSeconds(5);
+            tmr.Interval = TimeSpan.FromSeconds(10);
             tmr.Tick += tmr_Tick;
             tmr.Start();
         #endif

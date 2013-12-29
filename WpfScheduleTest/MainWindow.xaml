@@ -7,20 +7,25 @@
         <local:ITimeSegToTimeConverter x:Key="ITimeSegToTimeConverter"/>
     </Window.Resources>
     <Grid>
-        <ListBox HorizontalAlignment="Left" Margin="10,10,0,9.8" Width="117"  x:Name="lstStreetLight"   >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="54*"/>
+            <RowDefinition Height="53*"/>
+        </Grid.RowDefinitions>
+        <ListBox HorizontalAlignment="Left" Margin="10,10,0,9.8" Width="117"  x:Name="lstStreetLight" Grid.RowSpan="2" SelectionChanged="lstStreetLight_SelectionChanged"   >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock  Text="{Binding DevID}"  />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Custom:DataGrid x:Name="grdSchedule" HorizontalAlignment="Left" AutoGenerateColumns="False" Height="301" Margin="143,10,0,0" VerticalAlignment="Top" Width="218">
+        <Custom:DataGrid x:Name="grdSchedule" AutoGenerateColumns="False" Margin="0,10,157.4,9.8" Grid.RowSpan="2" HorizontalAlignment="Right" Width="218">
             <Custom:DataGrid.Columns>
                 <Custom:DataGridTextColumn Binding="{Binding Time, Converter={StaticResource ITimeSegToTimeConverter},  ValidatesOnExceptions=True}" Header="Time"/>
                 <Custom:DataGridTextColumn Binding="{Binding Level, Mode=TwoWay,  ValidatesOnExceptions=True}"   Header="Level"/>
-                </Custom:DataGrid.Columns>
-            </Custom:DataGrid>
-        <Button Content="傳送" HorizontalAlignment="Left" Height="34" Margin="386,51,0,0" VerticalAlignment="Top" Width="110" Click="Button_Click"/>
+            </Custom:DataGrid.Columns>
+        </Custom:DataGrid>
+        <Button Content="傳送" HorizontalAlignment="Right" Height="34" Margin="0,51,22.4,0" VerticalAlignment="Top" Width="110" Click="Button_Click"/>
+        <DataGrid x:Name="datagrid1"  IsReadOnly="True" AutoGenerateColumns="True" Margin="10,10,391.4,9.8" Grid.RowSpan="2"/>
 
     </Grid>
 </Window>

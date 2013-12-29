@@ -1,0 +1,92 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:StreetLightPanel"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="StreetLightPanel.MainWindow"
+     
+        Title="MainWindow" ResizeMode="NoResize" WindowState="Maximized" d:DesignWidth="1024" d:DesignHeight="768" Loaded="Window_Loaded" >
+    <Window.Resources>
+        <local:IsEnableToStreetColorConverter x:Key="IsEnableToStreetColorConverter" />
+        <Style x:Key="CheckBoxStyle1" TargetType="{x:Type CheckBox}">
+            <Style.Resources>
+
+            </Style.Resources>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <Grid d:DesignHeight="110.6" d:DesignWidth="129.8">
+                            <Grid.ToolTip>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding DevID}" />
+                                    <TextBlock Text="{Binding DimLevel}" />
+                                </StackPanel>
+                            </Grid.ToolTip>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CheckStates">
+                                    <VisualState x:Name="Checked">
+                                        <Storyboard>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="rectangle">
+                                                <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                    <VisualState x:Name="Unchecked"/>
+                                    <VisualState x:Name="Indeterminate"/>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Ellipse Width="Auto"   RenderTransformOrigin="-0.43,0.278" Margin="0" Height="Auto">
+                                <Ellipse.Fill>
+                                    <RadialGradientBrush RadiusX="0.534" RadiusY="0.567" GradientOrigin="0.501,0.492" Center="0.501,0.492">
+                                        <GradientStop Color="Black" Offset="1"/>
+                                        <GradientStop Color="{Binding IsEnable, Converter={StaticResource  IsEnableToStreetColorConverter}}"/>
+                                        <GradientStop Color="{Binding IsEnable, Converter={StaticResource  IsEnableToStreetColorConverter}}" Offset="0.64"/>
+                                    </RadialGradientBrush>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <Rectangle x:Name="rectangle" Width="Auto" StrokeDashArray="4 2" Stroke="#FFFEFCFC" Height="Auto" Margin="0" Visibility="Collapsed" StrokeThickness="3"/>
+                            <ContentPresenter RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Bottom" Margin="-7.167,0,-6.599,-13.826" HorizontalAlignment="Center" Width="Auto"/>
+                            <ProgressBar HorizontalAlignment="Stretch"  Value="{Binding DimLevel}" Height="4.4" Margin="-0.8,-6.013,-0.6,0" VerticalAlignment="Top" Width="Auto" SmallChange="1" LargeChange="10"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="0,0,0,0">
+        <RadioButton Content="填滿" Height="19" Margin="50,58,0,0" Name="rdUniform" VerticalAlignment="Top" IsChecked="True" Checked="rdUniform_Checked" HorizontalAlignment="Left" Width="66" RenderTransformOrigin="0.9,5.2" >
+            <RadioButton.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </RadioButton.RenderTransform>
+        </RadioButton>
+        <RadioButton Content="原比例" Height="19" Margin="129,14,0,0" Name="rdNone" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" Checked="rdNone_Checked" RenderTransformOrigin="0.5,0.5" >
+            <RadioButton.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                    <SkewTransform/>
+                    <RotateTransform/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </RadioButton.RenderTransform>
+        </RadioButton>
+        <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto" SizeChanged="scrollViewer1_SizeChanged" x:Name="scrollViewer1"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <Viewbox  DataContext="{Binding SelectedItem, ElementName=treeView1}" Stretch="Uniform" x:Name="vbImage">
+                <Grid x:Name="grdDeviceLayer"      >
+                    <Image x:Name="imgPic" Stretch="None" Source="/Center.jpg"   HorizontalAlignment="Left" VerticalAlignment="Top"  />
+                </Grid>
+            </Viewbox>
+            <!--<Image Source="/Center.jpg" Stretch="None" />-->
+        </ScrollViewer>
+        <Border HorizontalAlignment="Left" Height="130" Margin="0,50,0,0" VerticalAlignment="Top" Width="204" BorderBrush="#FFF3F3F3" BorderThickness="3" >
+            <Image x:Name="bdrOverView" Source="Center.jpg" MouseDown="bdrOverView_MouseDown"/>
+
+        </Border>
+        <Button Content="全選" HorizontalAlignment="Left" Height="45" Margin="237,0,0,0" VerticalAlignment="Top" Width="81" Click="Button_Click" FontSize="16"/>
+        <Button x:Name="btnTemplateEdit" Content=" 範本編輯" HorizontalAlignment="Left" Height="45" Margin="335,0,0,0" VerticalAlignment="Top" Width="81" Click="btnTemplateEdit_Click" FontSize="16"/>
+
+    </Grid>
+</Window>

@@ -32,7 +32,7 @@ namespace WpfScheduleTest
                 {
                     try
                     {
-                        lstStreetLight.ItemsSource = dev.GetVisibleStreetLightList();
+                        datagrid1.ItemsSource=lstStreetLight.ItemsSource = dev.GetVisibleStreetLightList();
                     }
                     catch { ;}
                 };
@@ -71,6 +71,11 @@ namespace WpfScheduleTest
                 dev.SetDeviceSchedule(info.DevID, timestr, levelstr);
                 dev.SetDeviceScheduleEnable(info.DevID, true);
             }
+        }
+
+        private void lstStreetLight_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
 
     

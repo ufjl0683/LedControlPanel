@@ -14,6 +14,17 @@ namespace CommTest
         static void Main(string[] args)
         {
 
+          // string [,]q=new string [,]{{"a","b"},{"c","d"}};
+
+            string res = GenerateSteetLightSetting("Taipei.csv");
+
+
+
+            Console.Write(res);
+            Console.ReadKey();
+
+
+
 
             Config config = new Config();
             config.Coordinators = new CoordinatorConfig[] { new CoordinatorConfig() { ID = 0, BaseUrl="http://10.10.1.1:8080" } };
@@ -58,6 +69,24 @@ Console.ReadKey();
 
         }
 
+
+        static string GenerateSteetLightSetting(string filename)
+        {
+
+            string res = "";
+            System.IO.StreamReader rd = System.IO.File.OpenText(filename);
+            rd.ReadLine(); //skip header
+            while (true)
+            {
+                string str = rd.ReadLine();
+                if (str == null) break;
+                res += "{";
+                string[] temp = str.Split(new char[] { ',' });
+                res += "\"" + temp[0] + "\"" + "," + "\"" + temp[1] + "\"" + ","+"\""+temp[2]+"\"}"+",\n";
+            }
+            res = res.Trim(new char[] { ',' ,'\n'});
+            return res;
+        }
 
         static void CeraMicroDeviceTest(string[] args)
          {

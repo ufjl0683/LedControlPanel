@@ -75,12 +75,15 @@
         <local:LedButton HorizontalAlignment="Left" Height="100" Margin="423,308,0,0" VerticalAlignment="Top" Width="76" Text="880f"/>
         <local:LedButton HorizontalAlignment="Left" Height="100" Margin="423,183,0,0" VerticalAlignment="Top" Width="76" Text="8846"/>
         <local:LedButton HorizontalAlignment="Left" Height="100" Margin="423,434,0,0" VerticalAlignment="Top" Width="76" Text="882b"/>
-        <local:LedButton HorizontalAlignment="Left" Height="100" Margin="665,183,0,0" VerticalAlignment="Top" Width="76" Text="010f"/>
+        <local:LedButton HorizontalAlignment="Left" Height="100" Margin="665,183,0,0" VerticalAlignment="Top" Width="76" Text="012f"/>
         <local:LedButton HorizontalAlignment="Left" Height="100" Margin="665,308,0,0" VerticalAlignment="Top" Width="76" Text="0111"/>
         <local:LedButton HorizontalAlignment="Left" Height="100" Margin="665,434,0,0" VerticalAlignment="Top" Width="76" Text="0128"/>
         <local:LedButton HorizontalAlignment="Left" Height="100" Margin="665,560,0,0" VerticalAlignment="Top" Width="76" Text="0126"/>
         <local:LedButton HorizontalAlignment="Left" Height="100" Margin="907,560,0,0" VerticalAlignment="Top" Width="76" Text="011b"/>
         <local:LedButton HorizontalAlignment="Left" Height="100" Margin="907,434,0,0" VerticalAlignment="Top" Width="76" Text="011c"/>
+        <local:LedButton HorizontalAlignment="Left" Height="100" Margin="907,183,0,0" VerticalAlignment="Top" Width="76" Text="012a"/>
+        <local:LedButton HorizontalAlignment="Left" Height="100" Margin="907,308,0,0" VerticalAlignment="Top" Width="76" Text="012b"/>
+
         <Grid x:Name="grdScenarior" HorizontalAlignment="Left" Height="800" VerticalAlignment="Top" Width="1280" Margin="0,-739.2,0,0" RenderTransformOrigin="0.5,0.5" Background="#FFFFFBFB">
             <Grid.RenderTransform>
                 <TransformGroup>
@@ -104,6 +107,6 @@
                 </CheckBox.RenderTransform>
             </CheckBox>
         </Grid>
-
+      
     </Grid>
 </Page>
