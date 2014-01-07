@@ -461,12 +461,20 @@ namespace CeraDevices
 
         }
 
-        public int Temperature
+        public double Temperature
         {
             get
             {
-                return t[0] ?? -999;
+                return( t[0] ?? -999)/100.0;
             }
+        }
+
+        public double LightSensor  //0~100
+        {
+            get
+            {
+               return (  r[0] ?? -999)/100.0;
+             }
         }
 
         public bool IsScheduleEnable

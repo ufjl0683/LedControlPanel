@@ -8,24 +8,27 @@
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="54*"/>
-            <RowDefinition Height="53*"/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
-        <ListBox HorizontalAlignment="Left" Margin="10,10,0,9.8" Width="117"  x:Name="lstStreetLight" Grid.RowSpan="2" SelectionChanged="lstStreetLight_SelectionChanged"   >
+        <!--<ListBox HorizontalAlignment="Left" Margin="10,10,0,9.8" Width="117"  x:Name="lstStreetLight" SelectionChanged="lstStreetLight_SelectionChanged"   >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock  Text="{Binding DevID}"  />
                 </DataTemplate>
             </ListBox.ItemTemplate>
-        </ListBox>
-        <Custom:DataGrid x:Name="grdSchedule" AutoGenerateColumns="False" Margin="0,10,157.4,9.8" Grid.RowSpan="2" HorizontalAlignment="Right" Width="218">
+        </ListBox>-->
+        <Custom:DataGrid x:Name="grdSchedule" AutoGenerateColumns="False" Margin="0,10,139.4,9.8" HorizontalAlignment="Right" Width="218">
             <Custom:DataGrid.Columns>
                 <Custom:DataGridTextColumn Binding="{Binding Time, Converter={StaticResource ITimeSegToTimeConverter},  ValidatesOnExceptions=True}" Header="Time"/>
                 <Custom:DataGridTextColumn Binding="{Binding Level, Mode=TwoWay,  ValidatesOnExceptions=True}"   Header="Level"/>
             </Custom:DataGrid.Columns>
         </Custom:DataGrid>
-        <Button Content="傳送" HorizontalAlignment="Right" Height="34" Margin="0,51,22.4,0" VerticalAlignment="Top" Width="110" Click="Button_Click"/>
-        <DataGrid x:Name="datagrid1"  IsReadOnly="True" AutoGenerateColumns="True" Margin="10,10,391.4,9.8" Grid.RowSpan="2"/>
+        <Button Content="傳送" HorizontalAlignment="Right" Height="34" Margin="0,10,10.4,0" VerticalAlignment="Top" Width="110" Click="Button_Click"/>
+        <DataGrid x:Name="datagrid1"  IsReadOnly="True" AutoGenerateColumns="True" Margin="10,10,362.4,9.8"/>
+        <Button Content="起動排程" HorizontalAlignment="Right" Height="34" Margin="0,49,10.4,0" VerticalAlignment="Top" Width="110" Click="btnEnableSch_Click"/>
+        <Button Content="解除排程" HorizontalAlignment="Right" Height="34" Margin="0,88,10.4,0" VerticalAlignment="Top" Width="110" Click="btnDisable_Click"/>
+        <Button Content="KickAll" HorizontalAlignment="Right" Height="34" Margin="0,127,10.4,0" VerticalAlignment="Top" Width="110" Click="btnKickAll_Click"/>
+        <CheckBox x:Name="chkStopCycleQuery" Content="停止週期查詢" Height="24" Margin="0,177,10.4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="91"/>
 
     </Grid>
 </Window>

@@ -32,7 +32,8 @@ namespace WpfScheduleTest
                 {
                     try
                     {
-                        datagrid1.ItemsSource=lstStreetLight.ItemsSource = dev.GetVisibleStreetLightList();
+                        if(chkStopCycleQuery.IsChecked==false)
+                               datagrid1.ItemsSource= dev.GetVisibleStreetLightList();
                     }
                     catch { ;}
                 };
@@ -49,13 +50,13 @@ namespace WpfScheduleTest
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             StreetLightInfo[] infos = dev.GetVisibleStreetLightList();
-            this.lstStreetLight.ItemsSource = infos;
+           this.datagrid1.ItemsSource = infos;
             
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            StreetLightInfo[] infos = lstStreetLight.ItemsSource as StreetLightInfo[];
+            StreetLightInfo[] infos = this.datagrid1.ItemsSource as StreetLightInfo[];
             int[]times= (from n in Schedules select n.Time).ToArray();
             int[] levels=  (from n in Schedules select n.Level).ToArray();
              string timestr,levelstr;
@@ -65,6 +66,7 @@ namespace WpfScheduleTest
             levelstr=levels[0].ToString();
               for(int i=1;i<levels.Length;i++)
                 levelstr+=","+levels[i];
+
               dev.SetDeviceRTC("*", DateTime.Now);
             foreach (StreetLightInfo info in infos)
             {
@@ -75,6 +77,24 @@ namespace WpfScheduleTest
 
         private void lstStreetLight_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
+        }
+
+        private void btnEnableSch_Click(object sender, RoutedEventArgs e)
+        {
+            dev.SetDeviceScheduleEnable("*", true);
+        }
+
+        private void btnDisable_Click(object sender, RoutedEventArgs e)
+        {
+            dev.SetDeviceScheduleEnable("*", false);
+        }
+
+        private void btnKickAll_Click(object sender, RoutedEventArgs e)
+        {
+            DeviceInfo[] infos = dev.GetDeviceList();
+            foreach (DeviceInfo info in infos)
+                            dev.Kick(info.addr);
 
         }
 
