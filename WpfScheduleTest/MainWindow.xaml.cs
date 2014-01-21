@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,38 +24,115 @@ namespace WpfScheduleTest
     public partial class MainWindow : Window
     {
         CeraDevices.CoordinatorDevice dev = new CeraDevices.CoordinatorDevice("http://10.10.1.1:8080");
-        Schedule[] Schedules = new Schedule[10];
+        ScheduleSegnment[] Schedules = new ScheduleSegnment[10];
+        
+        int cyclecnt=0;
+        int cycle = 10;
         public MainWindow()
         {
             InitializeComponent();
+#if !DEBUG
             System.Windows.Threading.DispatcherTimer tmr = new System.Windows.Threading.DispatcherTimer();
-            tmr.Tick += (s, a) =>
+            tmr.Tick += async   (s, a) =>
                 {
                     try
                     {
-                        if(chkStopCycleQuery.IsChecked==false)
-                               datagrid1.ItemsSource= dev.GetVisibleStreetLightList();
+                        StreetLightInfo[] infos=null;
+                        if (chkStopCycleQuery.IsChecked == false)
+                        {
+                            
+                            infos = await dev.GetVisibleStreetLightListAsync();
+                            
+                            this.datagrid1.ItemsSource = infos.OrderBy(n=>n.DevID).ToArray();
+                          
+                            CeraDevices.Schedule sch = new CeraDevices.Schedule();
+                            sch.Segnments = Schedules;
+                            int repcnt = 0;
+                            foreach (StreetLightInfo info in infos)
+                            {
+                                if (chkIsRepair.IsChecked == true && !sch.IsEqual(info.sch))
+                                {
+                                    dev.SetDeviceSchedule(info.DevID, sch.GetScheduleSegTimeString(), sch.GetScheduleSegLevelString());
+                                    repcnt++;
+                                }
+                              //  grdSchedule.ItemsSource
+                            }
+
+                            this.Title = repcnt + "/" + infos.Length.ToString();
+                            
+                        }
+                        if (cyclecnt++ * cycle % 600 == 0) //10 min
+                            if (chkIsLog.IsChecked == true)
+                                savelog(infos);
+                       
                     }
                     catch { ;}
                 };
 
-            tmr.Interval = TimeSpan.FromSeconds(5);
+            tmr.Interval = TimeSpan.FromSeconds(10);
             tmr.Start();
-            for (int i =0 ;i<Schedules.Length;i++)
-               Schedules[i] = new Schedule();
+           
 
-            this.grdSchedule.ItemsSource = Schedules;
+            
             dev.SetDeviceRTC("*", DateTime.Now);
+#endif
+            for (int i = 0; i < Schedules.Length; i++)
+                Schedules[i] = new ScheduleSegnment();
+            this.grdSchedule.ItemsSource = Schedules;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+       
+     
+        private void savelog(StreetLightInfo[] infos)
         {
-            StreetLightInfo[] infos = dev.GetVisibleStreetLightList();
-           this.datagrid1.ItemsSource = infos;
+            try
+            {
+
+                bool writeheader = false ;
+                if (!System.IO.File.Exists("led.csv"))
+                    writeheader = true;
+                using (StreamWriter wr = System.IO.File.AppendText(AppDomain.CurrentDomain.BaseDirectory + "led.csv"))
+                {
+                    if (writeheader)
+                        wr.WriteLine("TimeStamp,DevID,MAC,cmt,CurrentDimLevel,V,A,F,W,KWHP,KWHN,IsSchedule,LightSensor,Temperature,rtc");
+                    
+                    foreach (StreetLightInfo info in infos)
+                    {
+                        wr.Write(DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss")+",");
+                        wr.Write("\t"+info.DevID + ",");
+                        wr.Write("\t"+info.MAC + ",");
+                    
+                        wr.Write("\t"+info.cmt + ",");
+                        wr.Write(info.CurrentDimLevel + ",");
+                        wr.Write(info.V + ",");
+                        wr.Write(info.A + ",");
+                        wr.Write(info.F + ",");
+                        wr.Write(info.W + ",");
+                        wr.Write(info.KWHP + ",");
+                        wr.Write(info.KWHN + ",");
+                        wr.Write(info.IsScheduleEnable + ",");
+                        wr.Write(info.LightSensor + ",");
+                        wr.Write(info.Temperature + ",");
+                        wr.WriteLine(info.rtc+"");
+                       
+                     
+                    }
+
+                }
+            }
+            catch { ;}
+        }
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+#if !DEBUG
+            StreetLightInfo[] infos = await dev.GetVisibleStreetLightListAsync();
+           this.datagrid1.ItemsSource = infos.OrderBy(n=>n.DevID);
+#endif
             
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             StreetLightInfo[] infos = this.datagrid1.ItemsSource as StreetLightInfo[];
             int[]times= (from n in Schedules select n.Time).ToArray();
@@ -68,11 +146,16 @@ namespace WpfScheduleTest
                 levelstr+=","+levels[i];
 
               dev.SetDeviceRTC("*", DateTime.Now);
+             await  Task.Delay(100);
             foreach (StreetLightInfo info in infos)
             {
-                dev.SetDeviceSchedule(info.DevID, timestr, levelstr);
-                dev.SetDeviceScheduleEnable(info.DevID, true);
+                dev.SetDeviceScheduleAsync(info.DevID, timestr, levelstr);
+                await Task.Delay(200);
+               // dev.SetDeviceScheduleEnableAsync(info.DevID, true);
+               //await Task.Delay(200);
+              
             }
+            MessageBox.Show("ok");
         }
 
         private void lstStreetLight_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -80,14 +163,28 @@ namespace WpfScheduleTest
 
         }
 
-        private void btnEnableSch_Click(object sender, RoutedEventArgs e)
+        private async  void btnEnableSch_Click(object sender, RoutedEventArgs e)
         {
-            dev.SetDeviceScheduleEnable("*", true);
+          //  dev.SetDeviceScheduleEnable("*", true);
+            StreetLightInfo[] infos = this.datagrid1.ItemsSource as StreetLightInfo[];
+            foreach (StreetLightInfo info in infos)
+            {
+                dev.SetDeviceScheduleEnableAsync(info.DevID, true);
+               await Task.Delay(100);
+            }
+            MessageBox.Show("ok");
         }
 
-        private void btnDisable_Click(object sender, RoutedEventArgs e)
+        private async void btnDisable_Click(object sender, RoutedEventArgs e)
         {
-            dev.SetDeviceScheduleEnable("*", false);
+           // dev.SetDeviceScheduleEnable("*", false);
+            StreetLightInfo[] infos = this.datagrid1.ItemsSource as StreetLightInfo[];
+            foreach (StreetLightInfo info in infos)
+            {
+                dev.SetDeviceScheduleEnableAsync(info.DevID, false);
+                await Task.Delay(100);
+            }
+            MessageBox.Show("ok");
         }
 
         private void btnKickAll_Click(object sender, RoutedEventArgs e)
@@ -97,6 +194,13 @@ namespace WpfScheduleTest
                             dev.Kick(info.addr);
 
         }
+
+        private void chkIsLog_Checked(object sender, RoutedEventArgs e)
+        {
+            cyclecnt = 0;
+        }
+
+       
 
     
     }

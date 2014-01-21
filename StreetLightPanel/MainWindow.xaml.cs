@@ -33,7 +33,7 @@ namespace StreetLightPanel
             InitializeComponent();
             coor = ((App.Current) as App).dev;
             InitLed2dPositoin();
-
+          
         }
 
 
@@ -224,7 +224,7 @@ namespace StreetLightPanel
                 vbImage.Margin = new Thickness(0);
                 vbImage.UpdateLayout();
             }
-            else
+            else //全覽
             {
                 vbImage.Width = scrollViewer1.ViewportWidth;
                 vbImage.Height = scrollViewer1.ViewportHeight;
@@ -277,6 +277,7 @@ namespace StreetLightPanel
                 //sr.Serialize(System.IO.File.OpenWrite("config.xml"), config);
                 SaveConfig(config);
                 LedConfig = config;
+              
              //   this.listScene.ItemsSource = LedConfig.Scenariors;
             }
             else
@@ -369,6 +370,7 @@ namespace StreetLightPanel
             App.Current.Properties["LightCollection"] = dictStreetLightBindingInfos;
             App.Current.Properties["LightCollectionOriginal"] = dictStreetLightBindingInfosOriginal;
             Initial();
+            scrollViewer1_SizeChanged(null, null);
         }
 
         Config LoadConfig()
@@ -406,8 +408,60 @@ namespace StreetLightPanel
 
         private void btnTemplateEdit_Click(object sender, RoutedEventArgs e)
         {
-            new wndTempleateEdit(LedConfig.Scenariors).ShowDialog();
+          wndTempleateEdit dlg=  new wndTempleateEdit(LedConfig.Scenariors);
+            if (dlg.ShowDialog()==true)
+            {
+                SendTemplate(dlg.SelectedScenarior);
+
+            }
             SaveConfig(this.LedConfig);
+        }
+
+        void SendTemplate(Scenarior scene)
+        {
+
+            foreach (UIElement element in grdDeviceLayer.Children)
+            {
+                if (element is CheckBox)
+                {
+                    if ((element as CheckBox).IsEnabled && (element as CheckBox).IsChecked == true)
+                    {
+                        StreetLightBindingData data = (element as CheckBox).DataContext as StreetLightBindingData;
+                        coor.SetDeviceSchedule(data.DevID, scene.Schedule.GetScheduleSegTimeString(), scene.Schedule.GetScheduleSegLevelString());
+                    }
+                       
+                }
+            }
+        }
+        private void btnUnselectAll_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (UIElement element in grdDeviceLayer.Children)
+            {
+                if (element is CheckBox)
+                {
+                    if ((element as CheckBox).IsEnabled)
+                        (element as CheckBox).IsChecked = false ;
+                }
+            }
+        }
+
+        private void btnReverseSelect_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (UIElement element in grdDeviceLayer.Children)
+            {
+                if (element is CheckBox)
+                {
+                    if ((element as CheckBox).IsEnabled)
+                    {
+                        (element as CheckBox).IsChecked=!((element as CheckBox).IsChecked ?? false);
+                    }
+                }
+            }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+
         }
     }
 }

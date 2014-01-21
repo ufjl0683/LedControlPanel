@@ -29,6 +29,7 @@
         <TextBlock HorizontalAlignment="Left" Height="20" Margin="14,15,0,0" TextWrapping="Wrap" Text="範本名稱" VerticalAlignment="Top" Width="68"/>
         <TextBlock HorizontalAlignment="Left" Height="20" Margin="156,15,0,0" TextWrapping="Wrap" Text="排程" VerticalAlignment="Top" Width="68"/>
         <Button x:Name="btnAdd_Copy" Content="刪除" HorizontalAlignment="Left" Height="37" Margin="380,69,0,0" VerticalAlignment="Top" Width="68" IsCancel="False" Click="btnDelete_Click"/>
+        <Button x:Name="btnSend" Content="傳送排程" HorizontalAlignment="Left" Height="37" Margin="380,126,0,0" VerticalAlignment="Top" Width="68" IsCancel="False" Click="btnSend_Click"/>
 
     </Grid>
 </Window>

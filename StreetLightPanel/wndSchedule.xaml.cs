@@ -33,8 +33,8 @@ namespace StreetLightPanel
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             dev=(App.Current as App).dev;
-            CeraDevices.StreetLightInfo[] infos = dev.GetStreetLightList(devid);
-            datagrid1.ItemsSource = infos[0].sch.Segnments;
+            CeraDevices.StreetLightInfo[] infos = dev.GetStreetLightList(devid) ;
+            datagrid1.ItemsSource = infos[0].sch.Segnments.OrderBy(n=>n.Time).ToArray();
             info = infos[0];
         }
 

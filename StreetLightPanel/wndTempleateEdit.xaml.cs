@@ -20,6 +20,8 @@ namespace StreetLightPanel
     public partial class wndTempleateEdit : Window
     {
         System.Collections.Generic.List<Scenarior> Scenariors;
+
+        public Scenarior SelectedScenarior { get; set; }
         public wndTempleateEdit(System.Collections.Generic.List<Scenarior> Scenariors)
         {
             InitializeComponent();
@@ -48,6 +50,19 @@ namespace StreetLightPanel
                 this.Scenariors.Remove(this.lstScenarioName.SelectedItem as Scenarior);
             this.lstScenarioName.ItemsSource = null;
             this.lstScenarioName.ItemsSource = Scenariors;
+        }
+
+        private void btnSend_Click(object sender, RoutedEventArgs e)
+        {
+
+            if (this.lstScenarioName.SelectedItem != null)
+            {
+                this.DialogResult = true;
+                this.SelectedScenarior = lstScenarioName.SelectedItem as Scenarior;
+                this.Close();
+            }
+            else
+                MessageBox.Show("必須選取範本!");
         }
 
 

@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:StreetLightPanel"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="StreetLightPanel.MainWindow"
      
-        Title="MainWindow" ResizeMode="NoResize" WindowState="Maximized" d:DesignWidth="1024" d:DesignHeight="768" Loaded="Window_Loaded" >
+        Title="MainWindow" ResizeMode="NoResize" WindowState="Maximized" d:DesignWidth="2677.6" d:DesignHeight="1666.8" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" >
     <Window.Resources>
         <local:IsEnableToStreetColorConverter x:Key="IsEnableToStreetColorConverter" />
         <Style x:Key="CheckBoxStyle1" TargetType="{x:Type CheckBox}">
@@ -53,7 +53,7 @@
         </Style>
     </Window.Resources>
     <Grid Margin="0,0,0,0">
-        <RadioButton Content="填滿" Height="19" Margin="50,58,0,0" Name="rdUniform" VerticalAlignment="Top" IsChecked="True" Checked="rdUniform_Checked" HorizontalAlignment="Left" Width="66" RenderTransformOrigin="0.9,5.2" >
+        <RadioButton Content="全覽" Height="19" Margin="50,58,0,0" Name="rdUniform" VerticalAlignment="Top" IsChecked="True" Checked="rdUniform_Checked" HorizontalAlignment="Left" Width="66" RenderTransformOrigin="0.9,5.2" >
             <RadioButton.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
@@ -73,7 +73,7 @@
                 </TransformGroup>
             </RadioButton.RenderTransform>
         </RadioButton>
-        <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto" SizeChanged="scrollViewer1_SizeChanged" x:Name="scrollViewer1"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+        <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto" SizeChanged="scrollViewer1_SizeChanged" x:Name="scrollViewer1"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="Both" >
             <Viewbox  DataContext="{Binding SelectedItem, ElementName=treeView1}" Stretch="Uniform" x:Name="vbImage">
                 <Grid x:Name="grdDeviceLayer"      >
                     <Image x:Name="imgPic" Stretch="None" Source="/Center.jpg"   HorizontalAlignment="Left" VerticalAlignment="Top"  />
@@ -86,7 +86,9 @@
 
         </Border>
         <Button Content="全選" HorizontalAlignment="Left" Height="45" Margin="237,0,0,0" VerticalAlignment="Top" Width="81" Click="Button_Click" FontSize="16"/>
-        <Button x:Name="btnTemplateEdit" Content=" 範本編輯" HorizontalAlignment="Left" Height="45" Margin="335,0,0,0" VerticalAlignment="Top" Width="81" Click="btnTemplateEdit_Click" FontSize="16"/>
+        <Button x:Name="btnTemplateEdit" Content=" 範本編輯" HorizontalAlignment="Left" Height="45" Margin="508,0,0,0" VerticalAlignment="Top" Width="81" Click="btnTemplateEdit_Click" FontSize="16"/>
+        <Button x:Name="btnUnselectAll" Content="取消選取" HorizontalAlignment="Left" Height="45" Margin="326,0,0,0" VerticalAlignment="Top" Width="81" Click="btnUnselectAll_Click" FontSize="16"/>
+        <Button x:Name="btnReverseSelect" Content="反轉選取" HorizontalAlignment="Left" Height="45" Margin="412,0,0,0" VerticalAlignment="Top" Width="81" Click="btnReverseSelect_Click" FontSize="16"/>
 
     </Grid>
 </Window>

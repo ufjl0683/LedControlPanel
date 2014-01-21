@@ -29,6 +29,8 @@
         <Button Content="解除排程" HorizontalAlignment="Right" Height="34" Margin="0,88,10.4,0" VerticalAlignment="Top" Width="110" Click="btnDisable_Click"/>
         <Button Content="KickAll" HorizontalAlignment="Right" Height="34" Margin="0,127,10.4,0" VerticalAlignment="Top" Width="110" Click="btnKickAll_Click"/>
         <CheckBox x:Name="chkStopCycleQuery" Content="停止週期查詢" Height="24" Margin="0,177,10.4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="91"/>
+        <CheckBox x:Name="chkIsLog" Content="儲存至 led.csv" Height="22" Margin="0,206,0.4,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="101" Checked="chkIsLog_Checked" />
+        <CheckBox x:Name="chkIsRepair" Content="排程比對" Margin="0,233,10.4,71.8" HorizontalAlignment="Right" Width="91"/>
 
     </Grid>
 </Window>

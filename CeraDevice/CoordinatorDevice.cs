@@ -63,6 +63,22 @@ namespace CeraDevices
 
             return retList;
         }
+        public  async Task<StreetLightInfo[]> GetVisibleStreetLightListAsync()
+        {
+            DeviceInfo[] devlist = await GetDeviceListAsync();
+
+            devlist = devlist.Where(n => n != null && n.visibility).ToArray();
+            StreetLightInfo[] streetlist = await GetStreetLightListAsync();
+            foreach (DeviceInfo dev in devlist)
+            {
+                StreetLightInfo info = streetlist.Where(n => n.DevID == dev.addr).FirstOrDefault();
+                if (info != null)
+                    info.MAC = dev.mac;
+            }
+            StreetLightInfo[] retList = (from m in streetlist join n in devlist on m.DevID equals n.addr select m ).ToArray();
+
+            return retList;
+        }
         public void SetDeviceRTC(string devid, DateTime dt)
         {
             //10.10.1.1:8080/street_light.set_rtc? dev=8201&rtc=13-08-31-12-10-11 
@@ -76,6 +92,26 @@ namespace CeraDevices
             while (stream.ReadByte() != -1) ;
             stream.Close();
             stream.Dispose();
+
+
+
+        }
+
+        public async void SetDeviceRTCAsync(string devid, DateTime dt)
+        {
+            //10.10.1.1:8080/street_light.set_rtc? dev=8201&rtc=13-08-31-12-10-11 
+            MyWebClient wc = new MyWebClient();
+            Stream stream;
+            if (devid == "*")
+                stream =await  wc.OpenReadTaskAsync(UriBase + "/street_light.set_rtc?rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
+            else
+                stream =await  wc.OpenReadTaskAsync(UriBase + "/street_light.set_rtc?dev=" + devid + "&rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
+
+            while (stream.ReadByte() != -1) ;
+            stream.Close();
+            stream.Dispose();
+
+
 
         }
 
@@ -99,6 +135,45 @@ namespace CeraDevices
 
         }
 
+        public async void SetDeviceScheduleAsync(string devid, string timeStr, string levelStr)
+        {
+
+            MyWebClient wc = new MyWebClient();
+            Stream stream;
+            if (devid == "*")
+            {
+               stream = await  wc.OpenReadTaskAsync(new Uri(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr));
+
+               
+            }
+            else
+            {
+                stream = await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr);
+            }
+            while (stream.ReadByte() != -1) ;
+            stream.Close();
+            stream.Dispose();
+
+        }
+
+        public async void SetDeviceScheduleEnableAsync(string devid, bool enable)
+        {
+            //10.10.1.1:8080/street_light.set_dev_schedule?dev=081f&enable=0 
+
+            MyWebClient wc = new MyWebClient();
+            Stream stream;
+            if (devid == "*")
+            {
+                stream =await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?enable=" + (enable ? "1" : "0"));
+            }
+            else
+            {
+                stream =await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&enable=" + (enable ? "1" : "0"));
+            }
+            while (stream.ReadByte() != -1) ;
+            stream.Close();
+            stream.Dispose();
+        }
 
         public void SetDeviceScheduleEnable(string devid, bool enable)
         {
@@ -386,10 +461,14 @@ namespace CeraDevices
         }
         public string MAC
         {
-            get
-            {
-                return cmt.Substring(4, 16);
-            }
+
+
+            get;
+            set;
+            //get
+            //{
+            //    return cmt.Substring(4, 16);
+            //}
 
         }
 
@@ -522,22 +601,25 @@ namespace CeraDevices
 
         public string GetScheduleSegTimeString()
         {
-            string timestr;
-            timestr = sch.Segnments[0].Time.ToString();
-            for (int i = 1; i < sch.Segnments.Length; i++)
-                timestr += "," + sch.Segnments[i].Time;
+
+            return this.sch.GetScheduleSegTimeString();
+            //string timestr;
+            //timestr = sch.Segnments[0].Time.ToString();
+            //for (int i = 1; i < sch.Segnments.Length; i++)
+            //    timestr += "," + sch.Segnments[i].Time;
 
 
-            return timestr.TrimEnd(new char[] { ',' }) ;
+            //return timestr.TrimEnd(new char[] { ',' }) ;
         }
 
         public string GetScheduleSegLevelString()
         {
-            string levelstr;
-            levelstr = sch.Segnments[0].Level.ToString();
-            for (int i = 1; i < sch.Segnments.Length; i++)
-                levelstr += "," + sch.Segnments[i].Level;
-            return levelstr.TrimEnd(new char[]{','});
+            return this.sch.GetScheduleSegLevelString();
+            //string levelstr;
+            //levelstr = sch.Segnments[0].Level.ToString();
+            //for (int i = 1; i < sch.Segnments.Length; i++)
+            //    levelstr += "," + sch.Segnments[i].Level;
+            //return levelstr.TrimEnd(new char[]{','});
 
         }
 
@@ -583,6 +665,32 @@ namespace CeraDevices
 
 
         private ScheduleSegnment[] segs;
+
+        public bool IsEqual(Schedule otherSch)
+        {
+            ScheduleSegnment[] thisseg = Segnments.Where(n=>n.Level!=255).OrderBy(n => n.Time).ToArray();
+            ScheduleSegnment[] otherseg = otherSch.Segnments.Where(n=>n.Level!=255).OrderBy(n => n.Time).ToArray();
+
+            if (thisseg.Length != otherseg.Length)
+                return false;
+            bool iseq = true;
+            try
+            {
+                for (int i = 0; i < thisseg.Length; i++)
+                {
+                    if (thisseg[i].Level == 255)
+                        continue;
+                    iseq = iseq && thisseg[i].Time == otherseg[i].Time && thisseg[i].Level == otherseg[i].Level;
+                }
+            }
+            catch (Exception ex)
+            {
+                iseq = false;
+            }
+
+            return iseq;
+
+        }
         public ScheduleSegnment[] Segnments
         {
             get
@@ -610,6 +718,28 @@ namespace CeraDevices
             {
                 segs = value;
             }
+        }
+
+
+        public string GetScheduleSegTimeString()
+        {
+            string timestr;
+            timestr = this.Segnments[0].Time.ToString();
+            for (int i = 1; i < this.Segnments.Length; i++)
+                timestr += "," + this.Segnments[i].Time;
+
+
+            return timestr.TrimEnd(new char[] { ',' });
+        }
+
+        public string GetScheduleSegLevelString()
+        {
+            string levelstr;
+            levelstr = this.Segnments[0].Level.ToString();
+            for (int i = 1; i < this.Segnments.Length; i++)
+                levelstr += "," + this.Segnments[i].Level;
+            return levelstr.TrimEnd(new char[] { ',' });
+
         }
     }
 
