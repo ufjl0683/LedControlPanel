@@ -111,6 +111,30 @@ namespace shschool
 
         }
 
+           void SetAllDeviceTo0()
+           {
+               try
+               {
+                   IsinSetting = true;
+                   foreach (StreetLightBindingData data in this.dictStreetLightBindingInfos.Values)
+                   {
+                       if (data.IsEnable)
+                       {
+                           coor.SetDeviceDimLevel(data.DevID, 0);
+                           data.DimLevel = 0;
+                       }
+                       else
+                           data.DimLevel = 0;
+                   }
+               }
+               catch
+               {
+               }
+               finally
+               {
+                   IsinSetting = false;
+               }
+           }
            void SetAllDeviceTo20()
            {
                try
@@ -412,7 +436,7 @@ namespace shschool
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            SetAllDeviceTo20();
+            SetAllDeviceTo0();
         }
 
        

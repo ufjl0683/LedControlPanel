@@ -154,6 +154,13 @@
       <Project>{eba6e819-8e52-47a9-a1dc-f4606257da1a}</Project>
       <Name>CeraDevice</Name>
     </ProjectReference>
+    <ProjectReference Include="..\wcfShschool\wcfShschool.csproj">
+      <Project>{15b3e0d2-6217-493a-a690-158c497f5318}</Project>
+      <Name>wcfShschool</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

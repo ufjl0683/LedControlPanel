@@ -74,7 +74,7 @@ namespace WpfScheduleTest
            
 
             
-            dev.SetDeviceRTC("*", DateTime.Now);
+          //  dev.SetDeviceRTC("*", DateTime.Now);
 #endif
             for (int i = 0; i < Schedules.Length; i++)
                 Schedules[i] = new ScheduleSegnment();
@@ -127,7 +127,7 @@ namespace WpfScheduleTest
         {
 #if !DEBUG
             StreetLightInfo[] infos = await dev.GetVisibleStreetLightListAsync();
-           this.datagrid1.ItemsSource = infos.OrderBy(n=>n.DevID);
+           this.datagrid1.ItemsSource = infos.OrderBy(n=>n.DevID).ToArray();
 #endif
             
         }
@@ -145,7 +145,7 @@ namespace WpfScheduleTest
               for(int i=1;i<levels.Length;i++)
                 levelstr+=","+levels[i];
 
-              dev.SetDeviceRTC("*", DateTime.Now);
+            //  dev.SetDeviceRTC("*", DateTime.Now);
              await  Task.Delay(100);
             foreach (StreetLightInfo info in infos)
             {
@@ -198,6 +198,24 @@ namespace WpfScheduleTest
         private void chkIsLog_Checked(object sender, RoutedEventArgs e)
         {
             cyclecnt = 0;
+        }
+
+        private async void btnSetTime_Click(object sender, RoutedEventArgs e)
+        {
+            StreetLightInfo[] infos = this.datagrid1.ItemsSource as StreetLightInfo[];
+            foreach (StreetLightInfo info in infos)
+            {
+                try
+                {
+                    await dev.SetDeviceRTCAsync(info.DevID, DateTime.Now);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Time out");
+                }
+                await Task.Delay(100);
+            }
+            MessageBox.Show("ok");
         }
 
        

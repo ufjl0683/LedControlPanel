@@ -34,6 +34,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfScheduleTest", "WpfSched
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StreetLightPanel", "StreetLightPanel\StreetLightPanel.csproj", "{8DF2F781-4883-4FB2-B73E-03982AB1D1D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApplication1", "..\test\WpfApplication1\WpfApplication1.csproj", "{6D9C7CC6-A893-4801-9B1B-35220E77C578}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wcfShschool", "wcfShschool\wcfShschool.csproj", "{15B3E0D2-6217-493A-A690-158C497F5318}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -194,6 +198,26 @@ Global
 		{8DF2F781-4883-4FB2-B73E-03982AB1D1D3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8DF2F781-4883-4FB2-B73E-03982AB1D1D3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8DF2F781-4883-4FB2-B73E-03982AB1D1D3}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6D9C7CC6-A893-4801-9B1B-35220E77C578}.Release|x86.ActiveCfg = Release|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{15B3E0D2-6217-493A-A690-158C497F5318}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

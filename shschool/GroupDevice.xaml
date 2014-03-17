@@ -9,7 +9,7 @@
 	Title="GroupDevice" Unloaded="Page_Unloaded" Loaded="Page_Loaded">
 
     <Grid>
-        <Slider x:Name="DimmAdjust"  Value="{Binding DimLevel,Mode=TwoWay,Delay=1000}"  HorizontalAlignment="Left" Height="32" Margin="290,170,0,0" VerticalAlignment="Top" Width="197" RenderTransformOrigin="0.5,0.5" Maximum="100" LargeChange="10" SmallChange="1" ValueChanged="DimmAdjust_ValueChanged" ManipulationCompleted="DimmAdjust_ManipulationCompleted" TouchUp="DimmAdjust_TouchUp" Minimum="20">
+        <Slider x:Name="DimmAdjust"  Value="{Binding DimLevel,Mode=TwoWay,Delay=1000}"  HorizontalAlignment="Left" Height="32" Margin="290,170,0,0" VerticalAlignment="Top" Width="197" RenderTransformOrigin="0.5,0.5" Maximum="100" LargeChange="10" SmallChange="1" ValueChanged="DimmAdjust_ValueChanged" ManipulationCompleted="DimmAdjust_ManipulationCompleted" TouchUp="DimmAdjust_TouchUp" Minimum="0">
             <Slider.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform ScaleX="2.5" ScaleY="2.5"/>

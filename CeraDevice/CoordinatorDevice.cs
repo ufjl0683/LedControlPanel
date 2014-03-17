@@ -97,7 +97,7 @@ namespace CeraDevices
 
         }
 
-        public async void SetDeviceRTCAsync(string devid, DateTime dt)
+        public async Task SetDeviceRTCAsync(string devid, DateTime dt)
         {
             //10.10.1.1:8080/street_light.set_rtc? dev=8201&rtc=13-08-31-12-10-11 
             MyWebClient wc = new MyWebClient();
@@ -110,7 +110,7 @@ namespace CeraDevices
             while (stream.ReadByte() != -1) ;
             stream.Close();
             stream.Dispose();
-
+           
 
 
         }
