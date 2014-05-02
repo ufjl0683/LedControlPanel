@@ -19,6 +19,7 @@
                                 <StackPanel>
                                     <TextBlock Text="{Binding DevID}" />
                                     <TextBlock Text="{Binding DimLevel}" />
+                                    <TextBlock Text="{Binding LightNo}" />
                                 </StackPanel>
                             </Grid.ToolTip>
                             <VisualStateManager.VisualStateGroups>

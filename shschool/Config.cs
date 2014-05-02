@@ -19,10 +19,13 @@ namespace shschool
     }
 
 
-
+    [DataContract]
     public class Scenarior
     {
+      [DataMember]
         public string SceneName { get; set; }
+        
+        
         public System.Collections.Generic.List<StreetLightBindingData> List { get; set; }
     }
 }

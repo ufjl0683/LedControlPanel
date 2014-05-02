@@ -357,6 +357,25 @@ namespace CeraDevices
 
 
         }
+
+        public async Task<StreetLightInfo[]> GetStreetLightListAsync(string devid)
+        {
+
+
+            return await Task.FromResult<StreetLightInfo[]>(GetStreetLightList(devid));
+
+            //System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(StreetLightInfoList));
+
+            //StreetLightInfoList infolist = null;
+            //using (Stream stream =  await wc.OpenReadTaskAsync(UriBase + "/street_light.get_dev_list"))
+            //{
+            //    infolist = jsonsr.ReadObject(stream) as StreetLightInfoList; ;
+            //}
+            //int len = infolist.list.Length;
+            //return infolist.list.Take(len - 1).ToArray();
+
+
+        }
         public void SetDeviceDimLevel(string devid, int level)
         {
             MyWebClient client = new MyWebClient();

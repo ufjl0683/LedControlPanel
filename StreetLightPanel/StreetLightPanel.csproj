@@ -122,13 +122,13 @@
     <None Include="CenterImageBak\台北大學校區平面圖.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Center.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\CeraDevice\CeraDevice.csproj">
       <Project>{eba6e819-8e52-47a9-a1dc-f4606257da1a}</Project>
       <Name>CeraDevice</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Center.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,0 +1,35 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+     
+        xmlns:local="clr-namespace:StreetLightPanel" xmlns:Custom="http://schemas.microsoft.com/wpf/2008/toolkit" x:Class="StreetLightPanel.wndTempleateEdit"
+        Title="wndTempleateEdit" Height="464.2" Width="466.4" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    <Window.Resources>
+
+        <local:ITimeSegToTimeConverter x:Key="ITimeSegToTimeConverter"/>
+
+    </Window.Resources>
+    <Grid>
+        <ListBox x:Name="lstScenarioName" HorizontalAlignment="Left" Margin="10,40,0,10.4" Width="135">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding SceneName}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+
+        <Custom:DataGrid x:Name="datagrid1"  ItemsSource="{Binding ElementName=lstScenarioName,Path=SelectedItem.Schedule.Segnments }"  AutoGenerateColumns="False" Margin="156,40,104,10.4" >
+            <Custom:DataGrid.Columns>
+                <Custom:DataGridTextColumn Binding="{Binding Time, Converter={StaticResource ITimeSegToTimeConverter}, Mode=TwoWay, ValidatesOnExceptions=True}" Header="Time"/>
+                <Custom:DataGridTextColumn Binding="{Binding Level, Mode=TwoWay, ValidatesOnExceptions=True}"   Header="Level"/>
+            </Custom:DataGrid.Columns>
+        </Custom:DataGrid>
+        <Button x:Name="btnAdd" Content="新增" HorizontalAlignment="Left" Height="37" Margin="380,15,0,0" VerticalAlignment="Top" Width="68" IsCancel="False" Click="btnAdd_Click"/>
+        <TextBlock HorizontalAlignment="Left" Height="20" Margin="14,15,0,0" TextWrapping="Wrap" Text="範本名稱" VerticalAlignment="Top" Width="68"/>
+        <TextBlock HorizontalAlignment="Left" Height="20" Margin="156,15,0,0" TextWrapping="Wrap" Text="排程" VerticalAlignment="Top" Width="68"/>
+        <Button x:Name="btnAdd_Copy" Content="刪除" HorizontalAlignment="Left" Height="37" Margin="380,69,0,0" VerticalAlignment="Top" Width="68" IsCancel="False" Click="btnDelete_Click"/>
+        <Button x:Name="btnSend" Content="傳送排程" HorizontalAlignment="Left" Height="37" Margin="380,126,0,0" VerticalAlignment="Top" Width="68" IsCancel="False" Click="btnSend_Click"/>
+
+    </Grid>
+</Window>

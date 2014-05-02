@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<head>
+    <title>Page Title</title>
+
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="Scripts/jquery.mobile-1.4.2.min.css" />
+	<script src="Scripts/jquery-1.8.3.min.js"></script>
+    <script src="Scripts/jquery.mobile-1.4.2.min.js"></script>
+	 
+    <script>
+
+
+        function viewclick(menu) {
+            $.ajax("http://127.0.0.1:8081/rest/InvokeScenarior?SceneName=" + encodeURI(menu.innerHTML))
+            .done(function () {
+
+               // alert("success");
+
+            })
+
+            .fail(function () {
+
+                 alert("error");
+
+               })
+
+                  .always(function () {
+
+                  //    alert("complete");
+
+                  });
+
+
+
+
+        }
+        $(document).ready(function () {
+
+            $.getJSON("http://127.0.0.1:8081/rest/GetAllScenariors",
+         function (data) {
+             //  alert(data[0]["SceneName"]);
+             for (scene in data) {
+                 $("#listview").append($("<li/>",{'onclick':'viewclick(this)'}).append(data[scene].SceneName)) ;
+             //    alert(data[scene].SceneName);
+             }
+             $("#listview").listview("refresh");
+         });
+        }
+        );
+
+        //$('ul').append($('<li/>', {    //here appending `<li>`
+        //    'data-role': "list-divider"
+        //}).append($('<a/>', {    //here appending `<a>` into `<li>`
+        //    'href': 'test.html',
+        //    'data-transition': 'slide',
+        //    'text': 'hello'
+        //})));
+
+
+    </script>
+</head>
+<body>
+    <div data-role="page">
+	 
+	<div role="main" class="ui-content">
+
+        <ul  id="listview" data-role="listview">
+  <!--  <li  >Acura</li>
+    <li>Audi</li>
+    <li>BMW</li>
+    <li>Cadillac</li>
+    <li>Ferrari</li>-->
+</ul>
+
+
+	</div>
+	 
+</div>
+
+</body>
+</html>

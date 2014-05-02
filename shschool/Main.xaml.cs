@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -28,11 +29,12 @@ namespace shschool
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfosOriginal = new Dictionary<string, StreetLightBindingData>();
         IValueConverter converter = new IsEnableToColorConverter();
         System.Windows.Threading.DispatcherTimer tmr = new System.Windows.Threading.DispatcherTimer();
-        Config LedConfig;
+      public   Config LedConfig;
         public Main()
         {
             InitializeComponent();
             coor = ((App.Current) as App).dev;
+            
         //    this.ledBtn.Foreground = new SolidColorBrush(Colors.White);
           //this.ledBtn.Text = this.ledBtn.Text;
           //  this.ledBtn.Foreground = this.ledBtn.Foreground;

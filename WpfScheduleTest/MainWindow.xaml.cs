@@ -69,7 +69,7 @@ namespace WpfScheduleTest
                     catch { ;}
                 };
 
-            tmr.Interval = TimeSpan.FromSeconds(10);
+            tmr.Interval = TimeSpan.FromSeconds(60);
             tmr.Start();
            
 

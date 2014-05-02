@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,11 +33,19 @@ namespace shschool
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfosOriginal = new Dictionary<string, StreetLightBindingData>();
         IValueConverter converter = new IsEnableToColorConverter();
         System.Windows.Threading.DispatcherTimer tmr = new System.Windows.Threading.DispatcherTimer();
-        Config LedConfig;
+       public  Config LedConfig;
+
+       public static ServiceHost RestHost;
         public FongNanMain()
         {
             InitializeComponent();
             coor = ((App.Current) as App).dev;
+            if (RestHost == null)
+            {
+                RestHost = new ServiceHost(new wcfShschool.Service1() { main = this });
+                //  RestHost.BaseAddresses = new Uri("http://localhost:8083", UriKind.Absolute);
+                RestHost.Open();
+            }
         //    this.ledBtn.Foreground = new SolidColorBrush(Colors.White);
           //this.ledBtn.Text = this.ledBtn.Text;
           //  this.ledBtn.Foreground = this.ledBtn.Foreground;
@@ -45,6 +54,44 @@ namespace shschool
         }
 
        
+        public  void  InvokeScene(string SceneName)
+        {
+
+            Scenarior scene = LedConfig.Scenariors.Where<Scenarior>(n => n.SceneName == SceneName).FirstOrDefault();
+
+            if (scene == null)
+                return;
+            try
+            {
+               // listScene.IsEnabled = false;
+                IsinSetting = true;
+                foreach (StreetLightBindingData data in scene.List)
+                {
+
+                    StreetLightBindingData outputled = dictStreetLightBindingInfosOriginal[data.OriginalDevID];
+                    if (outputled.DimLevel != data.DimLevel)
+                    {
+                        outputled.DimLevel = data.DimLevel;
+                        if (outputled.IsEnable)
+                        {
+                            try
+                            {
+                                coor.SetDeviceDimLevel(outputled.DevID, data.DimLevel);
+                            }
+                            catch { ;}
+                        }
+
+                    }
+
+                }
+            }
+            catch { ;}
+            finally
+            {
+                IsinSetting = false; ;
+                listScene.IsEnabled = true;
+            }
+        }
 
         async void Initial()
         {

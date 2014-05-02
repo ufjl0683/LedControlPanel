@@ -22,7 +22,8 @@ namespace StreetLightPanel
     public partial class MainWindow : Window
     {
 
-        CeraDevices.CoordinatorDevice coor;
+      //  CeraDevices.CoordinatorDevice coor;
+        CeraDevices.DeviceManager coor_mgr;
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfos = new Dictionary<string, StreetLightBindingData>();
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfosOriginal = new Dictionary<string, StreetLightBindingData>();
         System.Windows.Threading.DispatcherTimer tmr = new System.Windows.Threading.DispatcherTimer();
@@ -31,7 +32,7 @@ namespace StreetLightPanel
         public MainWindow()
         {
             InitializeComponent();
-            coor = ((App.Current) as App).dev;
+           coor_mgr = ((App.Current) as App).coor_mgr;
             InitLed2dPositoin();
           
         }
@@ -84,7 +85,7 @@ namespace StreetLightPanel
              //   SetAllDeviceTo100();
                 (App.Current as App).IsStart = false;
             }
-            tmr.Interval = TimeSpan.FromSeconds(5);
+            tmr.Interval = TimeSpan.FromSeconds(30);
             tmr.Tick += tmr_Tick;
             tmr.Start();
 #endif
@@ -92,15 +93,24 @@ namespace StreetLightPanel
 
         bool IsinSetting = false;
         bool IsInTimer = false;
-        void tmr_Tick(object sender, EventArgs e)
+        bool InCmdSending = false;
+        int tickcnt=0;
+          void tmr_Tick(object sender, EventArgs e)
         {
             try
             {
+                if (InCmdSending)
+                    return;
+
                 if (IsInTimer || IsinSetting)
                     return;
                 IsInTimer = true;
-                GetDeviceInfoAndSetBindingData();
-
+                     GetDeviceInfoAndSetBindingData();
+                   if (tickcnt++ % 180 == 0)
+                   {
+                       coor_mgr.SetDeviceRTC("*", DateTime.Now);
+                   }
+               
                 CheckLedOutput();
             }
             catch (Exception ex)
@@ -121,7 +131,7 @@ namespace StreetLightPanel
             {
                 try
                 {
-                    infos = await coor.GetDeviceListAsync();
+                    infos = await coor_mgr.GetDeviceListAsync();
                 }
                 catch { ;}
             }
@@ -168,7 +178,7 @@ namespace StreetLightPanel
         
             try
             {
-                infos = coor.GetStreetLightList();
+                infos = coor_mgr.GetStreetLightList();
             }
             catch
             {
@@ -246,8 +256,8 @@ namespace StreetLightPanel
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            coor.SetDeviceRTC("*", DateTime.Now);
-            coor.SetDeviceScheduleEnable("*", true);
+            coor_mgr.SetDeviceRTC("*", DateTime.Now);
+            coor_mgr.SetDeviceScheduleEnable("*", true);
             if (App.Current.Properties.Contains("LightCollection"))
             {
                 this.dictStreetLightBindingInfos = App.Current.Properties["LightCollection"] as Dictionary<string, StreetLightBindingData>;
@@ -305,7 +315,7 @@ namespace StreetLightPanel
                     if (!dictStreetLightBindingInfos.ContainsKey(devid))
                     {
 
-                        temp = new StreetLightBindingData() { DevID = devid, OriginalDevID = btn.Tag.ToString(), DimLevel = 20, IsEnable = false };
+                        temp = new StreetLightBindingData() { DevID = devid, OriginalDevID = btn.Tag.ToString(), DimLevel = 0, IsEnable = false, LightNo= list[btn.Content.ToString()].LightNo };
 
                         dictStreetLightBindingInfos.Add(temp.DevID, temp);
                         dictStreetLightBindingInfosOriginal.Add(temp.OriginalDevID, temp);
@@ -328,7 +338,7 @@ namespace StreetLightPanel
                     btn.SetBinding(CheckBox.IsCheckedProperty, new Binding("IsChecked") { Mode = BindingMode.TwoWay });
                     // btn.Foreground = btn.Foreground;
                     btn.DataContext = temp;
-                    btn.Content = temp.DevID;
+                  //  btn.Content = temp.LightNo;
                     //      btn.Text = btn.Text;
                     btn.IsChecked = temp.IsChecked;
                     //   btn.IsChecked = false;
@@ -417,20 +427,62 @@ namespace StreetLightPanel
             SaveConfig(this.LedConfig);
         }
 
-        void SendTemplate(Scenarior scene)
+        async void SendTemplate(Scenarior scene)
         {
-
-            foreach (UIElement element in grdDeviceLayer.Children)
+            try
             {
-                if (element is CheckBox)
+                InCmdSending = true;
+
+                foreach (UIElement element in grdDeviceLayer.Children)
                 {
-                    if ((element as CheckBox).IsEnabled && (element as CheckBox).IsChecked == true)
+
+                    try
                     {
-                        StreetLightBindingData data = (element as CheckBox).DataContext as StreetLightBindingData;
-                        coor.SetDeviceSchedule(data.DevID, scene.Schedule.GetScheduleSegTimeString(), scene.Schedule.GetScheduleSegLevelString());
+                        if (element is CheckBox)
+                        {
+                            if ((element as CheckBox).IsEnabled && (element as CheckBox).IsChecked == true)
+                            {
+                                bool isFinish = false;
+                                for (int i = 0; i < 3; i++)
+                                {
+                                    try
+                                    {
+                                        StreetLightBindingData data = (element as CheckBox).DataContext as StreetLightBindingData;
+
+                                        coor_mgr.SetDeviceScheduleAsync(data.DevID, scene.Schedule.GetScheduleSegTimeString(), scene.Schedule.GetScheduleSegLevelString());
+
+                                        await Task.Delay(100);
+                                        StreetLightInfo[] backInfo = await coor_mgr.GetStreetLightListAsync(data.DevID);
+                                        await Task.Delay(100);
+                                        if (backInfo[0].sch.IsEqual(scene.Schedule))
+                                        {
+                                            isFinish = true;
+                                            break;
+                                        }
+                                    }
+                                    catch
+                                    { ;}
+                                }
+                                if (!isFinish)
+                                {
+                                    MessageBox.Show(((element as CheckBox).DataContext as StreetLightBindingData).DevID + "," + "排程傳送失敗!");
+                                }
+
+                            }
+
+                        }
                     }
-                       
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(((element as CheckBox).DataContext as StreetLightBindingData).DevID + "," + ex.Message);
+                    }
                 }
+                MessageBox.Show("ok!");
+            }
+            catch { ;}
+            finally
+            {
+                InCmdSending = false;
             }
         }
         private void btnUnselectAll_Click(object sender, RoutedEventArgs e)

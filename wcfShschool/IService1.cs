@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 using System.Text;
 
 namespace wcfShschool
@@ -12,10 +13,12 @@ namespace wcfShschool
     public interface IService1
     {
         [OperationContract]
+        [WebGet(ResponseFormat=WebMessageFormat.Json) ]
         string GetData(int value);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        [WebInvoke(ResponseFormat = WebMessageFormat.Json,RequestFormat=WebMessageFormat.Json,Method="GET" )]
+        CompositeType GetDataUsingDataContract(string composite);
 
         // TODO: 在此新增您的服務作業
     }

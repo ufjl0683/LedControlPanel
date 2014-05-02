@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.ServiceModel;
 using System.Text;
 
@@ -15,17 +17,38 @@ namespace wcfShschool
             return string.Format("You entered: {0}", value);
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public CompositeType GetDataUsingDataContract(string composite)
         {
             if (composite == null)
             {
                 throw new ArgumentNullException("composite");
             }
-            if (composite.BoolValue)
+        //    composite = "{\"BoolValue\":true,\"StringValue\":\"hello\"}";
+
+            DataContractJsonSerializer sr = new DataContractJsonSerializer(typeof(CompositeType));
+            MemoryStream  ms=new MemoryStream();
+         
+            byte[] data=System.Text.UTF8Encoding.UTF8.GetBytes(composite);
+            ms.Write(data,0,data.Length);
+            ms.Seek(0, SeekOrigin.Begin);
+            try
             {
-                composite.StringValue += "Suffix";
+                CompositeType ret = (CompositeType)sr.ReadObject(ms);
+                return ret;
             }
-            return composite;
+            catch (Exception ex)
+            {
+                 throw new FaultException(
+                new FaultReason(ex.Message),
+                new FaultCode("Data Access Error"));
+
+            }
+            
+            //if (composite.BoolValue)
+            //{
+            //    composite.StringValue += "Suffix";
+            //}
+            //return composite;
         }
     }
 }
