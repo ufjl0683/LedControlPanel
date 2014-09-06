@@ -48,8 +48,14 @@ namespace StreetLightPanel
         {
             //google maps map
             // string baseUrl = "http://mt0.google.com/mt/v=ap.92&hl=zh-CN&x=";
-            string baseUrl = "http://mt1.google.com/vt/lyrs=m@129&hl=zh-TW&x=";
-            string url = baseUrl + col.ToString() + "&y=" + row.ToString() + "&z=" + level.ToString() + "&s=";
+
+            //google base map
+            //string baseUrl = "http://mt1.google.com/vt/lyrs=m@129&hl=zh-TW&x=";
+            //string url = baseUrl + col.ToString() + "&y=" + row.ToString() + "&z=" + level.ToString() + "&s=";
+            //return url;
+
+            string baseUrl = "http://localhost:8081/RestService/GetImage?x=";
+            string url = baseUrl + col.ToString() + "&y=" + row.ToString() + "&z=" + level.ToString() ;
             return url;
 
             ////google maps satallite

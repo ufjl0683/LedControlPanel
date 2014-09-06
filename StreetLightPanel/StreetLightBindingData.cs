@@ -91,6 +91,22 @@ namespace StreetLightPanel
 
         }
 
+        public bool IsFake
+        {
+            get;
+            set;
+        }
+        public double KWHP
+        {
+            get;
+            set;
+        }
+
+        public double W
+        {
+            get;
+            set;
+        }
         public string LightNo
         {
             get;
@@ -109,9 +125,24 @@ namespace StreetLightPanel
                 if (value != _IsEnable)
                 {
                     _IsEnable = value;
-                     if( this.PropertyChanged!=null)
-                         this.PropertyChanged(this,new PropertyChangedEventArgs("IsEnable"));
+                    if (this.PropertyChanged != null)
+                    {
+                        this.PropertyChanged(this, new PropertyChangedEventArgs("IsEnable"));
+                        this.PropertyChanged(this, new PropertyChangedEventArgs("Status"));
+                    }
                 }
+            }
+        }
+
+        public int Status
+        {
+            get{
+                 if(IsFake)
+                     return -1;
+                 else if(IsEnable)
+                     return 1;
+                 else
+                     return 0;
             }
         }
         public override string ToString()

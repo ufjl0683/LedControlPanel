@@ -27,13 +27,13 @@ namespace StreetLightPanel
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfos = new Dictionary<string, StreetLightBindingData>();
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfosOriginal = new Dictionary<string, StreetLightBindingData>();
         System.Windows.Threading.DispatcherTimer tmr = new System.Windows.Threading.DispatcherTimer();
-        Config LedConfig;
+        public  Config LedConfig;
         IValueConverter converter = new IsEnableToColorConverter();
         public MainWindow()
         {
             InitializeComponent();
            coor_mgr = ((App.Current) as App).coor_mgr;
-            InitLed2dPositoin();
+          InitLed2dPositoin();
           
         }
 
@@ -195,6 +195,8 @@ namespace StreetLightPanel
                         try
                         {
                             (dictStreetLightBindingInfos[data.DevID]).DimLevel=data.CurrentDimLevel;
+                            (dictStreetLightBindingInfos[data.DevID]).KWHP = data.KWHP;
+                            (dictStreetLightBindingInfos[data.DevID]).W = data.W;
                         //    coor.SetDeviceDimLevel(data.DevID, (dictStreetLightBindingInfos[data.DevID]).DimLevel);
                         }
                         catch { ;}
@@ -263,7 +265,8 @@ namespace StreetLightPanel
                 this.dictStreetLightBindingInfos = App.Current.Properties["LightCollection"] as Dictionary<string, StreetLightBindingData>;
                 this.dictStreetLightBindingInfosOriginal = App.Current.Properties["LightCollectionOriginal"] as Dictionary<string, StreetLightBindingData>;
             }
-            System.Collections.Generic.Dictionary<string, StreetLightBindingData> List = new Dictionary<string, StreetLightBindingData>(); System.Collections.Generic.Dictionary<string, StreetLightBindingData> list = new Dictionary<string, StreetLightBindingData>();
+        //    System.Collections.Generic.Dictionary<string, StreetLightBindingData> List = new Dictionary<string, StreetLightBindingData>();
+            System.Collections.Generic.Dictionary<string, StreetLightBindingData> list = new Dictionary<string, StreetLightBindingData>();
             if (!System.IO.File.Exists("config.xml"))
             {
                 Config config = new Config();
@@ -274,7 +277,7 @@ namespace StreetLightPanel
                     if (element is CheckBox)
                     {
                         CheckBox btn = element as CheckBox;
-                        list.Add(btn.Content.ToString(), new StreetLightBindingData() { DevID = btn.Content.ToString(), OriginalDevID = btn.Content.ToString() });
+                        list.Add(btn.Content.ToString(), new StreetLightBindingData() { DevID = btn.Content.ToString(), OriginalDevID = btn.Content.ToString()  });
                         btn.Tag = btn.Content                            ;
                     }
 
@@ -283,6 +286,7 @@ namespace StreetLightPanel
 
                 config.StreetLightBindingDatas = list.Values.ToArray();
                 config.Scenariors = new List<Scenarior>();
+                config.Groups = new List<Group>();
                 //System.Xml.Serialization.XmlSerializer sr = new System.Xml.Serialization.XmlSerializer(typeof(Config));
                 //sr.Serialize(System.IO.File.OpenWrite("config.xml"), config);
                 SaveConfig(config);
@@ -315,7 +319,7 @@ namespace StreetLightPanel
                     if (!dictStreetLightBindingInfos.ContainsKey(devid))
                     {
 
-                        temp = new StreetLightBindingData() { DevID = devid, OriginalDevID = btn.Tag.ToString(), DimLevel = 0, IsEnable = false, LightNo= list[btn.Content.ToString()].LightNo };
+                        temp = new StreetLightBindingData() { DevID = devid, OriginalDevID = btn.Tag.ToString(), DimLevel = 0, IsEnable = false, LightNo = list[btn.Content.ToString()].LightNo, IsFake = list[btn.Content.ToString()].IsFake};
 
                         dictStreetLightBindingInfos.Add(temp.DevID, temp);
                         dictStreetLightBindingInfosOriginal.Add(temp.OriginalDevID, temp);
@@ -334,7 +338,9 @@ namespace StreetLightPanel
                     //   btn.SetBinding(ForegroundProperty, binding);
                     // btn.Content = null;
                     btn.SetBinding(CheckBox.ContentProperty, new Binding("DevID"));
+#if !DEBUG
                     btn.SetBinding(CheckBox.IsEnabledProperty, new Binding("IsEnable"));
+#endif
                     btn.SetBinding(CheckBox.IsCheckedProperty, new Binding("IsChecked") { Mode = BindingMode.TwoWay });
                     // btn.Foreground = btn.Foreground;
                     btn.DataContext = temp;
@@ -391,7 +397,7 @@ namespace StreetLightPanel
             return config;
         }
 
-        void SaveConfig(Config config)
+       public  void SaveConfig(Config config)
         {
             System.Xml.Serialization.XmlSerializer sr = new System.Xml.Serialization.XmlSerializer(typeof(Config));
             try
@@ -442,9 +448,11 @@ namespace StreetLightPanel
                         {
                             if ((element as CheckBox).IsEnabled && (element as CheckBox).IsChecked == true)
                             {
-                                bool isFinish = false;
-                                for (int i = 0; i < 3; i++)
-                                {
+
+
+                             //   bool isFinish = false;
+                                //for (int i = 0; i < 3; i++)
+                                //{
                                     try
                                     {
                                         StreetLightBindingData data = (element as CheckBox).DataContext as StreetLightBindingData;
@@ -452,21 +460,15 @@ namespace StreetLightPanel
                                         coor_mgr.SetDeviceScheduleAsync(data.DevID, scene.Schedule.GetScheduleSegTimeString(), scene.Schedule.GetScheduleSegLevelString());
 
                                         await Task.Delay(100);
-                                        StreetLightInfo[] backInfo = await coor_mgr.GetStreetLightListAsync(data.DevID);
-                                        await Task.Delay(100);
-                                        if (backInfo[0].sch.IsEqual(scene.Schedule))
-                                        {
-                                            isFinish = true;
-                                            break;
-                                        }
+                                      
                                     }
                                     catch
                                     { ;}
-                                }
-                                if (!isFinish)
-                                {
-                                    MessageBox.Show(((element as CheckBox).DataContext as StreetLightBindingData).DevID + "," + "排程傳送失敗!");
-                                }
+                                //}
+                                //if (!isFinish)
+                                //{
+                                //    MessageBox.Show(((element as CheckBox).DataContext as StreetLightBindingData).DevID + "," + "排程傳送失敗!");
+                                //}
 
                             }
 
@@ -477,7 +479,48 @@ namespace StreetLightPanel
                         MessageBox.Show(((element as CheckBox).DataContext as StreetLightBindingData).DevID + "," + ex.Message);
                     }
                 }
-                MessageBox.Show("ok!");
+
+                //check data
+                int trycnt = 0;
+                int failcnt = 0;
+                do
+                {
+                    trycnt++;
+                   // int failcnt = 0;
+                    failcnt = 0;
+                    foreach (UIElement element in grdDeviceLayer.Children)
+                    {
+                        try
+                        {
+                            if (element is CheckBox)
+                            {
+                                if ((element as CheckBox).IsEnabled && (element as CheckBox).IsChecked == true)
+                                {
+                                    StreetLightBindingData data = (element as CheckBox).DataContext as StreetLightBindingData;
+                                    StreetLightInfo[] backInfo = await coor_mgr.GetStreetLightListAsync(data.DevID);
+                                    await Task.Delay(100);
+                                    if (!backInfo[0].sch.IsEqual(scene.Schedule))
+                                    {
+                                        failcnt++;
+                                        coor_mgr.SetDeviceScheduleAsync(data.DevID, scene.Schedule.GetScheduleSegTimeString(), scene.Schedule.GetScheduleSegLevelString());
+                                        //  break;
+                                        await Task.Delay(100);
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                           
+                        }
+                    }
+                } while (failcnt != 0 && trycnt < 4);
+                if (failcnt == 0)
+                    MessageBox.Show("ok!");
+                else
+                    MessageBox.Show("fail!");
+                
+
             }
             catch { ;}
             finally
@@ -514,6 +557,48 @@ namespace StreetLightPanel
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
 
+        }
+
+        private void btnGroupSetting_Click(object sender, RoutedEventArgs e)
+        {
+            wndGroupSetting dlg = new wndGroupSetting(this.LedConfig,this);
+            if (dlg.ShowDialog()==null || dlg.DialogResult == false)
+            {
+                return;
+            }
+
+            foreach (StreetLightBindingData info in dictStreetLightBindingInfos.Values)
+                info.IsChecked = false;
+
+            Group grp = LedConfig.Groups.Where(n => n.GroupName == dlg.SelectedGroupName).FirstOrDefault();
+            foreach (string orgdevid in grp.OrgDevices)
+            {
+                dictStreetLightBindingInfosOriginal[orgdevid].IsChecked = true;
+            }
+
+
+
+        }
+
+        private void btnAddGroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.dictStreetLightBindingInfos.Values.Where(n => n.IsChecked == true).Count() == 0)
+            {
+                MessageBox.Show("請先選取路燈!");
+                return;
+            }
+            string res = Microsoft.VisualBasic.Interaction.InputBox("輸入群組名稱", "新增群組");
+            if (res == null)
+                return;
+            Group grp = new Group();
+            grp.OrgDevices = new List<string>();
+            grp.GroupName = res;
+            var q = from n in this.dictStreetLightBindingInfos.Values where n.IsChecked == true select n.OriginalDevID;
+            foreach (string s in q)
+                grp.OrgDevices.Add(s);
+            this.LedConfig.Groups.Add(grp);
+            SaveConfig(LedConfig);
+            
         }
     }
 }

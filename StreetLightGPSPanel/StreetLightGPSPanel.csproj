@@ -50,11 +50,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="esri.arcgis.client, Version=10.2.2.0, Culture=neutral, PublicKeyToken=29c6dd6e8553d944, processorArchitecture=MSIL" />
+    <Reference Include="ESRI.ArcGIS.Client.Toolkit.DataSources, Version=10.2.2.0, Culture=neutral, PublicKeyToken=29c6dd6e8553d944, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -78,9 +82,11 @@
     </ApplicationDefinition>
     <Compile Include="GaoDeMap.cs" />
     <Compile Include="GoogleMap.cs" />
+    <Compile Include="IService1.cs" />
     <Compile Include="ITimeSegToTimeConverter.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="IsEnableToColorConverter.cs" />
+    <Compile Include="Service1.cs" />
     <Compile Include="StreetLightBindingData.cs" />
     <Compile Include="Window1.xaml.cs">
       <DependentUpon>Window1.xaml</DependentUpon>

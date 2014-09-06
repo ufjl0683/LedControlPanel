@@ -15,7 +15,7 @@ namespace StreetLightPanel
         private const double cornerCoordinate = 20037508.342787;
         public override void Initialize()
         {
-
+            
             this.FullExtent = new
              ESRI.ArcGIS.Client.Geometry.Envelope(-20037508.342787, -20037508.342787, 20037508.342787, 20037508.342787);
             {

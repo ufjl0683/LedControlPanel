@@ -69,6 +69,12 @@ namespace shschool
             set { this._originalDevID = value; }
         }
 
+
+        public bool IsFake
+        {
+            get;
+            set;
+        }
         public int DimLevel {
 
             get { return _DimLevel; }

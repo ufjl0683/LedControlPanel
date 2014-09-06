@@ -17,9 +17,10 @@
                         <Grid d:DesignHeight="110.6" d:DesignWidth="129.8">
                             <Grid.ToolTip>
                                 <StackPanel>
-                                    <TextBlock Text="{Binding DevID}" />
-                                    <TextBlock Text="{Binding DimLevel}" />
-                                    <TextBlock Text="{Binding LightNo}" />
+                                    <TextBlock Text="{Binding DevID,StringFormat=ID:\{0\}}" />
+                                    <TextBlock Text="{Binding DimLevel,StringFormat=DIM:\{0\}}" />
+                                    <TextBlock Text="{Binding LightNo,StringFormat=PNO:\{0\}}" />
+                                    <TextBlock Text="{Binding W,StringFormat=W:\{0\}}"  />
                                 </StackPanel>
                             </Grid.ToolTip>
                             <VisualStateManager.VisualStateGroups>
@@ -39,14 +40,14 @@
                                 <Ellipse.Fill>
                                     <RadialGradientBrush RadiusX="0.534" RadiusY="0.567" GradientOrigin="0.501,0.492" Center="0.501,0.492">
                                         <GradientStop Color="Black" Offset="1"/>
-                                        <GradientStop Color="{Binding IsEnable, Converter={StaticResource  IsEnableToStreetColorConverter}}"/>
-                                        <GradientStop Color="{Binding IsEnable, Converter={StaticResource  IsEnableToStreetColorConverter}}" Offset="0.64"/>
+                                        <GradientStop Color="{Binding Status,   Converter={StaticResource  IsEnableToStreetColorConverter}}"/>
+                                        <GradientStop Color="{Binding Status, Converter={StaticResource  IsEnableToStreetColorConverter}}" Offset="0.64"/>
                                     </RadialGradientBrush>
                                 </Ellipse.Fill>
                             </Ellipse>
                             <Rectangle x:Name="rectangle" Width="Auto" StrokeDashArray="4 2" Stroke="#FFFEFCFC" Height="Auto" Margin="0" Visibility="Collapsed" StrokeThickness="3"/>
                             <ContentPresenter RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Bottom" Margin="-7.167,0,-6.599,-13.826" HorizontalAlignment="Center" Width="Auto"/>
-                            <ProgressBar HorizontalAlignment="Stretch"  Value="{Binding DimLevel}" Height="4.4" Margin="-0.8,-6.013,-0.6,0" VerticalAlignment="Top" Width="Auto" SmallChange="1" LargeChange="10"/>
+                            <ProgressBar HorizontalAlignment="Stretch"  Value="{Binding DimLevel}" Height="4.4" Margin="-0.8,-10,-0.6,0" VerticalAlignment="Top" Width="Auto" SmallChange="1" LargeChange="10"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
@@ -75,14 +76,14 @@
             </RadioButton.RenderTransform>
         </RadioButton>
         <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto" SizeChanged="scrollViewer1_SizeChanged" x:Name="scrollViewer1"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="Both" >
-            <Viewbox  DataContext="{Binding SelectedItem, ElementName=treeView1}" Stretch="Uniform" x:Name="vbImage">
+            <Viewbox    Stretch="Uniform" x:Name="vbImage">
                 <Grid x:Name="grdDeviceLayer"      >
-                    <Image x:Name="imgPic" Stretch="None" Source="/Center.jpg"   HorizontalAlignment="Left" VerticalAlignment="Top"  />
+                    <Image x:Name="imgPic" Stretch="None" Source="Center.jpg"   HorizontalAlignment="Left" VerticalAlignment="Top"  />
                 </Grid>
             </Viewbox>
             <!--<Image Source="/Center.jpg" Stretch="None" />-->
         </ScrollViewer>
-        <Border HorizontalAlignment="Left" Height="130" Margin="0,50,0,0" VerticalAlignment="Top" Width="204" BorderBrush="#FFF3F3F3" BorderThickness="3" >
+        <Border HorizontalAlignment="Left" Height="130" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="204" BorderBrush="#FFF3F3F3" BorderThickness="3" >
             <Image x:Name="bdrOverView" Source="Center.jpg" MouseDown="bdrOverView_MouseDown"/>
 
         </Border>
@@ -90,6 +91,8 @@
         <Button x:Name="btnTemplateEdit" Content=" 範本編輯" HorizontalAlignment="Left" Height="45" Margin="508,0,0,0" VerticalAlignment="Top" Width="81" Click="btnTemplateEdit_Click" FontSize="16"/>
         <Button x:Name="btnUnselectAll" Content="取消選取" HorizontalAlignment="Left" Height="45" Margin="326,0,0,0" VerticalAlignment="Top" Width="81" Click="btnUnselectAll_Click" FontSize="16"/>
         <Button x:Name="btnReverseSelect" Content="反轉選取" HorizontalAlignment="Left" Height="45" Margin="412,0,0,0" VerticalAlignment="Top" Width="81" Click="btnReverseSelect_Click" FontSize="16"/>
+        <Button x:Name="btnGroupSetting" Content="群組選擇" HorizontalAlignment="Left" Height="45" Margin="604,0,0,0" VerticalAlignment="Top" Width="81" FontSize="16" Click="btnGroupSetting_Click"/>
+        <Button x:Name="btnAddGroup" Content="新增群組" HorizontalAlignment="Left" Height="45" Margin="707,0,0,0" VerticalAlignment="Top" Width="81" FontSize="16" Click="btnAddGroup_Click" IsDefault="True"/>
 
     </Grid>
 </Window>

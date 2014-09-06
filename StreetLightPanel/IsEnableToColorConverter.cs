@@ -31,7 +31,12 @@ namespace StreetLightPanel
    {
        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
        {
-           if ((bool)value)
+         //  StreetLightBindingData data = value as StreetLightBindingData;
+           int status =(int) value  ;
+           if (status==-1)
+               return Colors.Gray;
+
+           if (status==1)
                return Colors.Yellow;
            else
                return Colors.Red;

@@ -15,11 +15,16 @@ namespace StreetLightPanel
         [DataMember]
       public  StreetLightBindingData[] StreetLightBindingDatas { get; set; }
         [DataMember]
+        public System.Collections.Generic.List<Group> Groups { get; set; }
         public System.Collections.Generic.List<Scenarior> Scenariors { get; set; }
-
     }
 
 
+    public class Group
+    {
+        public string GroupName { get; set; }
+        public System.Collections.Generic.List<string> OrgDevices { get; set; }
+    }
 
     public class Scenarior
     {

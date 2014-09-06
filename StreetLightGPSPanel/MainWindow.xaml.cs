@@ -1,7 +1,10 @@
 ﻿using CeraDevices;
+using ESRI.ArcGIS.Client;
+using ESRI.ArcGIS.Client.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,7 +24,8 @@ namespace StreetLightPanel
     /// </summary>
     public partial class MainWindow : Window
     {
-
+        ServiceHost serviceHost;
+        double currentx, currenty;
       //  CeraDevices.CoordinatorDevice coor;
         CeraDevices.DeviceManager coor_mgr;
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfos = new Dictionary<string, StreetLightBindingData>();
@@ -34,13 +38,101 @@ namespace StreetLightPanel
             InitializeComponent();
            coor_mgr = ((App.Current) as App).coor_mgr;
             InitLed2dPositoin();
-          
+            serviceHost = new ServiceHost(new Service1());
+            serviceHost.Open();
+        }
+#region map
+        Envelope ConvertPointToEnvelop(MapPoint point)
+        {
+
+
+            ESRI.ArcGIS.Client.Projection.WebMercator wm = new ESRI.ArcGIS.Client.Projection.WebMercator();
+            //return wm.FromGeographic(new ESRI.ArcGIS.Client.Geometry.Envelope(point, point) { SpatialReference = new SpatialReference(org_wkid) }).Extent;
+            return wm.FromGeographic(point).Extent;
+        }
+        MapPoint ConvertMapPointTo102100(MapPoint mp)
+        {
+            ESRI.ArcGIS.Client.Projection.WebMercator wm = new ESRI.ArcGIS.Client.Projection.WebMercator();
+            return wm.FromGeographic(mp) as MapPoint;
         }
 
+        void ZoomToLevel(int level)
+        {
 
+            double resolution = (this.map.Layers["basemap"] as TiledLayer).TileInfo.Lods[level].Resolution;
+            this.map.ZoomToResolution(resolution);
+        }
+
+        void ZoomToLevel(int level, MapPoint point)
+        {
+            bool zoomentry = false;
+            double resolution;
+            if (level == -1)
+                resolution = map.Resolution;
+            else
+                resolution = (this.map.Layers["basemap"] as TiledLayer).TileInfo.Lods[level].Resolution;
+
+
+            if (Math.Abs(map.Resolution - resolution) < 0.05)
+            {
+                this.map.PanTo(point);
+                return;
+            }
+            zoomentry = false;
+            this.map.ZoomToResolution(resolution);
+
+            map.ExtentChanged += (s, a) =>
+            {
+                if (!zoomentry)
+                    this.map.PanTo(point);
+
+                zoomentry = true;
+
+                //   SwitchLayerVisibility();
+            };
+
+
+
+        }
+
+        int GetCurrentLevel()
+        {
+
+            Lod[] Lods = (this.map.Layers["basemap"] as TiledLayer).TileInfo.Lods;
+            for (int i = 0; i < Lods.Length; i++)
+            {
+                if (Math.Abs(this.map.Resolution - Lods[i].Resolution) < 1 || this.map.Resolution >= Lods[i].Resolution)
+                {
+                    return i;
+                }
+
+            }
+            return 0;
+        }
+
+        void LocateTo(int level, double x, double y)
+        {
+
+            ESRI.ArcGIS.Client.Geometry.MapPoint mp = new ESRI.ArcGIS.Client.Geometry.MapPoint(x, y, new SpatialReference(102100));
+            if (currentx != x || currenty != y)
+            {
+                currentx = x;
+                currenty = y;
+              
+            }
+
+            this.ZoomToLevel(level, mp);
+           
+
+          
+        }
+#endregion
+
+        int cnt = 0;
         void InitLed2dPositoin()
         {
-            int LedWidth = 30;
+            int LedWidth = 15;
+          
             for(int i=0;i<App.Light2DInfo.GetLength(0);i++)
             {
                 
@@ -48,19 +140,27 @@ namespace StreetLightPanel
                     CheckBox chk = new CheckBox();
                     chk.Width = chk.Height = LedWidth;
                     chk.Style = this.FindResource("CheckBoxStyle1") as Style;
-                    chk.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-                    chk.VerticalAlignment = System.Windows.VerticalAlignment.Top;
-                    int x, y;
-                    x=int.Parse(App.Light2DInfo[i,1]);
-                      y=int.Parse(App.Light2DInfo[i,2]);
-                    chk.Margin = new Thickness( x- LedWidth / 2, y - LedWidth / 2, 0, 0);
+                    //chk.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+                    //chk.VerticalAlignment = System.Windows.VerticalAlignment.Top;
+                    double x, y;
+                    x=App.Light2DInfo[i,1];
+                      y=(App.Light2DInfo[i,2]);
+                  //  chk.Margin = new Thickness( x- LedWidth / 2, y - LedWidth / 2, 0, 0);
                     chk.Content = App.Light2DInfo[i,0];
                     chk.MouseRightButtonUp += chk_MouseRightButtonUp;
+                    
+                    ESRI.ArcGIS.Client.ElementLayer.SetEnvelope(chk,
+                      ConvertPointToEnvelop( new MapPoint(x,y))
+                        );
 
-                   // chk.Background = new SolidColorBrush(Colors.Yellow);
-                   // chk.Foreground = new SolidColorBrush(Colors.Red);
-                  //  this.grdDeviceLayer.Children.Add(chk);
+                    chk.Background = new SolidColorBrush(Colors.Yellow);
+                    chk.Foreground = new SolidColorBrush(Colors.Red);
+                    (this.map.Layers["grdDeviceLayer"] as ESRI.ArcGIS.Client.ElementLayer).Children.Add(chk);
+
+                    cnt++;
                 }
+
+     //       MessageBox.Show(cnt.ToString());
             }
 
         void chk_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -247,8 +347,14 @@ namespace StreetLightPanel
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+#if !DEBUG
+           
+            
+           
+
             coor_mgr.SetDeviceRTC("*", DateTime.Now);
             coor_mgr.SetDeviceScheduleEnable("*", true);
+#endif
             if (App.Current.Properties.Contains("LightCollection"))
             {
                 this.dictStreetLightBindingInfos = App.Current.Properties["LightCollection"] as Dictionary<string, StreetLightBindingData>;
@@ -261,18 +367,18 @@ namespace StreetLightPanel
 
 
                 #region  open here later
-                ////foreach (UIElement element in this.grdDeviceLayer.Children)
-                ////{
+                foreach (UIElement element in (this.map.Layers["grdDeviceLayer"] as ElementLayer).Children)
+                {
 
-                ////    if (element is CheckBox)
-                ////    {
-                ////        CheckBox btn = element as CheckBox;
-                ////        list.Add(btn.Content.ToString(), new StreetLightBindingData() { DevID = btn.Content.ToString(), OriginalDevID = btn.Content.ToString() });
-                ////        btn.Tag = btn.Content                            ;
-                ////    }
+                    if (element is CheckBox)
+                    {
+                        CheckBox btn = element as CheckBox;
+                        list.Add(btn.Content.ToString(), new StreetLightBindingData() { DevID = btn.Content.ToString(), OriginalDevID = btn.Content.ToString() });
+                        btn.Tag = btn.Content                            ;
+                    }
 
 
-                ////}
+                }
                 #endregion
 
                 config.StreetLightBindingDatas = list.Values.ToArray();
@@ -296,51 +402,51 @@ namespace StreetLightPanel
             }
 
             #region open here later
-            //foreach (UIElement element in this.grdDeviceLayer.Children)
-            //{
+            foreach (UIElement element in (this.map.Layers["grdDeviceLayer"] as ElementLayer).Children)
+            {
 
-            //    if (element is CheckBox)
-            //    {
-            //        CheckBox btn = element as CheckBox;
+                if (element is CheckBox)
+                {
+                    CheckBox btn = element as CheckBox;
 
-            //        StreetLightBindingData temp;
-            //        string devid = "";
-            //        btn.Tag = list[btn.Content.ToString()].OriginalDevID;
-            //        devid = list[btn.Content.ToString()].DevID;
-            //        if (!dictStreetLightBindingInfos.ContainsKey(devid))
-            //        {
+                    StreetLightBindingData temp;
+                    string devid = "";
+                    btn.Tag = list[btn.Content.ToString()].OriginalDevID;
+                    devid = list[btn.Content.ToString()].DevID;
+                    if (!dictStreetLightBindingInfos.ContainsKey(devid))
+                    {
 
-            //            temp = new StreetLightBindingData() { DevID = devid, OriginalDevID = btn.Tag.ToString(), DimLevel = 0, IsEnable = false, LightNo = list[btn.Content.ToString()].LightNo };
+                        temp = new StreetLightBindingData() { DevID = devid, OriginalDevID = btn.Tag.ToString(), DimLevel = 0, IsEnable = false, LightNo = list[btn.Content.ToString()].LightNo };
 
-            //            dictStreetLightBindingInfos.Add(temp.DevID, temp);
-            //            dictStreetLightBindingInfosOriginal.Add(temp.OriginalDevID, temp);
-            //        }
-            //        else
+                        dictStreetLightBindingInfos.Add(temp.DevID, temp);
+                        dictStreetLightBindingInfosOriginal.Add(temp.OriginalDevID, temp);
+                    }
+                    else
 
-            //            temp = dictStreetLightBindingInfos[devid] as StreetLightBindingData;
-
-
+                        temp = dictStreetLightBindingInfos[devid] as StreetLightBindingData;
 
 
 
-            //        Binding binding = new Binding() { Path = new PropertyPath("IsEnable"), Converter = converter };
-
-            //        btn.SetBinding(Button.ForegroundProperty, binding);
-
-            //        btn.SetBinding(CheckBox.ContentProperty, new Binding("DevID"));
-            //        btn.SetBinding(CheckBox.IsEnabledProperty, new Binding("IsEnable"));
-            //        btn.SetBinding(CheckBox.IsCheckedProperty, new Binding("IsChecked") { Mode = BindingMode.TwoWay });
-
-            //        btn.DataContext = temp;
-
-            //        btn.IsChecked = temp.IsChecked;
-
-            //    }
-           
-               
 
 
-            //} // foeach
+                    Binding binding = new Binding() { Path = new PropertyPath("IsEnable"), Converter = converter };
+
+                    btn.SetBinding(Button.ForegroundProperty, binding);
+
+                    btn.SetBinding(CheckBox.ContentProperty, new Binding("DevID"));
+                    btn.SetBinding(CheckBox.IsEnabledProperty, new Binding("IsEnable"));
+                    btn.SetBinding(CheckBox.IsCheckedProperty, new Binding("IsChecked") { Mode = BindingMode.TwoWay });
+
+                    btn.DataContext = temp;
+
+                    btn.IsChecked = temp.IsChecked;
+
+                }
+
+
+
+
+            } // foeach
 
             #endregion
 
@@ -480,6 +586,19 @@ namespace StreetLightPanel
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
 
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459))
+                    );
+            
+        }
+
+        private void map_Loaded(object sender, RoutedEventArgs e)
+        {
+            //ZoomToLevel(17, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459))
+            //      );
         }
     }
 }

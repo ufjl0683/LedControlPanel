@@ -64,6 +64,9 @@
     <Compile Include="Config.cs" />
     <Compile Include="IsEnableToColorConverter.cs" />
     <Compile Include="StreetLightBindingData.cs" />
+    <Compile Include="wndGroupSetting.xaml.cs">
+      <DependentUpon>wndGroupSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="wndSchedule.xaml.cs">
       <DependentUpon>wndSchedule.xaml</DependentUpon>
     </Compile>
@@ -82,6 +85,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="wndGroupSetting.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="wndSchedule.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -119,13 +126,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CenterImageBak\台北大學校區平面圖.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\CeraDevice\CeraDevice.csproj">
       <Project>{eba6e819-8e52-47a9-a1dc-f4606257da1a}</Project>
       <Name>CeraDevice</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="CenterImageBak\台北大學校區平面圖.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="CenterImageBak\法鼓山停車場平面圖%28空白%29.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Center.jpg" />
