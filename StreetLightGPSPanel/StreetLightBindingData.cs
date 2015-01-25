@@ -40,7 +40,7 @@ namespace StreetLightPanel
     }
 
     [DataContract]
-    public class StreetLightBindingData:INotifyPropertyChanged
+    public class                         StreetLightBindingData:INotifyPropertyChanged
 
     {
         bool _IsEnable;
@@ -90,7 +90,7 @@ namespace StreetLightPanel
 
 
         }
-
+        [DataMember]
         public string LightNo
         {
             get;
@@ -114,14 +114,36 @@ namespace StreetLightPanel
                 }
             }
         }
+        public double W
+        {
+            get;
+            set;
+        }
         public override string ToString()
         {
             return DevID;
         }
-
+        public int Status
+        {
+            get
+            {
+                if (IsFake)
+                    return -1;
+                else if (IsEnable)
+                    return 1;
+                else
+                    return 0;
+            }
+        }
         public bool boolMark {
             get;set;
             }
+
+        public bool IsFake
+        {
+            get;
+            set;
+        }
         public bool IsChecked {
             get
             {

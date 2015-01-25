@@ -3,6 +3,7 @@ using ESRI.ArcGIS.Client;
 using ESRI.ArcGIS.Client.Geometry;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
@@ -40,7 +41,7 @@ namespace StreetLightPanel
             InitLed2dPositoin();
             serviceHost = new ServiceHost(new Service1());
             serviceHost.Open();
-        }
+         }
 #region map
         Envelope ConvertPointToEnvelop(MapPoint point)
         {
@@ -188,21 +189,86 @@ namespace StreetLightPanel
             tmr.Interval = TimeSpan.FromSeconds(20);
             tmr.Tick += tmr_Tick;
             tmr.Start();
+
+            System.Windows.Threading.DispatcherTimer tmr5min = new System.Windows.Threading.DispatcherTimer() { Interval = TimeSpan.FromMinutes(5) };
+            tmr5min.Tick += tmr5min_Tick;
+            tmr5min.Start();
 #endif
+        }
+
+        async void tmr5min_Tick(object sender, EventArgs e)
+        {
+
+              DeviceInfo[] infos = null;
+            //try
+            //{
+            //    try
+            //    {
+            //        infos = await coor_mgr.GetDeviceListAsync();
+            //    }
+            //    catch { ;}
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message);
+            //}
+
+
+            //foreach (DeviceInfo info in infos)
+            //{
+            //    if (info == null)
+            //        continue;
+            //    if (dictStreetLightBindingInfos.ContainsKey(info.addr))
+            //    {
+
+            //        dictStreetLightBindingInfos[info.addr].IsEnable = info.visibility;
+                  
+            //    }
+            //}
+
+
+            StreetLightInfo[] street_light_info = null;
+            try
+            {
+                street_light_info = await this.coor_mgr.GetStreetLightListAsync();
+            }
+            catch { }
+            if (street_light_info != null)
+            {
+                using (StreamWriter wr = System.IO.File.CreateText(AppDomain.CurrentDomain.BaseDirectory + "energy.txt"))
+                {
+                foreach (StreetLightInfo data in street_light_info)
+                {
+                    if (dictStreetLightBindingInfos.ContainsKey(data.DevID))
+                    {
+                       //  dictStreetLightBindingInfos[data.DevID].DimLevel = data.CurrentDimLevel;
+                        //dictStreetLightBindingInfos[data.DevID].W = data.W;
+                        //dictStreetLightBindingInfos[data.DevID].IsEnable = true;
+                       
+                            wr.WriteLine(string.Format("{0} {1} {2} {3} {4} {5} {6}",DateTime.Now,data.DevID, dictStreetLightBindingInfos[data.DevID].LightNo,data.V,data.A,data.W,data.KWHP*2));
+                      
+                    }
+                }
+                }
+        }
+            var q = from n in dictStreetLightBindingInfos.Values where !street_light_info.Select(k => k.DevID).ToArray().Contains(n.DevID) select n;
+            foreach (StreetLightBindingData data in q)
+                data.IsEnable = false;
+           
         }
 
         bool IsinSetting = false;
         bool IsInTimer = false;
 
         int tickcnt=0;
-        void tmr_Tick(object sender, EventArgs e)
+      async  void tmr_Tick(object sender, EventArgs e)
         {
             try
             {
                 if (IsInTimer || IsinSetting)
                     return;
                 IsInTimer = true;
-                   GetDeviceInfoAndSetBindingData();
+                  await GetDeviceInfoAndSetBindingData();
                    if (tickcnt++ % 180 == 0)
                    {
                        coor_mgr.SetDeviceRTC("*", DateTime.Now);
@@ -246,27 +312,28 @@ namespace StreetLightPanel
                 {
 
                     dictStreetLightBindingInfos[info.addr].IsEnable = info.visibility;
-
+                   
                 }
             }
-            //StreetLightInfo[] street_light_info=null;
-            //try
-            //{
-            //     street_light_info = await coor.GetStreetLightListAsync();
-            //}
-            //catch { }
-            //if(street_light_info!=null)
-            //foreach (StreetLightInfo data in street_light_info)
-            //{
-            //    if (dictStreetLightBindingInfos.ContainsKey(data.DevID))
-            //    {
-            //        dictStreetLightBindingInfos[data.DevID].DimLevel = data.CurrentDimLevel;
-            //        dictStreetLightBindingInfos[data.DevID].IsEnable = true;
-            //    }
-            //}
-            //var q = from n in dictStreetLightBindingInfos.Values where !street_light_info.Select(k=>k.DevID).ToArray().Contains(n.DevID) select n;
-            //foreach (StreetLightBindingData data in q)
-            //    data.IsEnable = false;
+            StreetLightInfo[] street_light_info = null;
+            try
+            {
+                street_light_info = await this.coor_mgr.GetStreetLightListAsync();
+            }
+            catch { }
+            if (street_light_info != null)
+                foreach (StreetLightInfo data in street_light_info)
+                {
+                    if (dictStreetLightBindingInfos.ContainsKey(data.DevID))
+                    {
+                        dictStreetLightBindingInfos[data.DevID].DimLevel = data.CurrentDimLevel;
+                        dictStreetLightBindingInfos[data.DevID].W = data.W;
+                        dictStreetLightBindingInfos[data.DevID].IsEnable = true;
+                    }
+                }
+            var q = from n in dictStreetLightBindingInfos.Values where !street_light_info.Select(k => k.DevID).ToArray().Contains(n.DevID) select n;
+            foreach (StreetLightBindingData data in q)
+                data.IsEnable = false;
         }
         void CheckLedOutput()
         {
@@ -416,7 +483,7 @@ namespace StreetLightPanel
                     if (!dictStreetLightBindingInfos.ContainsKey(devid))
                     {
 
-                        temp = new StreetLightBindingData() { DevID = devid, OriginalDevID = btn.Tag.ToString(), DimLevel = 0, IsEnable = false, LightNo = list[btn.Content.ToString()].LightNo };
+                        temp = new StreetLightBindingData() { DevID = devid, OriginalDevID = btn.Tag.ToString(), DimLevel = 0, IsEnable = false, LightNo = list[btn.Content.ToString()].LightNo, IsFake = list[btn.Content.ToString()].IsFake};
 
                         dictStreetLightBindingInfos.Add(temp.DevID, temp);
                         dictStreetLightBindingInfosOriginal.Add(temp.OriginalDevID, temp);
@@ -453,7 +520,7 @@ namespace StreetLightPanel
             App.Current.Properties["LightCollection"] = dictStreetLightBindingInfos;
             App.Current.Properties["LightCollectionOriginal"] = dictStreetLightBindingInfosOriginal;
             Initial();
-           
+            Button_Click_1(null, null); //歸位
         }
 
         Config LoadConfig()
@@ -478,14 +545,14 @@ namespace StreetLightPanel
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             #region open here later
-            //foreach (UIElement element in grdDeviceLayer.Children)
-            //{
-            //    if (element is CheckBox)
-            //    {
-            //        if( (element as CheckBox).IsEnabled)
-            //               (element as CheckBox).IsChecked = true;
-            //    }
-            //}
+            foreach (UIElement element in  (this.map.Layers["grdDeviceLayer"] as ElementLayer).Children)
+            {
+                if (element is CheckBox)
+                {
+                    if ((element as CheckBox).IsEnabled)
+                        (element as CheckBox).IsChecked = true;
+                }
+            }
             #endregion
         }
 
@@ -506,81 +573,81 @@ namespace StreetLightPanel
         {
 
             #region open later
-            //foreach (UIElement element in grdDeviceLayer.Children)
-            //{
+            foreach (UIElement element in  (this.map.Layers["grdDeviceLayer"] as ElementLayer).Children)
+            {
 
-            //    try
-            //    {
-            //        if (element is CheckBox)
-            //        {
-            //            if ((element as CheckBox).IsEnabled && (element as CheckBox).IsChecked == true)
-            //            {
-            //                bool isFinish = false;
-            //                for (int i = 0; i < 3; i++)
-            //                {
-            //                    try
-            //                    {
-            //                        StreetLightBindingData data = (element as CheckBox).DataContext as StreetLightBindingData;
+                try
+                {
+                    if (element is CheckBox)
+                    {
+                        if ((element as CheckBox).IsEnabled && (element as CheckBox).IsChecked == true)
+                        {
+                            bool isFinish = false;
+                            for (int i = 0; i < 3; i++)
+                            {
+                                try
+                                {
+                                    StreetLightBindingData data = (element as CheckBox).DataContext as StreetLightBindingData;
 
-            //                        coor_mgr.SetDeviceScheduleAsync(data.DevID, scene.Schedule.GetScheduleSegTimeString(), scene.Schedule.GetScheduleSegLevelString());
+                                    coor_mgr.SetDeviceScheduleAsync(data.DevID, scene.Schedule.GetScheduleSegTimeString(), scene.Schedule.GetScheduleSegLevelString());
 
-            //                        await Task.Delay(100);
-            //                        StreetLightInfo[] backInfo = await coor_mgr.GetStreetLightListAsync(data.DevID);
-            //                        await Task.Delay(100);
-            //                        if (backInfo[0].sch.IsEqual(scene.Schedule))
-            //                        {
-            //                            isFinish = true;
-            //                            break;
-            //                        }
-            //                    }
-            //                    catch
-            //                    { ;}
-            //                }
-            //                if (!isFinish)
-            //                {
-            //                    MessageBox.Show(((element as CheckBox).DataContext as StreetLightBindingData).DevID + "," + "排程傳送失敗!");
-            //                }
+                                    await Task.Delay(100);
+                                    StreetLightInfo[] backInfo = await coor_mgr.GetStreetLightListAsync(data.DevID);
+                                    await Task.Delay(100);
+                                    if (backInfo[0].sch.IsEqual(scene.Schedule))
+                                    {
+                                        isFinish = true;
+                                        break;
+                                    }
+                                }
+                                catch
+                                { ;}
+                            }
+                            if (!isFinish)
+                            {
+                                MessageBox.Show(((element as CheckBox).DataContext as StreetLightBindingData).DevID + "," + "排程傳送失敗!");
+                            }
 
-            //            }
+                        }
 
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //       MessageBox.Show(  ((element as CheckBox).DataContext as StreetLightBindingData).DevID+","+   ex.Message) ;
-            //    }
-            //}
-            //MessageBox.Show("ok!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(((element as CheckBox).DataContext as StreetLightBindingData).DevID + "," + ex.Message);
+                }
+            }
+            MessageBox.Show("ok!");
             #endregion
         }
         private void btnUnselectAll_Click(object sender, RoutedEventArgs e)
         {
 
             //open  latter
-            //foreach (UIElement element in grdDeviceLayer.Children)
-            //{
-            //    if (element is CheckBox)
-            //    {
-            //        if ((element as CheckBox).IsEnabled)
-            //            (element as CheckBox).IsChecked = false ;
-            //    }
-            //}
+            foreach (UIElement element in  (this.map.Layers["grdDeviceLayer"] as ElementLayer).Children)
+            {
+                if (element is CheckBox)
+                {
+                    if ((element as CheckBox).IsEnabled)
+                        (element as CheckBox).IsChecked = false;
+                }
+            }
         }
 
         private void btnReverseSelect_Click(object sender, RoutedEventArgs e)
         {
 
             //open later
-            //foreach (UIElement element in grdDeviceLayer.Children)
-            //{
-            //    if (element is CheckBox)
-            //    {
-            //        if ((element as CheckBox).IsEnabled)
-            //        {
-            //            (element as CheckBox).IsChecked=!((element as CheckBox).IsChecked ?? false);
-            //        }
-            //    }
-            //}
+            foreach (UIElement element in  (this.map.Layers["grdDeviceLayer"] as ElementLayer).Children)
+            {
+                if (element is CheckBox)
+                {
+                    if ((element as CheckBox).IsEnabled)
+                    {
+                        (element as CheckBox).IsChecked = !((element as CheckBox).IsChecked ?? false);
+                    }
+                }
+            }
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -590,14 +657,18 @@ namespace StreetLightPanel
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459))
-                    );
-            
+         // 銘大林口校區
+            //121.341855, 24.984922
+            //ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459)));
+         //銘大金門校區           );
+          // 118.402180,24.501124
+            ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(118.402180, 24.501124)));
+
         }
 
         private void map_Loaded(object sender, RoutedEventArgs e)
         {
-            //ZoomToLevel(17, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459))
+            //ZoomToLevel(17, ConvertMapPointTo102100(new MapPoint(118.402180,24.501124))
             //      );
         }
     }

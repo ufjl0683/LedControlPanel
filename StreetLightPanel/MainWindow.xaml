@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:StreetLightPanel"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="StreetLightPanel.MainWindow"
      
-        Title="MainWindow" ResizeMode="NoResize" WindowState="Maximized" d:DesignWidth="2677.6" d:DesignHeight="1666.8" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" >
+        Title="MainWindow" WindowState="Maximized" d:DesignWidth="2677.6" d:DesignHeight="1666.8" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" >
     <Window.Resources>
         <local:IsEnableToStreetColorConverter x:Key="IsEnableToStreetColorConverter" />
         <Style x:Key="CheckBoxStyle1" TargetType="{x:Type CheckBox}">
@@ -45,7 +45,7 @@
                                     </RadialGradientBrush>
                                 </Ellipse.Fill>
                             </Ellipse>
-                            <Rectangle x:Name="rectangle" Width="Auto" StrokeDashArray="4 2" Stroke="#FFFEFCFC" Height="Auto" Margin="0" Visibility="Collapsed" StrokeThickness="3"/>
+                            <Rectangle x:Name="rectangle" Width="Auto" StrokeDashArray="4 0" Stroke="LightGreen" Height="Auto" Margin="0" Visibility="Collapsed" StrokeThickness="7"/>
                             <ContentPresenter RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Bottom" Margin="-7.167,0,-6.599,-13.826" HorizontalAlignment="Center" Width="Auto"/>
                             <ProgressBar HorizontalAlignment="Stretch"  Value="{Binding DimLevel}" Height="4.4" Margin="-0.8,-10,-0.6,0" VerticalAlignment="Top" Width="Auto" SmallChange="1" LargeChange="10"/>
                         </Grid>
@@ -88,11 +88,11 @@
 
         </Border>
         <Button Content="全選" HorizontalAlignment="Left" Height="45" Margin="237,0,0,0" VerticalAlignment="Top" Width="81" Click="Button_Click" FontSize="16"/>
-        <Button x:Name="btnTemplateEdit" Content=" 範本編輯" HorizontalAlignment="Left" Height="45" Margin="508,0,0,0" VerticalAlignment="Top" Width="81" Click="btnTemplateEdit_Click" FontSize="16"/>
-        <Button x:Name="btnUnselectAll" Content="取消選取" HorizontalAlignment="Left" Height="45" Margin="326,0,0,0" VerticalAlignment="Top" Width="81" Click="btnUnselectAll_Click" FontSize="16"/>
-        <Button x:Name="btnReverseSelect" Content="反轉選取" HorizontalAlignment="Left" Height="45" Margin="412,0,0,0" VerticalAlignment="Top" Width="81" Click="btnReverseSelect_Click" FontSize="16"/>
-        <Button x:Name="btnGroupSetting" Content="群組選擇" HorizontalAlignment="Left" Height="45" Margin="604,0,0,0" VerticalAlignment="Top" Width="81" FontSize="16" Click="btnGroupSetting_Click"/>
-        <Button x:Name="btnAddGroup" Content="新增群組" HorizontalAlignment="Left" Height="45" Margin="707,0,0,0" VerticalAlignment="Top" Width="81" FontSize="16" Click="btnAddGroup_Click" IsDefault="True"/>
+        <Button x:Name="btnTemplateEdit" Content=" 排程編輯" HorizontalAlignment="Left" Height="45" Margin="548,0,0,0" VerticalAlignment="Top" Width="81" Click="btnTemplateEdit_Click" FontSize="16"/>
+        <Button x:Name="btnUnselectAll" Content="取消選取" HorizontalAlignment="Left" Height="45" Margin="343,0,0,0" VerticalAlignment="Top" Width="81" Click="btnUnselectAll_Click" FontSize="16"/>
+        <Button x:Name="btnReverseSelect" Content="反轉選取" HorizontalAlignment="Left" Height="45" Margin="443,0,0,0" VerticalAlignment="Top" Width="81" Click="btnReverseSelect_Click" FontSize="16"/>
+        <Button x:Name="btnGroupSetting" Content="路燈群組選擇" HorizontalAlignment="Left" Height="45" Margin="649,0,0,0" VerticalAlignment="Top" Width="103" FontSize="16" Click="btnGroupSetting_Click"/>
+        <Button x:Name="btnAddGroup" Content="新增路燈群組" HorizontalAlignment="Left" Height="45" Margin="773,0,0,0" VerticalAlignment="Top" Width="119" FontSize="16" Click="btnAddGroup_Click" IsDefault="True"/>
 
     </Grid>
 </Window>

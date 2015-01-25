@@ -14,7 +14,7 @@ namespace StreetLightPanel
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if ((bool)value)
-                return new SolidColorBrush(Colors.White);
+                return new SolidColorBrush(Colors.Black);
             else
                 return new SolidColorBrush( Colors.Red);
            // throw new NotImplementedException();
@@ -31,7 +31,11 @@ namespace StreetLightPanel
    {
        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
        {
-           if ((bool)value)
+           int status = (int)value;
+           if (status == -1)
+               return Colors.Gray;
+
+           if (status == 1)
                return Colors.Yellow;
            else
                return Colors.Red;

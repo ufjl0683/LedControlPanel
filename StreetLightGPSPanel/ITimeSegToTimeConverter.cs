@@ -12,7 +12,10 @@ namespace StreetLightPanel
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             int time = System.Convert.ToInt32(value);
-            return string.Format("{0:00}:{1:00}", time / 60, time % 60);
+            int hour = time / 60;
+            int sec = time % 60;
+
+            return string.Format("{0:00}:{1:00}", hour < 24 ? hour : 0,hour < 24? sec:0);
 
 
         }

@@ -324,6 +324,7 @@ namespace CeraDevices
             if (devid == "*")
                 using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_list"))
                 {
+                    Console.WriteLine(UriBase + "/street_light.get_dev_list");
                     infolist = jsonsr.ReadObject(stream) as StreetLightInfoList; ;
                 }
             else

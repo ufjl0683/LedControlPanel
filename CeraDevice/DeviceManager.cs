@@ -23,7 +23,14 @@ namespace CeraDevices
                 {
                     if (info != null)
                     {
-                        dictDevice.Add(info.DevID, Coordinators[i]);
+                      //   if (!dictDevice.ContainsKey(info.DevID))
+                            dictDevice.Add(info.DevID, Coordinators[i]);
+                        // else
+                            
+                            
+                       
+                          
+                        
                       //  dictDeviceID.Add(info.RmkID, info.DevID);
                     }
                 }

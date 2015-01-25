@@ -16,56 +16,48 @@ namespace CommTest
 
           // string [,]q=new string [,]{{"a","b"},{"c","d"}};
 
-            string res = GenerateSteetLightSetting("Taipei.csv");
-
-
-
-            Console.Write(res);
+         //   string res = GenerateSteetLightSetting("Taipei.csv");
+            try
+            {
+                DeviceManager mgr = new DeviceManager(new CeraDevices.CoordinatorDevice[] { new CeraDevices.CoordinatorDevice("http://10.10.1.1:8080") });
+                mgr.GetStreetLightList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message + "," + ex.StackTrace);
+            }
+        //    Console.Write(res);
             Console.ReadKey();
 
 
 
 
-            Config config = new Config();
-            config.Coordinators = new CoordinatorConfig[] { new CoordinatorConfig() { ID = 0, BaseUrl="http://10.10.1.1:8080" } };
-            config.Groups = new GroupConfig[]{
-                new GroupConfig{ GroupID=0, GroupName="TestGroup", DimLevel=0 ,Devices=new DeviceConfig[]{new DeviceConfig(){ CoordinatorID=0, MAC="ABCDEFG", RmkID="aabb" } }   }
-            };
+//            Config config = new Config();
+//            config.Coordinators = new CoordinatorConfig[] { new CoordinatorConfig() { ID = 0, BaseUrl="http://10.10.1.1:8080" } };
+//            config.Groups = new GroupConfig[]{
+//                new GroupConfig{ GroupID=0, GroupName="TestGroup", DimLevel=0 ,Devices=new DeviceConfig[]{new DeviceConfig(){ CoordinatorID=0, MAC="ABCDEFG", RmkID="aabb" } }   }
+//            };
 
-            Config.WriteXml(config,"config.xml");
+//            Config.WriteXml(config,"config.xml");
             
-           CeraDevices.CoordinatorDevice cdev = new CeraDevices.CoordinatorDevice("10.10.1.1", 8080);
+//           CeraDevices.CoordinatorDevice cdev = new CeraDevices.CoordinatorDevice("10.10.1.1", 8080);
            
-        //   CeraDevices.CorrdinatorInfo info= cdev.GetDeviceInfo();
-         // StreetLightInfo[] list= cdev.GetStreetLightList();
-
-        //   CeraDevices.DeviceManager mgr = new DeviceManager(new CoordinatorDevice[] { cdev });
-            
-            
-           //Console.WriteLine(info.ToString());
-           //CeraDevices.DeviceInfo[] infos = cdev.GetDeviceList();
-           //cdev.SetStreetLightRemark("8814","AABBCC");
-
-          //  mgr["aabb"].SetDeviceDimLevel(mgr.GetDeviceID("aabb"), 80);
-         //   mgr["aabb"].SetDeviceDimLevel(mgr.GetDeviceID("aabb"), 0);
        
-           // CeraDevices.CoordinatorDevice.PermitJoinNode(60);
           
-           cdev.SetDeviceSchedule("*", "0,180,1190,1210,1235,0,0,0,0,0", "20,40,60,20,20,255,255,255,255,255");
-            cdev.SetDeviceRTC("*", DateTime.Now);
-     //       cdev.SetDeviceEnableSch("8814", true);
+//           cdev.SetDeviceSchedule("*", "0,180,1190,1210,1235,0,0,0,0,0", "20,40,60,20,20,255,255,255,255,255");
+//            cdev.SetDeviceRTC("*", DateTime.Now);
+    
+//            cdev.SetDeviceScheduleEnable("*", true);
 
-            cdev.SetDeviceScheduleEnable("*", true);
+//            CeraDevices.StreetLightInfo[] stifos = cdev.GetStreetLightList();
 
-            CeraDevices.StreetLightInfo[] stifos = cdev.GetStreetLightList();
-
-Console.ReadKey();
-cdev.SetDeviceScheduleEnable("*", false);
-foreach (StreetLightInfo info in stifos)
-{
-    cdev.SetDeviceDimLevel(info.DevID, 100);
-}
-Console.ReadKey();
+//Console.ReadKey();
+//cdev.SetDeviceScheduleEnable("*", false);
+//foreach (StreetLightInfo info in stifos)
+//{
+//    cdev.SetDeviceDimLevel(info.DevID, 100);
+//}
+//Console.ReadKey();
 
         }
 
