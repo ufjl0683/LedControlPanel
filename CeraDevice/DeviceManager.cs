@@ -14,10 +14,15 @@ namespace CeraDevices
         public  DeviceManager(CoordinatorDevice[] CoordinatorDevices)
         {
 
+
             Coordinators = CoordinatorDevices;
 
+#if DEBUG
+            return;
+#endif
             for (int i = 0; i < Coordinators.Length; i++)
             {
+
                 StreetLightInfo[] list =     Coordinators[i].GetStreetLightList();
                 foreach (StreetLightInfo info in list)
                 {

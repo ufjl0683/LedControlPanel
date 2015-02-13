@@ -138,10 +138,15 @@
     <Resource Include="CenterImageBak\法鼓山停車場平面圖%28空白%29.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Center.jpg" />
+    <Resource Include="CenterImageBak\綠建築中心-1.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="CenterImageBak\綠建築中心-1.jpg" />
+    <Resource Include="CenterImageBak\點路燈位置圖1-輔助路牌 之 平面圖 --簡潔淡化版99-12-1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Center.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

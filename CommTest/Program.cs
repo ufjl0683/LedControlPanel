@@ -1,4 +1,5 @@
-﻿using CeraDevices;
+﻿ 
+using CeraDevices.Coordinator2;
 using CeraDevices.Packages;
 using LED;
 using System;
@@ -11,21 +12,30 @@ namespace CommTest
     {
         static object lockobj = new object();
         static System.Collections.Generic.List<ushort> addr = new List<ushort>();
-        static void Main(string[] args)
+        static   void Main(string[] args)
         {
 
+            CoordinatorDevice2 dev = new CoordinatorDevice2("10.10.1.1", 8080);
+            CorrdinatorInfo info = dev.GetDeviceInfo();
+            DeviceInfo[] infos = dev.GetDeviceList();
+            Console.WriteLine(infos.Length);
+            task(dev);
+            Console.WriteLine(info.pan_id);
+                          dev.PermitJoinNode(60);
+                          StreetLightInfo[] sinfos = dev.GetStreetLightList();
+            Console.WriteLine(sinfos.Length);
           // string [,]q=new string [,]{{"a","b"},{"c","d"}};
 
          //   string res = GenerateSteetLightSetting("Taipei.csv");
-            try
-            {
-                DeviceManager mgr = new DeviceManager(new CeraDevices.CoordinatorDevice[] { new CeraDevices.CoordinatorDevice("http://10.10.1.1:8080") });
-                mgr.GetStreetLightList();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message + "," + ex.StackTrace);
-            }
+            //try
+            //{
+            //    DeviceManager mgr = new DeviceManager(new CeraDevices.CoordinatorDevice[] { new CeraDevices.CoordinatorDevice("http://10.10.1.1:8080") });
+            //    mgr.GetStreetLightList();
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message + "," + ex.StackTrace);
+            //}
         //    Console.Write(res);
             Console.ReadKey();
 
@@ -61,7 +71,12 @@ namespace CommTest
 
         }
 
+        static async void task(CoordinatorDevice2 dev)
+        {
 
+            DeviceInfo[] infos = await dev.GetDeviceListAsync();
+            Console.WriteLine(infos.Length);
+        }
         static string GenerateSteetLightSetting(string filename)
         {
 
@@ -80,113 +95,113 @@ namespace CommTest
             return res;
         }
 
-        static void CeraMicroDeviceTest(string[] args)
-         {
+        //static void CeraMicroDeviceTest(string[] args)
+        // {
 
-             CmdBasePackage pkg2, pkg1;
+        //     CmdBasePackage pkg2, pkg1;
 
-             if (args.Length == 0)
-             {
-                 Console.WriteLine("請指定 ComPort,請按任意鍵繼續");
-                 Console.ReadKey();
-                 return;
-             }
+        //     if (args.Length == 0)
+        //     {
+        //         Console.WriteLine("請指定 ComPort,請按任意鍵繼續");
+        //         Console.ReadKey();
+        //         return;
+        //     }
 
-             CeraDevices.CeraDevice dev = new CeraDevices.CeraDevice(args[0], 115200);
-             int successcnt = 0;
-             dev.OnChildTableReport += new ChildTableReportHandler(dev_OnChildTableReport);
+        //     CeraDevices.CeraDevice dev = new CeraDevices.CeraDevice(args[0], 115200);
+        //     int successcnt = 0;
+        //     dev.OnChildTableReport += new ChildTableReportHandler(dev_OnChildTableReport);
 
-             pkg2 = new PermitNoteJoinPackage(30);
-             pkg2.OnCompleted += (s, a) =>
-             {
-                 Console.WriteLine("開放加入Node 30 sec 命令成功,請按任意鍵繼續");
+        //     pkg2 = new PermitNoteJoinPackage(30);
+        //     pkg2.OnCompleted += (s, a) =>
+        //     {
+        //         Console.WriteLine("開放加入Node 30 sec 命令成功,請按任意鍵繼續");
 
-             }
-             ;
-             pkg2.OnFailed += (s, a) =>
-             {
-                 Console.WriteLine("開放加入Node 30 sec 命令失敗,請按任意鍵繼續");
-                 Console.ReadKey();
-                 return;
-             };
-             dev.SendPackage(pkg2);
-             //  Console.WriteLine("開放加入Node 30 sec,請按任意鍵繼續");
-
-
-             Console.ReadKey();
+        //     }
+        //     ;
+        //     pkg2.OnFailed += (s, a) =>
+        //     {
+        //         Console.WriteLine("開放加入Node 30 sec 命令失敗,請按任意鍵繼續");
+        //         Console.ReadKey();
+        //         return;
+        //     };
+        //     dev.SendPackage(pkg2);
+        //     //  Console.WriteLine("開放加入Node 30 sec,請按任意鍵繼續");
 
 
-
-
-             pkg1 = new CeraDevices.Packages.RequestChildrenTable();
-
-             pkg1.OnCompleted += (s, a) =>
-             {
-                 Console.WriteLine("要求所有的裝置回報成功,請按任意鍵繼續 ");
-
-             };
-             pkg1.OnFailed += (s, a) =>
-             {
-                 Console.WriteLine("要求所有的裝置回報失敗,請按任意鍵繼續");
-                 Console.ReadKey();
-                 return;
-             };
-             dev.SendPackage(pkg1);
-             Console.ReadKey();
-             //pkg1.OnCompleted += (s, a) =>
-             //    {
-             //        //CmdBasePackage pkg2 = new LedControlPackage(0x1000, 1,100, 0, 0, 0);
-             //        //dev.SendPackage(pkg2);
-             //    };
-
-             //====================================================================
-             Console.WriteLine("準備開始測試,請按任意鍵繼續");
-             Console.ReadKey();
-             bool flag = true;
-
-             while (true)
-             {
-                 for (int i = flag ? 0 : 100; flag ? i <= 100 : i >= 0; )
-                 {
-                     //  int[] add = new int[] { 0x100b, 0x1016, 0x1008, 0x1003 };
-
-                     for (int j = 0; j < addr.Count; j++)
-                     {
-                         LedControlPackage pkg = new LedControlPackage(addr[j], 01, (byte)i, (byte)i, (byte)i, (byte)i);
-
-                         pkg.OnFailed += (s, a) =>
-                         {
-                             Console.WriteLine("failed");
-                             lock (lockobj)
-                                 System.Threading.Monitor.Pulse(lockobj);
-                         };
-
-                         pkg.OnCompleted += (s, a) =>
-                         {
-                             Console.WriteLine("Success");
-                             lock (lockobj)
-                                 System.Threading.Monitor.Pulse(lockobj);
-                         };
-                         dev.SendPackage(pkg);
-                         lock (lockobj)
-                             System.Threading.Monitor.Wait(lockobj, 1000);
-                         // System.Threading.Thread.Sleep(100);
-                     }
-
-                     //System.Console.WriteLine("================" + i + "================");
-                     //System.Threading.Thread.Sleep(3000);
-
-                     if (flag) i += 10; else i -= 10;
-
-                 }
-
-                 flag = !flag;
+        //     Console.ReadKey();
 
 
 
 
-             }
-         }
+        //     pkg1 = new CeraDevices.Packages.RequestChildrenTable();
+
+        //     pkg1.OnCompleted += (s, a) =>
+        //     {
+        //         Console.WriteLine("要求所有的裝置回報成功,請按任意鍵繼續 ");
+
+        //     };
+        //     pkg1.OnFailed += (s, a) =>
+        //     {
+        //         Console.WriteLine("要求所有的裝置回報失敗,請按任意鍵繼續");
+        //         Console.ReadKey();
+        //         return;
+        //     };
+        //     dev.SendPackage(pkg1);
+        //     Console.ReadKey();
+        //     //pkg1.OnCompleted += (s, a) =>
+        //     //    {
+        //     //        //CmdBasePackage pkg2 = new LedControlPackage(0x1000, 1,100, 0, 0, 0);
+        //     //        //dev.SendPackage(pkg2);
+        //     //    };
+
+        //     //====================================================================
+        //     Console.WriteLine("準備開始測試,請按任意鍵繼續");
+        //     Console.ReadKey();
+        //     bool flag = true;
+
+        //     while (true)
+        //     {
+        //         for (int i = flag ? 0 : 100; flag ? i <= 100 : i >= 0; )
+        //         {
+        //             //  int[] add = new int[] { 0x100b, 0x1016, 0x1008, 0x1003 };
+
+        //             for (int j = 0; j < addr.Count; j++)
+        //             {
+        //                 LedControlPackage pkg = new LedControlPackage(addr[j], 01, (byte)i, (byte)i, (byte)i, (byte)i);
+
+        //                 pkg.OnFailed += (s, a) =>
+        //                 {
+        //                     Console.WriteLine("failed");
+        //                     lock (lockobj)
+        //                         System.Threading.Monitor.Pulse(lockobj);
+        //                 };
+
+        //                 pkg.OnCompleted += (s, a) =>
+        //                 {
+        //                     Console.WriteLine("Success");
+        //                     lock (lockobj)
+        //                         System.Threading.Monitor.Pulse(lockobj);
+        //                 };
+        //                 dev.SendPackage(pkg);
+        //                 lock (lockobj)
+        //                     System.Threading.Monitor.Wait(lockobj, 1000);
+        //                 // System.Threading.Thread.Sleep(100);
+        //             }
+
+        //             //System.Console.WriteLine("================" + i + "================");
+        //             //System.Threading.Thread.Sleep(3000);
+
+        //             if (flag) i += 10; else i -= 10;
+
+        //         }
+
+        //         flag = !flag;
+
+
+
+
+        //     }
+        // }
         static void dev_OnChildTableReport(ResponseChildTable childTable)
         {
 

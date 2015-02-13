@@ -60,6 +60,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Packages\RequestChildrenTable.cs" />
     <Compile Include="Packages\ResponseChildTable.cs" />
+    <Compile Include="CoordinatorDevice2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

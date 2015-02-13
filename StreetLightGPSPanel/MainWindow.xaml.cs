@@ -659,10 +659,10 @@ namespace StreetLightPanel
         {
          // 銘大林口校區
             //121.341855, 24.984922
-            //ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459)));
+            ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459)));
          //銘大金門校區           );
           // 118.402180,24.501124
-            ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(118.402180, 24.501124)));
+          //  ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(118.402180, 24.501124)));
 
         }
 

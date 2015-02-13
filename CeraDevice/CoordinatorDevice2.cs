@@ -8,36 +8,36 @@ using System.IO;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using CeraDevices.Coordinator2;
 
-
-namespace CeraDevices
+namespace CeraDevices.Coordinator2
 {
 
-    public class CoordinatorDevice
+    public class CoordinatorDevice2
     {
         private string UriBase = "http://10.10.1.1:8080";
         //     MyWebClient wc = new MyWebClient();
 
 
-        public CoordinatorDevice(string ip, int port)
+        public CoordinatorDevice2(string ip, int port)
         {
             UriBase = "http://" + ip + ":" + port;
         }
 
-        public CoordinatorDevice(string baseUrl)
+        public CoordinatorDevice2(string baseUrl)
         {
             UriBase = baseUrl;
         }
-        public  CorrdinatorInfo GetDeviceInfo()
+        public  CorrdinatorInfo GetDeviceInfo()   //version 2
         {
             MyWebClient wc = new MyWebClient();
-            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(CorrdinatorInfo));
+            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(CorrdinatorInfoBase));
 
             Stream stream;
-            CorrdinatorInfo retInfo = jsonsr.ReadObject(stream = wc.OpenRead(UriBase + "/info")) as CorrdinatorInfo;
+            CorrdinatorInfoBase retInfo = jsonsr.ReadObject(stream = wc.OpenRead(UriBase + "/info")) as CorrdinatorInfoBase;
             stream.Close();
             stream.Dispose();
-            return retInfo;
+            return retInfo.info;
         }
 
         //public void SetDeviceEnableSch(string devid,bool enable)
@@ -56,7 +56,7 @@ namespace CeraDevices
         {
             DeviceInfo[] devlist = GetDeviceList();
 
-            devlist = devlist.Where(n => n != null && n.visibility).ToArray();
+            devlist = devlist.Where(n => n != null && n.visibility==1).ToArray();
             StreetLightInfo[] streetlist = GetStreetLightList().ToArray();
 
             StreetLightInfo[] retList = (from m in streetlist join n in devlist on m.DevID equals n.addr select m).ToArray();
@@ -67,7 +67,7 @@ namespace CeraDevices
         {
             DeviceInfo[] devlist = await GetDeviceListAsync();
 
-            devlist = devlist.Where(n => n != null && n.visibility).ToArray();
+            devlist = devlist.Where(n => n != null && n.visibility==1).ToArray();
             StreetLightInfo[] streetlist = await GetStreetLightListAsync();
             foreach (DeviceInfo dev in devlist)
             {
@@ -120,14 +120,15 @@ namespace CeraDevices
         {
 
             MyWebClient wc = new MyWebClient();
+            DateTime dt = DateTime.Now;
             Stream stream;
             if (devid == "*")
             {
-                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr);
+                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day);
             }
             else
             {
-                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr);
+                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day);
             }
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -135,20 +136,22 @@ namespace CeraDevices
 
         }
 
-        public async void SetDeviceScheduleAsync(string devid, string timeStr, string levelStr)
+        public async void SetDeviceScheduleAsync(string mac, string timeStr, string levelStr)
         {
 
             MyWebClient wc = new MyWebClient();
+            
             Stream stream;
-            if (devid == "*")
+            System.DateTime dt = DateTime.Now;
+            if (mac == "*")
             {
-               stream = await  wc.OpenReadTaskAsync(new Uri(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr));
+               stream = await  wc.OpenReadTaskAsync(new Uri(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day));
 
                
             }
             else
             {
-                stream = await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr);
+                stream = await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?mac=" + mac + "&time=" + timeStr + "&level=" + levelStr + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day);
             }
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -202,6 +205,11 @@ namespace CeraDevices
                 while (stream.ReadByte() != -1) ;
             }
 
+            //System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(Coordinator2.CoordinatorResult));
+
+            //Stream stream;
+            //Coordinator2.CoordinatorResult res = jsonsr.ReadObject(stream = wc.OpenRead(UriBase + "/info")) as CorrdinatorInfoBase;
+
         }
 
         public void ChangeRFChanel(int chanelno)
@@ -250,12 +258,12 @@ namespace CeraDevices
 
         }
 
-        public DeviceInfo[] GetDeviceList()
+        public DeviceInfo[] GetDeviceList()  //version 2
         {
 
             MyWebClient wc = new MyWebClient();
 
-            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DeviceInfoList));
+            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DeviceInfoListBase));
             //          Command /get_dev_list /get_dev_list /get_dev_list
             //Parameters - - -
             //Response Body {  list: [  {    addr: “”,    type: “”,    pan: “”,    mac: “”,    visibility: 1,  },...] }
@@ -263,22 +271,22 @@ namespace CeraDevices
             //string string string string int
             //device id
             //device id device type device pan id MAC Address visibility
-            DeviceInfoList infolist = null;
+            DeviceInfoListBase infolist = null;
             using (Stream stream = wc.OpenRead(UriBase + "/get_dev_list"))
             {
-                infolist = jsonsr.ReadObject(stream) as DeviceInfoList; ;
+                infolist = jsonsr.ReadObject(stream) as DeviceInfoListBase; ;
             }
-            return infolist.list.Where(n => n != null).ToArray();
+            return  infolist.list.Where(n => n != null).ToArray();
 
         }
 
 
 
-        public async Task<DeviceInfo[]> GetDeviceListAsync()
+        public async Task<DeviceInfo[]> GetDeviceListAsync()  //version2
         {
 
 
-            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DeviceInfoList));
+            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(DeviceInfoListBase));
             //          Command /get_dev_list /get_dev_list /get_dev_list
             //Parameters - - -
             //Response Body {  list: [  {    addr: “”,    type: “”,    pan: “”,    mac: “”,    visibility: 1,  },...] }
@@ -286,21 +294,21 @@ namespace CeraDevices
             //string string string string int
             //device id
             //device id device type device pan id MAC Address visibility
-            DeviceInfoList infolist = null;
+            DeviceInfoListBase infolist = null;
             MyWebClient wc = new MyWebClient();
             using (Stream stream = await wc.OpenReadTaskAsync(UriBase + "/get_dev_list"))
             {
-                infolist = jsonsr.ReadObject(stream) as DeviceInfoList; ;
+                infolist = jsonsr.ReadObject(stream) as DeviceInfoListBase; ;
             }
             return infolist.list.Where(n => n != null).ToArray();
 
         }
 
-        public StreetLightInfo[] GetStreetLightList()
+        public StreetLightInfo[] GetStreetLightList()   //version 2
         {
             return GetStreetLightList("*");
         }
-        public StreetLightInfo[] GetStreetLightList(string devid)
+        public StreetLightInfo[] GetStreetLightList(string devid)  //version 2
         {
 
             //         Command /street_light.get_dev_list /street_light.get_dev_list /street_light.get_dev_list
@@ -318,29 +326,93 @@ namespace CeraDevices
             //comment
             MyWebClient wc = new MyWebClient();
 
-            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(StreetLightInfoList));
+            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(StreetLightInfoListBase));
 
-            StreetLightInfoList infolist = null;
+            StreetLightInfoListBase infolist = null;
             if (devid == "*")
                 using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_list"))
                 {
                     Console.WriteLine(UriBase + "/street_light.get_dev_list");
-                    infolist = jsonsr.ReadObject(stream) as StreetLightInfoList; ;
+                    infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
                 }
             else
             {
                 using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_list?dev="+devid))
                 {
-                    infolist = jsonsr.ReadObject(stream) as StreetLightInfoList; ;
+                    infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
                 }
             }
             int len = infolist.list.Length;
-            return infolist.list.Take(len - 1).ToArray();
+
+           StreetLightInfo [] schedinfo=  GetDeviceSchedule(devid);
+          //  foreach(StreetLightInfo info in infolist
+           StreetLightInfo[] retinfos = infolist.list.Take(len - 1).ToArray();
+           foreach (StreetLightInfo info in retinfos)
+           {
+               StreetLightInfo temp = schedinfo.Where(n => n.dev == info.dev).FirstOrDefault();
+               if (temp == null)
+                   continue;
+               info.sch = temp.sch;
+               info.cmt = temp.cmt;
+               info.SetScheduleEnable(temp.IsScheduleEnable);
+
+           }
+           return retinfos; //infolist.list.Take(len - 1).ToArray();
 
         }
 
 
-        public async Task<StreetLightInfo[]> GetStreetLightListAsync()
+        private async Task<StreetLightInfo[]> GetDeviceScheduleAsync(string dev)
+        {
+
+
+            return await Task.FromResult<StreetLightInfo[]>(GetDeviceSchedule(dev));
+
+            //System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(StreetLightInfoList));
+
+            //StreetLightInfoList infolist = null;
+            //using (Stream stream =  await wc.OpenReadTaskAsync(UriBase + "/street_light.get_dev_list"))
+            //{
+            //    infolist = jsonsr.ReadObject(stream) as StreetLightInfoList; ;
+            //}
+            //int len = infolist.list.Length;
+            //return infolist.list.Take(len - 1).ToArray();
+
+
+        }
+
+        private StreetLightInfo[] GetDeviceSchedule(string devid)  //version 2
+        {
+            MyWebClient wc = new MyWebClient();
+
+            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(StreetLightInfoListBase));
+
+            StreetLightInfoListBase infolist = null;
+            if (devid == "*")
+                using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_info"))
+                {
+                    Console.WriteLine(UriBase + "/street_light.get_dev_info");
+                    infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
+                }
+            else
+            {
+                using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_info?dev=" + devid))
+                {
+                    infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
+                }
+            }
+            int len = infolist.list.Length;
+            return infolist.list.Take(len - 1).ToArray();
+        }
+
+        //[DataContract]
+        //public class DeviceScheduleBase
+        //{
+        //    [DataMember(Name="objects")]
+        //    StreetLightInfo[] list { get; set; }
+        //}
+
+        public async Task<StreetLightInfo[]> GetStreetLightListAsync()  //version2
         {
 
 
@@ -442,7 +514,6 @@ namespace CeraDevices
 
 
         }
-
         public static string ToASCIIString(string str)
         {
             byte[] data = System.Text.Encoding.ASCII.GetBytes(str);
@@ -456,7 +527,6 @@ namespace CeraDevices
         }
 
 
-
     }
 
 
@@ -468,6 +538,14 @@ namespace CeraDevices
 
         [DataMember]
         public StreetLightInfo[] list;
+    }
+    [DataContract]
+    public class StreetLightInfoListBase
+    {
+        [DataMember]
+        public bool success { get; set; }
+        [DataMember(Name="objects")]
+        public StreetLightInfo[] list { get; set; }
     }
 
     [DataContract]
@@ -604,11 +682,20 @@ namespace CeraDevices
 
         }
 
+        public bool Visible
+        {
+            get
+            {
+                return visibility == 0 ? false : true;
+            }
+        }
+
+        
         public double Temperature
         {
             get
             {
-                return( t[0] ?? -999)/100.0;
+                return (t[0] ?? -999) / 100.0;
             }
         }
 
@@ -616,8 +703,8 @@ namespace CeraDevices
         {
             get
             {
-               return (  r[0] ?? -999)/100.0;
-             }
+                return (r[0] ?? -999) / 100.0;
+            }
         }
 
         public bool IsScheduleEnable
@@ -627,25 +714,7 @@ namespace CeraDevices
                 return this.sch.en;
             }
         }
-        public bool Visible
-        {
-            get
-            {
-                return visibility == 0 ? false : true;
-            }
-        }
 
-        public static string ToASCIIString(string str)
-        {
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(str);
-            string result = "";
-
-            foreach (byte b in data)
-            {
-                result += b.ToString("X2");
-            }
-            return result;
-        }
         [DataMember]
         public int visibility { get; set; }
         [DataMember]
@@ -684,6 +753,10 @@ namespace CeraDevices
         [Display(AutoGenerateField = false)]
         public string cmt { get; set; }
 
+        public void SetScheduleEnable(bool enable)
+        {
+            this.sch.en = enable;
+        }
         public string GetScheduleSegTimeString()
         {
 
@@ -707,8 +780,6 @@ namespace CeraDevices
             //return levelstr.TrimEnd(new char[]{','});
 
         }
-
-      
 
 
     }
@@ -755,8 +826,8 @@ namespace CeraDevices
 
         public bool IsEqual(Schedule otherSch)
         {
-            ScheduleSegnment[] thisseg = Segnments.Where(n=>n.Level!=255).OrderBy(n => n.Time).ToArray();
-            ScheduleSegnment[] otherseg = otherSch.Segnments.Where(n=>n.Level!=255).OrderBy(n => n.Time).ToArray();
+            ScheduleSegnment[] thisseg = Segnments.Where(n => n.Level != 255).OrderBy(n => n.Time).ToArray();
+            ScheduleSegnment[] otherseg = otherSch.Segnments.Where(n => n.Level != 255).OrderBy(n => n.Time).ToArray();
 
             if (thisseg.Length != otherseg.Length)
                 return false;
@@ -765,7 +836,7 @@ namespace CeraDevices
             {
                 for (int i = 0; i < thisseg.Length; i++)
                 {
-                    if (thisseg[i].Level == 255)
+                    if (thisseg[i].Time == 15555)
                         continue;
                     iseq = iseq && thisseg[i].Time == otherseg[i].Time && thisseg[i].Level == otherseg[i].Level;
                 }
@@ -788,14 +859,14 @@ namespace CeraDevices
                     return new ScheduleSegnment[0];
                 else
                 {
-                    
-                        segs = new ScheduleSegnment[time.Length - 1];
-                        for (int i = 0; i < time.Length - 1; i++)
-                        {
-                            if (time[i] != null)
-                                segs[i] = new ScheduleSegnment() { Time = (int)time[i], Level = (int)level[i] };
-                        }
-                    
+
+                    segs = new ScheduleSegnment[time.Length - 1];
+                    for (int i = 0; i < time.Length - 1; i++)
+                    {
+                        if (time[i] != null)
+                            segs[i] = new ScheduleSegnment() { Time = (int)time[i], Level = (int)level[i] };
+                    }
+
 
                     return segs;
                 }
@@ -805,10 +876,7 @@ namespace CeraDevices
             {
                 segs = value;
             }
-
-
         }
-
 
         public string GetScheduleSegTimeString()
         {
@@ -820,6 +888,19 @@ namespace CeraDevices
 
             return timestr.TrimEnd(new char[] { ',' });
         }
+      
+
+
+        //public string GetScheduleSegTimeString()
+        //{
+        //    string timestr;
+        //    timestr = this.Segnments[0].Time.ToString();
+        //    for (int i = 1; i < this.Segnments.Length; i++)
+        //        timestr += "," + this.Segnments[i].Time;
+
+
+        //    return timestr.TrimEnd(new char[] { ',' });
+        //}
 
         public string GetScheduleSegLevelString()
         {
@@ -834,8 +915,8 @@ namespace CeraDevices
 
     public class ScheduleSegnment : INotifyPropertyChanged
     {
-        int _time = 0;
-        int _level = 255;
+        int _time = 15555;
+        int _level = 0;
         public event PropertyChangedEventHandler PropertyChanged;
         public int Time
         {
@@ -892,47 +973,73 @@ namespace CeraDevices
         }
     }
 
-        [DataContract]
-        public class DeviceInfoList
-        {
-            [DataMember]
-            public DeviceInfo[] list;
+    [DataContract]
+    public class DeviceInfoListBase
+    {
+       [DataMember]
+        public bool success { get; set; }
 
-        }
+      
+        [DataMember(Name = "objects")]
+       public DeviceInfo[] list;
 
+    }
 
-        [DataContract]
-        public class DeviceInfo
-        {
-            [DataMember]
-            public string addr { get; set; }
-            [DataMember]
-            public string type { get; set; }
-            [DataMember]
-            public string pan { get; set; }
-            [DataMember]
-            public string mac { get; set; }
-            [DataMember]
-            public bool visibility { get; set; }
+    [DataContract]
+    public class DeviceInfoList
+    {
+        [DataMember]
+        public DeviceInfo[] list;
 
-        }
-        [DataContract]
-        public class CorrdinatorInfo
-        {
-            // {  build: “”,  servertime: “”,  pan_id: “”,  mac_address: “”,  rf_channel }
-            [DataMember]
-            public string build { get; set; }
-            [DataMember]
-            public string pan_id { get; set; }
-            [DataMember]
-            public string mac_address { get; set; }
-            [DataMember]
-            public string rf_channel { get; set; }
-
-        }
+    }
 
 
+    [DataContract]
+    public class DeviceInfo
+    {
+        [DataMember]
+        public string addr { get; set; }
+        [DataMember]
+        public string type { get; set; }
+        [DataMember]
+        public string pan { get; set; }
+        [DataMember]
+        public string mac { get; set; }
+        [DataMember]
+        public int visibility { get; set; }
 
+    }
+    [DataContract]
+    public class CorrdinatorInfoBase
+    {
+        // {  build: “”,  servertime: “”,  pan_id: “”,  mac_address: “”,  rf_channel }
+        [DataMember]
+        public bool success { get; set; }
+        [DataMember(Name="object")]
+        public CorrdinatorInfo info { get; set; }
+
+    }
+
+      [DataContract]
+    public class CorrdinatorInfo
+    {
+
+        [DataMember]
+        public string build { get; set; }
+        [DataMember]
+        public string pan_id { get; set; }
+        [DataMember]
+        public string mac_address { get; set; }
+        [DataMember]
+        public string rf_channel { get; set; }
+    }
+
+     [DataContract]
+      public class CoordinatorResult
+      {
+         [DataMember]
+         public bool success { get; set; }
+      }
 
     }
 
