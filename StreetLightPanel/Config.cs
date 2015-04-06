@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using CeraDevices;
+using CeraDevices.Coordinator2;
 
 namespace StreetLightPanel
 {

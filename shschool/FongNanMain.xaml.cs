@@ -235,8 +235,10 @@ namespace shschool
                     continue;
                 if (dictStreetLightBindingInfos.ContainsKey(info.addr))
                 {
-
+ 
                     dictStreetLightBindingInfos[info.addr].IsEnable = info.visibility;
+ 
+ 
 
                 }
             }

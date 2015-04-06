@@ -1,5 +1,5 @@
-﻿ 
-using CeraDevices.Coordinator2;
+﻿
+using CeraDevices;
 using CeraDevices.Packages;
 using LED;
 using System;

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CeraDevices;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,10 +36,10 @@ namespace StreetLightPanel
           if (sceneName == "")
               return;
 
-            CeraDevices.ScheduleSegnment[] segs=new CeraDevices.ScheduleSegnment[10];
+            ScheduleSegnment[] segs=new ScheduleSegnment[10];
             for(int i=0;i<segs.Length;i++)
-                segs[i]=new CeraDevices.ScheduleSegnment(){ Time=0,Level=255};
-            Scenariors.Add(new Scenarior() { SceneName = sceneName, Schedule = new CeraDevices.Schedule() { Segnments = segs } });
+                segs[i]=new ScheduleSegnment(){ Time=0,Level=255};
+            Scenariors.Add(new Scenarior() { SceneName = sceneName, Schedule = new Schedule() { Segnments = segs } });
             this.lstScenarioName.ItemsSource = null;
             this.lstScenarioName.ItemsSource = Scenariors;
         }

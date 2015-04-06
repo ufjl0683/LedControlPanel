@@ -10,10 +10,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using CeraDevices.Coordinator2;
 
-namespace CeraDevices.Coordinator2
+namespace CeraDevices
 {
 
-    public class CoordinatorDevice2
+    public class CoordinatorDevice2:ICoordinatorDevice
     {
         private string UriBase = "http://10.10.1.1:8080";
         //     MyWebClient wc = new MyWebClient();
@@ -55,8 +55,11 @@ namespace CeraDevices.Coordinator2
         public StreetLightInfo[] GetVisibleStreetLightList()
         {
             DeviceInfo[] devlist = GetDeviceList();
-
+#if Version1
+            devlist = devlist.Where(n => n != null && n.visibility  ).ToArray();
+#else
             devlist = devlist.Where(n => n != null && n.visibility==1).ToArray();
+#endif
             StreetLightInfo[] streetlist = GetStreetLightList().ToArray();
 
             StreetLightInfo[] retList = (from m in streetlist join n in devlist on m.DevID equals n.addr select m).ToArray();
@@ -67,7 +70,11 @@ namespace CeraDevices.Coordinator2
         {
             DeviceInfo[] devlist = await GetDeviceListAsync();
 
+#if Version1
+            devlist = devlist.Where(n => n != null && n.visibility).ToArray();
+#else
             devlist = devlist.Where(n => n != null && n.visibility==1).ToArray();
+#endif
             StreetLightInfo[] streetlist = await GetStreetLightListAsync();
             foreach (DeviceInfo dev in devlist)
             {
@@ -124,11 +131,11 @@ namespace CeraDevices.Coordinator2
             Stream stream;
             if (devid == "*")
             {
-                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day);
+                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr/*+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day*/);
             }
             else
             {
-                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day);
+                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr /* + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day*/);
             }
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -136,22 +143,22 @@ namespace CeraDevices.Coordinator2
 
         }
 
-        public async void SetDeviceScheduleAsync(string mac, string timeStr, string levelStr)
+        public async void SetDeviceScheduleAsync(string devid, string timeStr, string levelStr)
         {
 
             MyWebClient wc = new MyWebClient();
             
             Stream stream;
             System.DateTime dt = DateTime.Now;
-            if (mac == "*")
+            if (devid == "*")
             {
-               stream = await  wc.OpenReadTaskAsync(new Uri(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day));
+               stream = await  wc.OpenReadTaskAsync(new Uri(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr/*+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day*/));
 
                
             }
             else
             {
-                stream = await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?mac=" + mac + "&time=" + timeStr + "&level=" + levelStr + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day);
+                stream = await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr/* + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day*/);
             }
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -527,6 +534,53 @@ namespace CeraDevices.Coordinator2
         }
 
 
+
+
+        //CeraDevices.CorrdinatorInfo ICoordinatorDevice.GetDeviceInfo()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //CeraDevices.DeviceInfo[] ICoordinatorDevice.GetDeviceList()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //Task<CeraDevices.DeviceInfo[]> ICoordinatorDevice.GetDeviceListAsync()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //CeraDevices.StreetLightInfo[] ICoordinatorDevice.GetStreetLightList()
+        //{
+        //   // throw new NotImplementedException();
+        //    return GetStreetLightList("*");
+        //}
+
+        //CeraDevices.StreetLightInfo[] ICoordinatorDevice.GetStreetLightList(string devid)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //Task<CeraDevices.StreetLightInfo[]> ICoordinatorDevice.GetStreetLightListAsync()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //Task<CeraDevices.StreetLightInfo[]> ICoordinatorDevice.GetStreetLightListAsync(string devid)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //CeraDevices.StreetLightInfo[] ICoordinatorDevice.GetVisibleStreetLightList()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //Task<CeraDevices.StreetLightInfo[]> ICoordinatorDevice.GetVisibleStreetLightListAsync()
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 
 
@@ -551,6 +605,7 @@ namespace CeraDevices.Coordinator2
     [DataContract]
     public class StreetLightInfo
     {
+      
 
         [Display(Order = 1)]
         public string DevID
@@ -569,6 +624,7 @@ namespace CeraDevices.Coordinator2
                 //  return cmt.Substring(0, 4);
             }
         }
+        [DataMember(Name = "mac")]
         public string MAC
         {
 
@@ -686,7 +742,11 @@ namespace CeraDevices.Coordinator2
         {
             get
             {
+#if Version1
+                return visibility ? false : true;
+#else
                 return visibility == 0 ? false : true;
+#endif
             }
         }
 
@@ -716,7 +776,11 @@ namespace CeraDevices.Coordinator2
         }
 
         [DataMember]
+#if Version1
+        public bool visibility { get; set; }
+#else
         public int visibility { get; set; }
+#endif
         [DataMember]
         [Display(AutoGenerateField = false)]
         public string dev { get; set; }
@@ -1006,7 +1070,12 @@ namespace CeraDevices.Coordinator2
         [DataMember]
         public string mac { get; set; }
         [DataMember]
+#if Version1
+       public bool visibility { get; set; }
+#else
         public int visibility { get; set; }
+
+#endif
 
     }
     [DataContract]

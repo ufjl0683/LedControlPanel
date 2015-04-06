@@ -80,7 +80,7 @@
         <Button x:Name="btnUnselectAll" Content="取消選取" HorizontalAlignment="Left" Height="45" Margin="326,0,0,0" VerticalAlignment="Top" Width="81" Click="btnUnselectAll_Click" FontSize="16"/>
         <Button x:Name="btnReverseSelect" Content="反轉選取" HorizontalAlignment="Left" Height="45" Margin="412,0,0,0" VerticalAlignment="Top" Width="81" Click="btnReverseSelect_Click" FontSize="16"/>
 
-        <esri:Map Background="White" IsLogoVisible="False" Margin="44,64,3.2,9.6" WrapAround="True" x:Name="map" Loaded="map_Loaded" RenderTransformOrigin="0.5,0.5" >
+        <esri:Map Background="White" IsLogoVisible="False" Margin="48,65,-0.8,8.6" WrapAround="True" x:Name="map" Loaded="map_Loaded" RenderTransformOrigin="0.5,0.5" >
             <esri:Map.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>

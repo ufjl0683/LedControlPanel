@@ -8,12 +8,12 @@ using System.IO;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-
+using CeraDevices.Coordinator2;
 
 namespace CeraDevices
 {
 
-    public class CoordinatorDevice
+    public class CoordinatorDevice :ICoordinatorDevice
     {
         private string UriBase = "http://10.10.1.1:8080";
         //     MyWebClient wc = new MyWebClient();
@@ -55,8 +55,11 @@ namespace CeraDevices
         public StreetLightInfo[] GetVisibleStreetLightList()
         {
             DeviceInfo[] devlist = GetDeviceList();
-
+#if Version1 
             devlist = devlist.Where(n => n != null && n.visibility).ToArray();
+#else
+            devlist = devlist.Where(n => n != null && n.visibility==1).ToArray();
+#endif
             StreetLightInfo[] streetlist = GetStreetLightList().ToArray();
 
             StreetLightInfo[] retList = (from m in streetlist join n in devlist on m.DevID equals n.addr select m).ToArray();
@@ -67,7 +70,11 @@ namespace CeraDevices
         {
             DeviceInfo[] devlist = await GetDeviceListAsync();
 
+#if Version1 
             devlist = devlist.Where(n => n != null && n.visibility).ToArray();
+#else
+            devlist = devlist.Where(n => n != null && n.visibility == 1).ToArray();
+#endif
             StreetLightInfo[] streetlist = await GetStreetLightListAsync();
             foreach (DeviceInfo dev in devlist)
             {
@@ -462,474 +469,474 @@ namespace CeraDevices
 
 
 
-    [DataContract]
-    public class StreetLightInfoList
-    {
+    //[DataContract]
+    //public class StreetLightInfoList
+    //{
 
-        [DataMember]
-        public StreetLightInfo[] list;
-    }
+    //    [DataMember]
+    //    public StreetLightInfo[] list;
+    //}
 
-    [DataContract]
-    public class StreetLightInfo
-    {
+    //[DataContract]
+    //public class StreetLightInfo
+    //{
 
-        [Display(Order = 1)]
-        public string DevID
-        {
-            get
-            {
-                return dev;
-            }
-        }
-        [Display(Order = 2)]
-        public string RmkID
-        {
-            get
-            {
-                return DevID;  //MAC.Substring(12, 4);
-                //  return cmt.Substring(0, 4);
-            }
-        }
-        public string MAC
-        {
-
-
-            get;
-            set;
-            //get
-            //{
-            //    return cmt.Substring(4, 16);
-            //}
-
-        }
-
-        [Display(Order = 3)]
-        public int CurrentDimLevel
-        {
-            get
-            {
-                return (int)l[0];
-            }
-        }
-        [Display(Order = 4)]
-        public double V
-        {
-            get
-            {
-                return pm[0].v * 1e-6;
-            }
-            set
-            {
-                pm[0].v = (int)(value / 1e-6);
-            }
-        }
-        [Display(Order = 5)]
-        public double A
-        {
-            get
-            {
-                return pm[0].a * 1e-6;
-            }
-            set
-            {
-                pm[0].a = (int)(value / 1e-6);
-            }
-        }
-        [Display(Order = 6)]
-        public double W
-        {
-            get
-            {
-                return pm[0].w * 1e-6;
-            }
-            set
-            {
-                pm[0].w = (int)(value / 1e-6);
-            }
-        }
-        [Display(Order = 7)]
-        public double PF
-        {
-            get
-            {
-                return pm[0].pf * 1e-6;
-            }
-
-            set
-            {
-
-                pm[0].pf = (int)(value / 1e-6);
-            }
-        }
-        [Display(Order = 8)]
-        public double KWHP
-        {
-            get
-            {
-                return pm[0].kwh_p * 1e-3;
-            }
-            set
-            {
-                pm[0].kwh_p = (uint)(value / 1e-3);
-            }
-
-        }
-        [Display(Order = 9)]
-        public double KWHN
-        {
-            get
-            {
-                return pm[0].kwh_n * 1e-3;
-            }
-
-            set
-            {
-                pm[0].kwh_n = (uint)(value / 1e-3);
-            }
-
-        }
-        [Display(Order = 10)]
-        public double F
-        {
-            get
-            {
-                return pm[0].f * 1e-2;
-            }
-
-            set
-            {
-                pm[0].f = (int)(value / 1e-2);
-            }
-
-        }
-
-        public double Temperature
-        {
-            get
-            {
-                return( t[0] ?? -999)/100.0;
-            }
-        }
-
-        public double LightSensor  //0~100
-        {
-            get
-            {
-               return (  r[0] ?? -999)/100.0;
-             }
-        }
-
-        public bool IsScheduleEnable
-        {
-            get
-            {
-                return this.sch.en;
-            }
-        }
-        public bool Visible
-        {
-            get
-            {
-                return visibility == 0 ? false : true;
-            }
-        }
-
-        public static string ToASCIIString(string str)
-        {
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(str);
-            string result = "";
-
-            foreach (byte b in data)
-            {
-                result += b.ToString("X2");
-            }
-            return result;
-        }
-        [DataMember]
-        public int visibility { get; set; }
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public string dev { get; set; }
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public string lt { get; set; }  //last report time
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public bool to { get; set; }  //time out
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public int rr { get; set; }  //rsi receive
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public int rt { get; set; }   //rsi transmit
-        [DataMember]
-
-        public string rtc { get; set; }
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public int?[] l { get; set; } //dim level
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public int?[] r { get; set; } //sensor
-        [DataMember]
-
-        public int?[] t { get; set; } //temperature
-        [DataMember]
-        public Schedule sch { get; set; }
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public PowerMeter[] pm { get; set; }
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public string cmt { get; set; }
-
-        public string GetScheduleSegTimeString()
-        {
-
-            return this.sch.GetScheduleSegTimeString();
-            //string timestr;
-            //timestr = sch.Segnments[0].Time.ToString();
-            //for (int i = 1; i < sch.Segnments.Length; i++)
-            //    timestr += "," + sch.Segnments[i].Time;
+    //    [Display(Order = 1)]
+    //    public string DevID
+    //    {
+    //        get
+    //        {
+    //            return dev;
+    //        }
+    //    }
+    //    [Display(Order = 2)]
+    //    public string RmkID
+    //    {
+    //        get
+    //        {
+    //            return DevID;  //MAC.Substring(12, 4);
+    //            //  return cmt.Substring(0, 4);
+    //        }
+    //    }
+    //    public string MAC
+    //    {
 
 
-            //return timestr.TrimEnd(new char[] { ',' }) ;
-        }
+    //        get;
+    //        set;
+    //        //get
+    //        //{
+    //        //    return cmt.Substring(4, 16);
+    //        //}
 
-        public string GetScheduleSegLevelString()
-        {
-            return this.sch.GetScheduleSegLevelString();
-            //string levelstr;
-            //levelstr = sch.Segnments[0].Level.ToString();
-            //for (int i = 1; i < sch.Segnments.Length; i++)
-            //    levelstr += "," + sch.Segnments[i].Level;
-            //return levelstr.TrimEnd(new char[]{','});
+    //    }
 
-        }
+    //    [Display(Order = 3)]
+    //    public int CurrentDimLevel
+    //    {
+    //        get
+    //        {
+    //            return (int)l[0];
+    //        }
+    //    }
+    //    [Display(Order = 4)]
+    //    public double V
+    //    {
+    //        get
+    //        {
+    //            return pm[0].v * 1e-6;
+    //        }
+    //        set
+    //        {
+    //            pm[0].v = (int)(value / 1e-6);
+    //        }
+    //    }
+    //    [Display(Order = 5)]
+    //    public double A
+    //    {
+    //        get
+    //        {
+    //            return pm[0].a * 1e-6;
+    //        }
+    //        set
+    //        {
+    //            pm[0].a = (int)(value / 1e-6);
+    //        }
+    //    }
+    //    [Display(Order = 6)]
+    //    public double W
+    //    {
+    //        get
+    //        {
+    //            return pm[0].w * 1e-6;
+    //        }
+    //        set
+    //        {
+    //            pm[0].w = (int)(value / 1e-6);
+    //        }
+    //    }
+    //    [Display(Order = 7)]
+    //    public double PF
+    //    {
+    //        get
+    //        {
+    //            return pm[0].pf * 1e-6;
+    //        }
+
+    //        set
+    //        {
+
+    //            pm[0].pf = (int)(value / 1e-6);
+    //        }
+    //    }
+    //    [Display(Order = 8)]
+    //    public double KWHP
+    //    {
+    //        get
+    //        {
+    //            return pm[0].kwh_p * 1e-3;
+    //        }
+    //        set
+    //        {
+    //            pm[0].kwh_p = (uint)(value / 1e-3);
+    //        }
+
+    //    }
+    //    [Display(Order = 9)]
+    //    public double KWHN
+    //    {
+    //        get
+    //        {
+    //            return pm[0].kwh_n * 1e-3;
+    //        }
+
+    //        set
+    //        {
+    //            pm[0].kwh_n = (uint)(value / 1e-3);
+    //        }
+
+    //    }
+    //    [Display(Order = 10)]
+    //    public double F
+    //    {
+    //        get
+    //        {
+    //            return pm[0].f * 1e-2;
+    //        }
+
+    //        set
+    //        {
+    //            pm[0].f = (int)(value / 1e-2);
+    //        }
+
+    //    }
+
+    //    public double Temperature
+    //    {
+    //        get
+    //        {
+    //            return( t[0] ?? -999)/100.0;
+    //        }
+    //    }
+
+    //    public double LightSensor  //0~100
+    //    {
+    //        get
+    //        {
+    //           return (  r[0] ?? -999)/100.0;
+    //         }
+    //    }
+
+    //    public bool IsScheduleEnable
+    //    {
+    //        get
+    //        {
+    //            return this.sch.en;
+    //        }
+    //    }
+    //    public bool Visible
+    //    {
+    //        get
+    //        {
+    //            return visibility == 0 ? false : true;
+    //        }
+    //    }
+
+    //    public static string ToASCIIString(string str)
+    //    {
+    //        byte[] data = System.Text.Encoding.ASCII.GetBytes(str);
+    //        string result = "";
+
+    //        foreach (byte b in data)
+    //        {
+    //            result += b.ToString("X2");
+    //        }
+    //        return result;
+    //    }
+    //    [DataMember]
+    //    public int visibility { get; set; }
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public string dev { get; set; }
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public string lt { get; set; }  //last report time
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public bool to { get; set; }  //time out
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public int rr { get; set; }  //rsi receive
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public int rt { get; set; }   //rsi transmit
+    //    [DataMember]
+
+    //    public string rtc { get; set; }
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public int?[] l { get; set; } //dim level
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public int?[] r { get; set; } //sensor
+    //    [DataMember]
+
+    //    public int?[] t { get; set; } //temperature
+    //    [DataMember]
+    //    public Schedule sch { get; set; }
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public PowerMeter[] pm { get; set; }
+    //    [DataMember]
+    //    [Display(AutoGenerateField = false)]
+    //    public string cmt { get; set; }
+
+    //    public string GetScheduleSegTimeString()
+    //    {
+
+    //        return this.sch.GetScheduleSegTimeString();
+    //        //string timestr;
+    //        //timestr = sch.Segnments[0].Time.ToString();
+    //        //for (int i = 1; i < sch.Segnments.Length; i++)
+    //        //    timestr += "," + sch.Segnments[i].Time;
+
+
+    //        //return timestr.TrimEnd(new char[] { ',' }) ;
+    //    }
+
+    //    public string GetScheduleSegLevelString()
+    //    {
+    //        return this.sch.GetScheduleSegLevelString();
+    //        //string levelstr;
+    //        //levelstr = sch.Segnments[0].Level.ToString();
+    //        //for (int i = 1; i < sch.Segnments.Length; i++)
+    //        //    levelstr += "," + sch.Segnments[i].Level;
+    //        //return levelstr.TrimEnd(new char[]{','});
+
+    //    }
 
       
 
 
-    }
+    //}
 
-    [DataContract]
-    public class PowerMeter
-    {
-        // voltage  current  walt  power factor  frequency  apparent power  kwh positive  kwh negative
-        //v: 0,      a: 0,      w: 0,      pf: 0,      f: 0,      ap: 0,      kwh_p: 0,      kwh_n: 0  
-        [DataMember]
-        public int v { get; set; }  //unit 1e-6
-        [DataMember]
-        public int a { get; set; }  //unit 1e-6
-        [DataMember]
-        public int w { get; set; }  //unit 1e-6
-        [DataMember]
-        public int pf { get; set; }  //unit 1e-6
-        [DataMember]
-        public int f { get; set; }  //1e-2
-        [DataMember]
-        public int ap { get; set; }
-        [DataMember]
-        public uint kwh_p { get; set; }//1e-3 scale
-        [DataMember]
-        public uint kwh_n { get; set; }// 1e-3 scale
-
-
-    }
-    [DataContract]
-    public class Schedule
-    {
+    //[DataContract]
+    //public class PowerMeter
+    //{
+    //    // voltage  current  walt  power factor  frequency  apparent power  kwh positive  kwh negative
+    //    //v: 0,      a: 0,      w: 0,      pf: 0,      f: 0,      ap: 0,      kwh_p: 0,      kwh_n: 0  
+    //    [DataMember]
+    //    public int v { get; set; }  //unit 1e-6
+    //    [DataMember]
+    //    public int a { get; set; }  //unit 1e-6
+    //    [DataMember]
+    //    public int w { get; set; }  //unit 1e-6
+    //    [DataMember]
+    //    public int pf { get; set; }  //unit 1e-6
+    //    [DataMember]
+    //    public int f { get; set; }  //1e-2
+    //    [DataMember]
+    //    public int ap { get; set; }
+    //    [DataMember]
+    //    public uint kwh_p { get; set; }//1e-3 scale
+    //    [DataMember]
+    //    public uint kwh_n { get; set; }// 1e-3 scale
 
 
-        //  enable: 0,      time: [0,...],      level: [0,...]  
-        [DataMember]
-        public bool en { get; set; }
-        [DataMember]
-        public int?[] time { get; set; }
-        [DataMember]
-        public int?[] level { get; set; }
+    //}
+    //[DataContract]
+    //public class Schedule
+    //{
 
 
-        private ScheduleSegnment[] segs;
+    //    //  enable: 0,      time: [0,...],      level: [0,...]  
+    //    [DataMember]
+    //    public bool en { get; set; }
+    //    [DataMember]
+    //    public int?[] time { get; set; }
+    //    [DataMember]
+    //    public int?[] level { get; set; }
 
-        public bool IsEqual(Schedule otherSch)
-        {
-            ScheduleSegnment[] thisseg = Segnments.Where(n=>n.Level!=255).OrderBy(n => n.Time).ToArray();
-            ScheduleSegnment[] otherseg = otherSch.Segnments.Where(n=>n.Level!=255).OrderBy(n => n.Time).ToArray();
 
-            if (thisseg.Length != otherseg.Length)
-                return false;
-            bool iseq = true;
-            try
-            {
-                for (int i = 0; i < thisseg.Length; i++)
-                {
-                    if (thisseg[i].Level == 255)
-                        continue;
-                    iseq = iseq && thisseg[i].Time == otherseg[i].Time && thisseg[i].Level == otherseg[i].Level;
-                }
-            }
-            catch (Exception ex)
-            {
-                iseq = false;
-            }
+    //    private ScheduleSegnment[] segs;
 
-            return iseq;
+    //    public bool IsEqual(Schedule otherSch)
+    //    {
+    //        ScheduleSegnment[] thisseg = Segnments.Where(n=>n.Level!=255).OrderBy(n => n.Time).ToArray();
+    //        ScheduleSegnment[] otherseg = otherSch.Segnments.Where(n=>n.Level!=255).OrderBy(n => n.Time).ToArray();
 
-        }
-        public ScheduleSegnment[] Segnments
-        {
-            get
-            {
-                if (segs != null)
-                    return segs;
-                if (time == null || level == null || time.Length == 0 || level.Length == 0)
-                    return new ScheduleSegnment[0];
-                else
-                {
+    //        if (thisseg.Length != otherseg.Length)
+    //            return false;
+    //        bool iseq = true;
+    //        try
+    //        {
+    //            for (int i = 0; i < thisseg.Length; i++)
+    //            {
+    //                if (thisseg[i].Level == 255)
+    //                    continue;
+    //                iseq = iseq && thisseg[i].Time == otherseg[i].Time && thisseg[i].Level == otherseg[i].Level;
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            iseq = false;
+    //        }
+
+    //        return iseq;
+
+    //    }
+    //    public ScheduleSegnment[] Segnments
+    //    {
+    //        get
+    //        {
+    //            if (segs != null)
+    //                return segs;
+    //            if (time == null || level == null || time.Length == 0 || level.Length == 0)
+    //                return new ScheduleSegnment[0];
+    //            else
+    //            {
                     
-                        segs = new ScheduleSegnment[time.Length - 1];
-                        for (int i = 0; i < time.Length - 1; i++)
-                        {
-                            if (time[i] != null)
-                                segs[i] = new ScheduleSegnment() { Time = (int)time[i], Level = (int)level[i] };
-                        }
+    //                    segs = new ScheduleSegnment[time.Length - 1];
+    //                    for (int i = 0; i < time.Length - 1; i++)
+    //                    {
+    //                        if (time[i] != null)
+    //                            segs[i] = new ScheduleSegnment() { Time = (int)time[i], Level = (int)level[i] };
+    //                    }
                     
 
-                    return segs;
-                }
-            }
+    //                return segs;
+    //            }
+    //        }
 
-            set
-            {
-                segs = value;
-            }
-
-
-        }
+    //        set
+    //        {
+    //            segs = value;
+    //        }
 
 
-        public string GetScheduleSegTimeString()
-        {
-            string timestr;
-            timestr = this.Segnments[0].Time.ToString();
-            for (int i = 1; i < this.Segnments.Length; i++)
-                timestr += "," + this.Segnments[i].Time;
+    //    }
 
 
-            return timestr.TrimEnd(new char[] { ',' });
-        }
-
-        public string GetScheduleSegLevelString()
-        {
-            string levelstr;
-            levelstr = this.Segnments[0].Level.ToString();
-            for (int i = 1; i < this.Segnments.Length; i++)
-                levelstr += "," + this.Segnments[i].Level;
-            return levelstr.TrimEnd(new char[] { ',' });
-
-        }
-    }
-
-    public class ScheduleSegnment : INotifyPropertyChanged
-    {
-        int _time = 0;
-        int _level = 255;
-        public event PropertyChangedEventHandler PropertyChanged;
-        public int Time
-        {
-            get
-            {
-                return _time;
-            }
-            set
-            {
-                if (value != _time)
-                {
-                    //System.Text.RegularExpressions.Regex regx = new System.Text.RegularExpressions.Regex(@"\d{1,2}:\d{1,2}");
-                    //if (!regx.Match(value.ToString()).Success)
-                    //    throw new ArgumentException("format err");
-                    //int hour = value / 60;
-                    //int min = value % 60;
-                    if (value == -1)
-                        throw new ArgumentException("format err");
-                    _time = value;
-                    if (PropertyChanged != null)
-                        PropertyChanged(this, new PropertyChangedEventArgs("Time"));
+    //    public string GetScheduleSegTimeString()
+    //    {
+    //        string timestr;
+    //        timestr = this.Segnments[0].Time.ToString();
+    //        for (int i = 1; i < this.Segnments.Length; i++)
+    //            timestr += "," + this.Segnments[i].Time;
 
 
-                }
+    //        return timestr.TrimEnd(new char[] { ',' });
+    //    }
 
-            }
-        }
-        public int Level
-        {
-            get
-            {
-                return _level;
-            }
-            set
-            {
-                if (value != _level)
-                {
-                    int res;
+    //    public string GetScheduleSegLevelString()
+    //    {
+    //        string levelstr;
+    //        levelstr = this.Segnments[0].Level.ToString();
+    //        for (int i = 1; i < this.Segnments.Length; i++)
+    //            levelstr += "," + this.Segnments[i].Level;
+    //        return levelstr.TrimEnd(new char[] { ',' });
 
-                    //if(!int.TryParse(value.ToString(),out res))
-                    //    throw new Exception("format err");
-                    //if(!(value>=0 && value<=100 || value==255))
-                    //    throw new Exception("format err");
+    //    }
+    //}
 
-                    _level = value;
-                    if (PropertyChanged != null)
-                        PropertyChanged(this, new PropertyChangedEventArgs("Level"));
-
-
-                }
-
-            }
-
-        }
-    }
-
-        [DataContract]
-        public class DeviceInfoList
-        {
-            [DataMember]
-            public DeviceInfo[] list;
-
-        }
+    //public class ScheduleSegnment : INotifyPropertyChanged
+    //{
+    //    int _time = 0;
+    //    int _level = 255;
+    //    public event PropertyChangedEventHandler PropertyChanged;
+    //    public int Time
+    //    {
+    //        get
+    //        {
+    //            return _time;
+    //        }
+    //        set
+    //        {
+    //            if (value != _time)
+    //            {
+    //                //System.Text.RegularExpressions.Regex regx = new System.Text.RegularExpressions.Regex(@"\d{1,2}:\d{1,2}");
+    //                //if (!regx.Match(value.ToString()).Success)
+    //                //    throw new ArgumentException("format err");
+    //                //int hour = value / 60;
+    //                //int min = value % 60;
+    //                if (value == -1)
+    //                    throw new ArgumentException("format err");
+    //                _time = value;
+    //                if (PropertyChanged != null)
+    //                    PropertyChanged(this, new PropertyChangedEventArgs("Time"));
 
 
-        [DataContract]
-        public class DeviceInfo
-        {
-            [DataMember]
-            public string addr { get; set; }
-            [DataMember]
-            public string type { get; set; }
-            [DataMember]
-            public string pan { get; set; }
-            [DataMember]
-            public string mac { get; set; }
-            [DataMember]
-            public bool visibility { get; set; }
+    //            }
 
-        }
-        [DataContract]
-        public class CorrdinatorInfo
-        {
-            // {  build: “”,  servertime: “”,  pan_id: “”,  mac_address: “”,  rf_channel }
-            [DataMember]
-            public string build { get; set; }
-            [DataMember]
-            public string pan_id { get; set; }
-            [DataMember]
-            public string mac_address { get; set; }
-            [DataMember]
-            public string rf_channel { get; set; }
+    //        }
+    //    }
+    //    public int Level
+    //    {
+    //        get
+    //        {
+    //            return _level;
+    //        }
+    //        set
+    //        {
+    //            if (value != _level)
+    //            {
+    //                int res;
 
-        }
+    //                //if(!int.TryParse(value.ToString(),out res))
+    //                //    throw new Exception("format err");
+    //                //if(!(value>=0 && value<=100 || value==255))
+    //                //    throw new Exception("format err");
+
+    //                _level = value;
+    //                if (PropertyChanged != null)
+    //                    PropertyChanged(this, new PropertyChangedEventArgs("Level"));
+
+
+    //            }
+
+    //        }
+
+    //    }
+    //}
+
+    //    [DataContract]
+    //    public class DeviceInfoList
+    //    {
+    //        [DataMember]
+    //        public DeviceInfo[] list;
+
+    //    }
+
+
+    //    [DataContract]
+    //    public class DeviceInfo
+    //    {
+    //        [DataMember]
+    //        public string addr { get; set; }
+    //        [DataMember]
+    //        public string type { get; set; }
+    //        [DataMember]
+    //        public string pan { get; set; }
+    //        [DataMember]
+    //        public string mac { get; set; }
+    //        [DataMember]
+    //        public bool visibility { get; set; }
+
+    //    }
+    //    [DataContract]
+    //    public class CorrdinatorInfo
+    //    {
+    //        // {  build: “”,  servertime: “”,  pan_id: “”,  mac_address: “”,  rf_channel }
+    //        [DataMember]
+    //        public string build { get; set; }
+    //        [DataMember]
+    //        public string pan_id { get; set; }
+    //        [DataMember]
+    //        public string mac_address { get; set; }
+    //        [DataMember]
+    //        public string rf_channel { get; set; }
+
+    //    }
 
 
 

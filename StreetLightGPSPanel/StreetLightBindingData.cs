@@ -109,8 +109,12 @@ namespace StreetLightPanel
                 if (value != _IsEnable)
                 {
                     _IsEnable = value;
-                     if( this.PropertyChanged!=null)
-                         this.PropertyChanged(this,new PropertyChangedEventArgs("IsEnable"));
+                    if (this.PropertyChanged != null)
+                    {
+                        this.PropertyChanged(this, new PropertyChangedEventArgs("IsEnable"));
+                        this.PropertyChanged(this, new PropertyChangedEventArgs("Status"));
+
+                    }
                 }
             }
         }

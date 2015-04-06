@@ -36,6 +36,12 @@ namespace StreetLightPanel
             try
             {
                 CeraDevices.StreetLightInfo[] infos = dev_mgr.GetStreetLightList(devid);
+
+                foreach (ScheduleSegnment seg in infos[0].sch.Segnments)
+                {
+                    if (seg.Time == 15555)
+                        seg.Level = 255;
+                }
                 datagrid1.ItemsSource = infos[0].sch.Segnments.OrderBy(n => n.Time).ToArray();
                 info = infos[0];
             }

@@ -9,15 +9,15 @@ using System.Windows.Media;
 
 namespace StreetLightPanel
 {
-   public class IsEnableToColorConverter:IValueConverter
+    public class IsEnableToColorConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if ((bool)value)
                 return new SolidColorBrush(Colors.Black);
             else
-                return new SolidColorBrush( Colors.Red);
-           // throw new NotImplementedException();
+                return new SolidColorBrush(Colors.Red);
+            // throw new NotImplementedException();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

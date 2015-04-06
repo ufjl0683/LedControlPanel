@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Version2</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;Version2</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -123,7 +123,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CeraDevice\CeraDevice.csproj">
@@ -132,21 +134,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="CenterImageBak\台北大學校區平面圖.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="CenterImageBak\法鼓山停車場平面圖%28空白%29.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="CenterImageBak\綠建築中心-1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="CenterImageBak\點路燈位置圖1-輔助路牌 之 平面圖 --簡潔淡化版99-12-1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Center.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="CenterImageBak\台北大學new.jpg" />
+    <Content Include="CenterImageBak\台北大學校區平面圖.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CenterImageBak\法鼓山停車場平面圖%28空白%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CenterImageBak\綠建築中心-1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CenterImageBak\點路燈位置圖1-輔助路牌 之 平面圖 --簡潔淡化版99-12-1.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

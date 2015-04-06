@@ -1,4 +1,5 @@
 ﻿using CeraDevices;
+using CeraDevices.Coordinator2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,11 @@ namespace StreetLightPanel
         string devid;
         CeraDevices.DeviceManager dev_mgr;
         StreetLightInfo info;
-        public wndSchedule(string devid)
+        public wndSchedule(string devid,string title)
         {
             InitializeComponent();
-           this.Title=  this.devid = devid;
+         this.devid = devid;
+         this.Title = title;
         
         }
 
@@ -35,7 +37,7 @@ namespace StreetLightPanel
             dev_mgr=(App.Current as App).coor_mgr;
             try
             {
-                CeraDevices.StreetLightInfo[] infos = dev_mgr.GetStreetLightList(devid);
+                StreetLightInfo[] infos = dev_mgr.GetStreetLightList(devid);
                 datagrid1.ItemsSource = infos[0].sch.Segnments.OrderBy(n => n.Time).ToArray();
                 info = infos[0];
             }

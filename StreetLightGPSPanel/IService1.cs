@@ -11,8 +11,9 @@ namespace StreetLightPanel
     [ServiceContract]
    public interface IService1
     {
-       [OperationContract]
-       [WebGet]   
-        System.IO.Stream GetImage(int x, int y, int z);
+        [OperationContract]
+        [WebGet]
+        //  System.IO.Stream GetImage(int x, int y, int z);
+        Task<System.IO.Stream> GetImage(int x, int y, int z);
     }
 }

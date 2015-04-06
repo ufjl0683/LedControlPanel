@@ -32,8 +32,8 @@ namespace StreetLightPanel
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfos = new Dictionary<string, StreetLightBindingData>();
         System.Collections.Generic.Dictionary<string, StreetLightBindingData> dictStreetLightBindingInfosOriginal = new Dictionary<string, StreetLightBindingData>();
         System.Windows.Threading.DispatcherTimer tmr = new System.Windows.Threading.DispatcherTimer();
-        Config LedConfig;
-        IValueConverter converter = new IsEnableToColorConverter();
+      Config LedConfig;
+        IValueConverter fontconverter = new IsEnableToColorConverter();
         public MainWindow()
         {
             InitializeComponent();
@@ -328,7 +328,7 @@ namespace StreetLightPanel
                     {
                         dictStreetLightBindingInfos[data.DevID].DimLevel = data.CurrentDimLevel;
                         dictStreetLightBindingInfos[data.DevID].W = data.W;
-                        dictStreetLightBindingInfos[data.DevID].IsEnable = true;
+                      //  dictStreetLightBindingInfos[data.DevID].IsEnable = true;
                     }
                 }
             var q = from n in dictStreetLightBindingInfos.Values where !street_light_info.Select(k => k.DevID).ToArray().Contains(n.DevID) select n;
@@ -354,7 +354,7 @@ namespace StreetLightPanel
                     if (!dictStreetLightBindingInfos.ContainsKey(data.DevID))
                         continue;
 
-                    if ((dictStreetLightBindingInfos[data.DevID]).IsEnable && data.CurrentDimLevel != (dictStreetLightBindingInfos[data.DevID]).DimLevel)
+                    if ((dictStreetLightBindingInfos[data.DevID]).IsEnable /*&& data.CurrentDimLevel != (dictStreetLightBindingInfos[data.DevID]).DimLevel*/)
                     {
                         try
                         {
@@ -496,9 +496,9 @@ namespace StreetLightPanel
 
 
 
-                    Binding binding = new Binding() { Path = new PropertyPath("IsEnable"), Converter = converter };
+                   Binding binding = new Binding() { Path = new PropertyPath("IsEnable"), Converter = fontconverter };
 
-                    btn.SetBinding(Button.ForegroundProperty, binding);
+                   btn.SetBinding(Button.ForegroundProperty, binding);
 
                     btn.SetBinding(CheckBox.ContentProperty, new Binding("DevID"));
                     btn.SetBinding(CheckBox.IsEnabledProperty, new Binding("IsEnable"));
@@ -599,9 +599,11 @@ namespace StreetLightPanel
                                         isFinish = true;
                                         break;
                                     }
+
                                 }
                                 catch
                                 { ;}
+                                Task.Delay(5000);
                             }
                             if (!isFinish)
                             {
@@ -659,11 +661,13 @@ namespace StreetLightPanel
         {
          // 銘大林口校區
             //121.341855, 24.984922
-            ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459)));
+        //ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459)));
          //銘大金門校區           );
           // 118.402180,24.501124
-          //  ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(118.402180, 24.501124)));
-
+            ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(118.402180, 24.501124)));
+            //銘大士林校區           );
+            // {28, 121.528570, 25.086284},
+       //     ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.528570, 25.086284)));
         }
 
         private void map_Loaded(object sender, RoutedEventArgs e)

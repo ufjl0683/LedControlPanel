@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CeraDevices;
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -13,7 +15,7 @@ namespace StreetLightPanel
     public class StreetLightBindingDataGroup : INotifyPropertyChanged
     {
         int _DimLevel = 0;
-        public CeraDevices.CoordinatorDevice coor
+        public CoordinatorDevice coor
         {
             set;
             get;
@@ -97,6 +99,15 @@ namespace StreetLightPanel
             set;
         }
         public double KWHP
+        {
+            get;
+            set;
+        }
+
+        public double V
+        { get; set; }
+
+        public double A
         {
             get;
             set;

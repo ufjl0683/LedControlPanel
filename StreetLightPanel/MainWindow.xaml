@@ -21,6 +21,8 @@
                                     <TextBlock Text="{Binding DimLevel,StringFormat=DIM:\{0\}}" />
                                     <TextBlock Text="{Binding LightNo,StringFormat=PNO:\{0\}}" />
                                     <TextBlock Text="{Binding W,StringFormat=W:\{0\}}"  />
+                                    <TextBlock Text="{Binding V,StringFormat=V:\{0\}}"  />
+                                    <TextBlock Text="{Binding A,StringFormat=A:\{0\}}"  />
                                 </StackPanel>
                             </Grid.ToolTip>
                             <VisualStateManager.VisualStateGroups>
@@ -46,13 +48,52 @@
                                 </Ellipse.Fill>
                             </Ellipse>
                             <Rectangle x:Name="rectangle" Width="Auto" StrokeDashArray="4 0" Stroke="LightGreen" Height="Auto" Margin="0" Visibility="Collapsed" StrokeThickness="7"/>
-                            <ContentPresenter RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Bottom" Margin="-7.167,0,-6.599,-13.826" HorizontalAlignment="Center" Width="Auto"/>
+                            <ContentPresenter RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="Bottom" Margin="-18.752,0,-23.189,-15.165"  HorizontalAlignment="Center" Width="56.941"   Height="15.965"  >
+                            	<!--<ContentPresenter.RenderTransform>
+                            		<TransformGroup>
+                            			<ScaleTransform/>
+                            			<SkewTransform/>
+                            			<RotateTransform Angle="0.195"/>
+                            			<TranslateTransform X="0.002" Y="-0.064"/>
+                            		</TransformGroup>
+                            	</ContentPresenter.RenderTransform>-->
+                            </ContentPresenter>
                             <ProgressBar HorizontalAlignment="Stretch"  Value="{Binding DimLevel}" Height="4.4" Margin="-0.8,-10,-0.6,0" VerticalAlignment="Top" Width="Auto" SmallChange="1" LargeChange="10"/>
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="FocusVisual">
+        	<Setter Property="Control.Template">
+        		<Setter.Value>
+        			<ControlTemplate>
+        				<Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF"/>
+        <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070"/>
+        <Style x:Key="OptionMarkFocusVisual">
+        	<Setter Property="Control.Template">
+        		<Setter.Value>
+        			<ControlTemplate>
+        				<Rectangle Margin="14,0,0,0" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+        			</ControlTemplate>
+        		</Setter.Value>
+        	</Setter>
+        </Style>
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Background" Color="#FFF3F9FF"/>
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Border" Color="#FF5593FF"/>
+        <SolidColorBrush x:Key="OptionMark.MouseOver.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Background" Color="#FFE6E6E6"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Border" Color="#FFBCBCBC"/>
+        <SolidColorBrush x:Key="OptionMark.Disabled.Glyph" Color="#FF707070"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Background" Color="#FFD9ECFF"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Border" Color="#FF3C77DD"/>
+        <SolidColorBrush x:Key="OptionMark.Pressed.Glyph" Color="#FF212121"/>
+        <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="#FF212121"/>
     </Window.Resources>
     <Grid Margin="0,0,0,0">
         <RadioButton Content="全覽" Height="19" Margin="50,58,0,0" Name="rdUniform" VerticalAlignment="Top" IsChecked="True" Checked="rdUniform_Checked" HorizontalAlignment="Left" Width="66" RenderTransformOrigin="0.9,5.2" >

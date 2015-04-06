@@ -1,4 +1,5 @@
 ﻿using CeraDevices;
+using CeraDevices.Coordinator2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +41,7 @@ namespace StreetLightPanel
 
         void InitLed2dPositoin()
         {
-            int LedWidth = 30;
+            int LedWidth = 15;
             for(int i=0;i<App.Light2DInfo.GetLength(0);i++)
             {
                 
@@ -54,7 +55,7 @@ namespace StreetLightPanel
                     x=int.Parse(App.Light2DInfo[i,1]);
                       y=int.Parse(App.Light2DInfo[i,2]);
                     chk.Margin = new Thickness( x- LedWidth / 2, y - LedWidth / 2, 0, 0);
-                    chk.Content = App.Light2DInfo[i,0];
+                  chk.Tag=  chk.Content = App.Light2DInfo[i,0];
                     chk.MouseRightButtonUp += chk_MouseRightButtonUp;
 
                    // chk.Background = new SolidColorBrush(Colors.Yellow);
@@ -66,7 +67,9 @@ namespace StreetLightPanel
         void chk_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             CheckBox chk = sender as CheckBox;
-            wndSchedule wnd = new wndSchedule(chk.Content.ToString());
+            StreetLightBindingData data = chk.DataContext as StreetLightBindingData;
+           
+            wndSchedule wnd = new wndSchedule(data.DevID,data.LightNo);
           //  wnd.Left = chk.Margin.Left;
           //  wnd.Top = chk.Margin.Top;
             wnd.Owner = this;
@@ -147,8 +150,12 @@ namespace StreetLightPanel
                     continue;
                 if (dictStreetLightBindingInfos.ContainsKey(info.addr))
                 {
-
-                    dictStreetLightBindingInfos[info.addr].IsEnable = info.visibility;
+#if Version1
+            dictStreetLightBindingInfos[info.addr].IsEnable = info.visibility  ;
+#else
+                    dictStreetLightBindingInfos[info.addr].IsEnable = info.visibility == 1;
+#endif
+                   
 
                 }
             }
@@ -190,13 +197,15 @@ namespace StreetLightPanel
                     if (!dictStreetLightBindingInfos.ContainsKey(data.DevID))
                         continue;
 
-                    if ((dictStreetLightBindingInfos[data.DevID]).IsEnable && data.CurrentDimLevel != (dictStreetLightBindingInfos[data.DevID]).DimLevel)
+                    if ((dictStreetLightBindingInfos[data.DevID]).IsEnable  /*&& data.CurrentDimLevel != (dictStreetLightBindingInfos[data.DevID]).DimLevel*/)
                     {
                         try
                         {
                             (dictStreetLightBindingInfos[data.DevID]).DimLevel=data.CurrentDimLevel;
                             (dictStreetLightBindingInfos[data.DevID]).KWHP = data.KWHP;
                             (dictStreetLightBindingInfos[data.DevID]).W = data.W;
+                            (dictStreetLightBindingInfos[data.DevID]).A = data.A;
+                            (dictStreetLightBindingInfos[data.DevID]).V = data.V;
                         //    coor.SetDeviceDimLevel(data.DevID, (dictStreetLightBindingInfos[data.DevID]).DimLevel);
                         }
                         catch { ;}
@@ -278,7 +287,7 @@ namespace StreetLightPanel
                     {
                         CheckBox btn = element as CheckBox;
                         list.Add(btn.Content.ToString(), new StreetLightBindingData() { DevID = btn.Content.ToString(), OriginalDevID = btn.Content.ToString()  });
-                        btn.Tag = btn.Content                            ;
+                       // btn.Tag = btn.Content                            ;
                     }
 
 
@@ -328,7 +337,7 @@ namespace StreetLightPanel
 
                         temp = dictStreetLightBindingInfos[devid] as StreetLightBindingData;
 
-
+                    btn.FontSize = 8;
 
                     //   temp.IsEnable = true;
 
@@ -337,7 +346,8 @@ namespace StreetLightPanel
                     btn.SetBinding(Button.ForegroundProperty, binding);
                     //   btn.SetBinding(ForegroundProperty, binding);
                     // btn.Content = null;
-                    btn.SetBinding(CheckBox.ContentProperty, new Binding("DevID"));
+                  //  btn.SetBinding(CheckBox.ContentProperty, new Binding("DevID"));
+                    btn.SetBinding(CheckBox.ContentProperty, new Binding("LightNo"));
 #if !DEBUG
                     btn.SetBinding(CheckBox.IsEnabledProperty, new Binding("IsEnable"));
 #endif
@@ -456,7 +466,8 @@ namespace StreetLightPanel
                                     try
                                     {
                                         StreetLightBindingData data = (element as CheckBox).DataContext as StreetLightBindingData;
-
+                                        //StreetLightInfo[] backInfo = await coor_mgr.GetStreetLightListAsync(data.DevID);
+                                        //await Task.Delay(100);
                                         coor_mgr.SetDeviceScheduleAsync(data.DevID, scene.Schedule.GetScheduleSegTimeString(), scene.Schedule.GetScheduleSegLevelString());
 
                                         await Task.Delay(100);

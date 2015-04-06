@@ -1,4 +1,5 @@
 ﻿using CeraDevices;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,7 +24,7 @@ namespace WpfScheduleTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        CeraDevices.CoordinatorDevice dev = new CeraDevices.CoordinatorDevice("http://10.10.1.1:8080");
+        CoordinatorDevice dev = new CeraDevices.CoordinatorDevice("http://10.10.1.1:8080");
         ScheduleSegnment[] Schedules = new ScheduleSegnment[10];
         
         int cyclecnt=0;

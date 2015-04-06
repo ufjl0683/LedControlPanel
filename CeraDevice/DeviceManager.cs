@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using CeraDevices.Coordinator2;
 namespace CeraDevices
 {
     public   class DeviceManager
     {
-        System.Collections.Generic.Dictionary<string, CoordinatorDevice> dictDevice=new Dictionary<string,CoordinatorDevice>();
+        System.Collections.Generic.Dictionary<string, ICoordinatorDevice> dictDevice=new Dictionary<string,ICoordinatorDevice>();
         System.Collections.Generic.Dictionary<string, string> dictDeviceID=new Dictionary<string,string>();
-        CoordinatorDevice[] Coordinators;
-        public  DeviceManager(CoordinatorDevice[] CoordinatorDevices)
+        ICoordinatorDevice[] Coordinators;
+        public  DeviceManager(ICoordinatorDevice[] CoordinatorDevices)
         {
 
 
@@ -68,7 +68,7 @@ namespace CeraDevices
         {
             List<StreetLightInfo> list = new List<StreetLightInfo>();
            
-             foreach (CoordinatorDevice coor in Coordinators)
+             foreach (ICoordinatorDevice coor in Coordinators)
              {
                  try
                  {
@@ -135,7 +135,7 @@ namespace CeraDevices
             return dictDeviceID[RmkID];
         }
 
-       public  CoordinatorDevice this[string devid]
+       public  ICoordinatorDevice this[string devid]
         {
             get
             {
@@ -156,7 +156,7 @@ namespace CeraDevices
        {
            if (devid == "*")
            {
-               foreach (CoordinatorDevice coor in Coordinators)
+               foreach (ICoordinatorDevice coor in Coordinators)
                {
                    try
                    {
@@ -187,7 +187,7 @@ namespace CeraDevices
        {
            if (devid == "*")
            {
-               foreach (CoordinatorDevice coor in Coordinators)
+               foreach (ICoordinatorDevice coor in Coordinators)
                {
                     
                        coor.SetDeviceSchedule("*", segtime,seglevel);
@@ -197,6 +197,8 @@ namespace CeraDevices
            else
            {
                 
+              //   StreetLightInfo[] backInfo =   this.GetStreetLightList(devid);
+                   
                    this[devid].SetDeviceSchedule(devid,segtime,seglevel);
                 
            }
@@ -211,7 +213,7 @@ namespace CeraDevices
        {
            if (devid == "*")
            {
-               foreach (CoordinatorDevice coor in Coordinators)
+               foreach (ICoordinatorDevice coor in Coordinators)
                {
 
                     coor.SetDeviceScheduleAsync("*", segtime, seglevel);
@@ -221,6 +223,8 @@ namespace CeraDevices
            else
            {
 
+               //StreetLightInfo[] backInfo = await this.GetStreetLightListAsync(devid);
+               //await Task.Delay(100);
                  this[devid].SetDeviceScheduleAsync(devid, segtime, seglevel);
 
            }
@@ -231,7 +235,7 @@ namespace CeraDevices
        public  async  Task<DeviceInfo[]> GetDeviceListAsync()
        {
            List<DeviceInfo> list = new List<DeviceInfo>();
-           foreach (CoordinatorDevice coor in Coordinators)
+           foreach (ICoordinatorDevice coor in Coordinators)
            {
                
                    list.AddRange(await coor.GetDeviceListAsync());
@@ -247,7 +251,7 @@ namespace CeraDevices
        {
            if (devid == "*")
            {
-               foreach (CoordinatorDevice coor in Coordinators)
+               foreach (ICoordinatorDevice coor in Coordinators)
                {
                    try
                    {

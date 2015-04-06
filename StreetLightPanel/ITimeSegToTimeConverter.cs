@@ -22,14 +22,14 @@ namespace StreetLightPanel
             System.Text.RegularExpressions.Regex regx = new System.Text.RegularExpressions.Regex(@"\d{1,2}:\d{1,2}");
             if (!regx.Match(value.ToString()).Success)
                 // return value;
-                return -1;
+                return 15555;
             string[] data = value.ToString().Split(new char[] { ':' });
             int hour = System.Convert.ToInt32(data[0]);
             int min = System.Convert.ToInt32(data[1]);
             if (hour >= 24)
-                return -1;
+                return 15555;
             if (min >= 60)
-                return -1;
+                return 15555;
             return hour * 60 + min;
 
         }

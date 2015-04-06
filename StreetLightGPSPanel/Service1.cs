@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
@@ -12,7 +13,7 @@ namespace StreetLightPanel
   public   class Service1:IService1
     {
 
-       public  System.IO.Stream GetImage(int x, int y, int z)
+       public async  Task<System.IO.Stream> GetImage(int x, int y, int z)
          {
 
              string baseUrl = "http://mt1.google.com/vt/lyrs=m@129&hl=zh-TW&x=";
@@ -32,8 +33,9 @@ namespace StreetLightPanel
              // wreq.Headers.Add("user-agent", @"Mozilla/5.0");
              wreq.UserAgent = "Mozilla/5.0";
            //  WebOperationContext.Current.OutgoingResponse.ContentType = "image/jpeg";
-
-             return wreq.GetResponse().GetResponseStream();
+             WebResponse resp = await wreq.GetResponseAsync();
+             return resp.GetResponseStream();
+          //   return wreq.GetResponse().GetResponseStream();
              //  System.IO.Stream stream=  wc.OpenRead(string.Format(url, 0, 0, 0));
 
 
