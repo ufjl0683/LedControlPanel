@@ -660,11 +660,11 @@ namespace StreetLightPanel
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
          // 銘大林口校區
-            //121.341855, 24.984922
-        //ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459)));
+          //  121.341855, 24.984922
+        ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.3430004, 24.986459)));
          //銘大金門校區           );
           // 118.402180,24.501124
-            ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(118.402180, 24.501124)));
+          //  ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(118.402180, 24.501124)));
             //銘大士林校區           );
             // {28, 121.528570, 25.086284},
        //     ZoomToLevel(19, ConvertMapPointTo102100(new MapPoint(121.528570, 25.086284)));

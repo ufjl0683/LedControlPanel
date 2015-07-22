@@ -29,7 +29,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;Version2</DefineConstants>
+    <DefineConstants>TRACE;Version1</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -134,9 +134,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Center.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
+    <Resource Include="Center.jpg" />
     <Resource Include="CenterImageBak\台北大學new.jpg" />
     <Content Include="CenterImageBak\台北大學校區平面圖.jpg" />
   </ItemGroup>

@@ -8,7 +8,7 @@ namespace CeraDevices
 {
     public  class MyWebClient:WebClient
     {
-        int Timeout = 5000;
+        int Timeout = 10000;
 
         //public MyWebClient():base()
         //{
