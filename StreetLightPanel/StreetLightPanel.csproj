@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Version2</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Version1</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -134,18 +134,21 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="CenterImageBak\台北大學new.jpg" />
+    <None Include="CenterImageBak\台北大學校區平面圖.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CenterImageBak\法鼓山停車場平面圖%28空白%29.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CenterImageBak\海洋大學.jpg" />
+    <None Include="CenterImageBak\綠建築中心-1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CenterImageBak\點路燈位置圖1-輔助路牌 之 平面圖 --簡潔淡化版99-12-1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Center.jpg" />
-    <Resource Include="CenterImageBak\台北大學new.jpg" />
-    <Content Include="CenterImageBak\台北大學校區平面圖.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CenterImageBak\法鼓山停車場平面圖%28空白%29.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CenterImageBak\綠建築中心-1.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CenterImageBak\點路燈位置圖1-輔助路牌 之 平面圖 --簡潔淡化版99-12-1.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

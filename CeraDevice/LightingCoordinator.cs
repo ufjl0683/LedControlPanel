@@ -8,23 +8,23 @@ using System.IO;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using CeraDevices.Coordinator2;
+ 
 
-namespace CeraDevices
+namespace CeraDevices.LightingCoordinator
 {
 
-    public class CoordinatorDevice2:ICoordinatorDevice
+    public class Coordinator: ILightingCoordinator
     {
         private string UriBase = "http://10.10.1.1:8080";
         //     MyWebClient wc = new MyWebClient();
 
 
-        public CoordinatorDevice2(string ip, int port)
+        public Coordinator(string ip, int port)
         {
             UriBase = "http://" + ip + ":" + port;
         }
 
-        public CoordinatorDevice2(string baseUrl)
+        public Coordinator(string baseUrl)
         {
             UriBase = baseUrl;
         }
@@ -55,11 +55,9 @@ namespace CeraDevices
         public virtual StreetLightInfo[] GetVisibleStreetLightList()
         {
             DeviceInfo[] devlist = GetDeviceList();
-#if Version1
-            devlist = devlist.Where(n => n != null && n.visibility  ).ToArray();
-#else
+ 
             devlist = devlist.Where(n => n != null && n.visibility==1).ToArray();
-#endif
+ 
             StreetLightInfo[] streetlist = GetStreetLightList().ToArray();
 
             StreetLightInfo[] retList = (from m in streetlist join n in devlist on m.DevID equals n.addr select m).ToArray();
@@ -70,11 +68,9 @@ namespace CeraDevices
         {
             DeviceInfo[] devlist = await GetDeviceListAsync();
 
-#if Version1
-            devlist = devlist.Where(n => n != null && n.visibility).ToArray();
-#else
+ 
             devlist = devlist.Where(n => n != null && n.visibility==1).ToArray();
-#endif
+ 
             StreetLightInfo[] streetlist = await GetStreetLightListAsync();
             foreach (DeviceInfo dev in devlist)
             {
@@ -92,9 +88,9 @@ namespace CeraDevices
             MyWebClient wc = new MyWebClient();
             Stream stream;
             if (devid == "*")
-                stream = wc.OpenRead(UriBase + "/street_light.set_rtc?rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
+                stream = wc.OpenRead(UriBase + "/lighting.set_rtc?rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
             else
-                stream = wc.OpenRead(UriBase + "/street_light.set_rtc?dev=" + devid + "&rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
+                stream = wc.OpenRead(UriBase + "/lighting.set_rtc?dev=" + devid + "&rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
 
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -110,9 +106,9 @@ namespace CeraDevices
             MyWebClient wc = new MyWebClient();
             Stream stream;
             if (devid == "*")
-                stream =await  wc.OpenReadTaskAsync(UriBase + "/street_light.set_rtc?rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
+                stream = await wc.OpenReadTaskAsync(UriBase + "/lighting.set_rtc?rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
             else
-                stream =await  wc.OpenReadTaskAsync(UriBase + "/street_light.set_rtc?dev=" + devid + "&rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
+                stream = await wc.OpenReadTaskAsync(UriBase + "/lighting.set_rtc?dev=" + devid + "&rtc=" + dt.ToString("yy-MM-dd-HH-mm-ss"));
 
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -131,11 +127,11 @@ namespace CeraDevices
             Stream stream;
             if (devid == "*")
             {
-                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr/*+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day*/);
+                stream = wc.OpenRead(UriBase + "/lighting.set_dev_schedule?time=" + timeStr + "&level=" + levelStr/*+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day*/);
             }
             else
             {
-                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr /* + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day*/);
+                stream = wc.OpenRead(UriBase + "/lighting.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr /* + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day*/);
             }
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -152,13 +148,13 @@ namespace CeraDevices
             System.DateTime dt = DateTime.Now;
             if (devid == "*")
             {
-               stream = await  wc.OpenReadTaskAsync(new Uri(UriBase + "/street_light.set_dev_schedule?time=" + timeStr + "&level=" + levelStr/*+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day*/));
+                stream = await wc.OpenReadTaskAsync(new Uri(UriBase + "/lighting.set_dev_schedule?time=" + timeStr + "&level=" + levelStr/*+"&on="+dt.Year+"-"+dt.Month+"-"+dt.Day*/));
 
                
             }
             else
             {
-                stream = await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr/* + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day*/);
+                stream = await wc.OpenReadTaskAsync(UriBase + "/lighting.set_dev_schedule?dev=" + devid + "&time=" + timeStr + "&level=" + levelStr/* + "&on=" + dt.Year + "-" + dt.Month + "-" + dt.Day*/);
             }
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -174,11 +170,11 @@ namespace CeraDevices
             Stream stream;
             if (devid == "*")
             {
-                stream =await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?enable=" + (enable ? "1" : "0"));
+                stream = await wc.OpenReadTaskAsync(UriBase + "/lighting.set_dev_schedule?enable=" + (enable ? "1" : "0"));
             }
             else
             {
-                stream =await wc.OpenReadTaskAsync(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&enable=" + (enable ? "1" : "0"));
+                stream = await wc.OpenReadTaskAsync(UriBase + "/lighting.set_dev_schedule?dev=" + devid + "&enable=" + (enable ? "1" : "0"));
             }
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -193,11 +189,11 @@ namespace CeraDevices
             Stream stream;
             if (devid == "*")
             {
-                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?enable=" + (enable ? "1" : "0"));
+                stream = wc.OpenRead(UriBase + "/lighting.set_dev_schedule?enable=" + (enable ? "1" : "0"));
             }
             else
             {
-                stream = wc.OpenRead(UriBase + "/street_light.set_dev_schedule?dev=" + devid + "&enable=" + (enable ? "1" : "0"));
+                stream = wc.OpenRead(UriBase + "/lighting.set_dev_schedule?dev=" + devid + "&enable=" + (enable ? "1" : "0"));
             }
             while (stream.ReadByte() != -1) ;
             stream.Close();
@@ -289,7 +285,7 @@ namespace CeraDevices
 
 
 
-        public virtual async Task<DeviceInfo[]> GetDeviceListAsync()  //version2
+        public virtual async Task<DeviceInfo[]> GetDeviceListAsync()  //version3
         {
 
 
@@ -337,33 +333,33 @@ namespace CeraDevices
 
             StreetLightInfoListBase infolist = null;
             if (devid == "*")
-                using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_list"))
+                using (Stream stream = wc.OpenRead(UriBase + "/lighting.get_dev_list"))
                 {
-                    Console.WriteLine(UriBase + "/street_light.get_dev_list");
+                    Console.WriteLine(UriBase + "/lighting.get_dev_list");
                     infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
                 }
             else
             {
-                using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_list?dev="+devid))
+                using (Stream stream = wc.OpenRead(UriBase + "/lighting.get_dev_list?dev=" + devid))
                 {
                     infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
                 }
             }
             int len = infolist.list.Length;
 
-           StreetLightInfo [] schedinfo=  GetDeviceSchedule(devid);
+           //StreetLightInfo [] schedinfo=  GetDeviceSchedule(devid);
           //  foreach(StreetLightInfo info in infolist
            StreetLightInfo[] retinfos = infolist.list.Take(len - 1).ToArray();
-           foreach (StreetLightInfo info in retinfos)
-           {
-               StreetLightInfo temp = schedinfo.Where(n => n.dev == info.dev).FirstOrDefault();
-               if (temp == null)
-                   continue;
-               info.sch = temp.sch;
-               info.cmt = temp.cmt;
-               info.SetScheduleEnable(temp.IsScheduleEnable);
+           //foreach (StreetLightInfo info in retinfos)
+           //{
+           //    StreetLightInfo temp = schedinfo.Where(n => n.dev == info.dev).FirstOrDefault();
+           //    if (temp == null)
+           //        continue;
+           //    info.sch = temp.sch;
+           //    info.cmt = temp.cmt;
+           //    info.SetScheduleEnable(temp.IsScheduleEnable);
 
-           }
+           //}
            return retinfos; //infolist.list.Take(len - 1).ToArray();
 
         }
@@ -396,14 +392,14 @@ namespace CeraDevices
 
             StreetLightInfoListBase infolist = null;
             if (devid == "*")
-                using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_info"))
+                using (Stream stream = wc.OpenRead(UriBase + "/lighting.get_dev_info"))
                 {
-                    Console.WriteLine(UriBase + "/street_light.get_dev_info");
+                    Console.WriteLine(UriBase + "/lighting.get_dev_info");
                     infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
                 }
             else
             {
-                using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_info?dev=" + devid))
+                using (Stream stream = wc.OpenRead(UriBase + "/lighting.get_dev_info?dev=" + devid))
                 {
                     infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
                 }
@@ -463,7 +459,7 @@ namespace CeraDevices
             //if(devid=="*")
             //    args = "/street_light.set_dim_level?level=" + level;
             //else
-            args = "/street_light.set_dim_level?dev=" + devid + "&level=" + level;
+            args = "/lighting.set_dim_level?dev=" + devid + "&level=" + level;
             using (Stream stream = client.OpenRead(new Uri(UriBase + args, UriKind.Absolute)))
             {
                 while (stream.ReadByte() != -1) ;
@@ -493,7 +489,7 @@ namespace CeraDevices
             //if (devid == "*")
             //    args = "/street_light.set_dim_level?level=" + level;
             //else
-            args = "/street_light.set_dim_level?dev=" + devid + "&level=" + level;
+            args = "/lighting.set_dim_level?dev=" + devid + "&level=" + level;
             using (Stream stream = await client.OpenReadTaskAsync(new Uri(UriBase + args, UriKind.Absolute)))
             {
                 while (stream.ReadByte() != -1) ;
@@ -514,7 +510,7 @@ namespace CeraDevices
                 result = remark.Substring(0, 64);
             else
                 result = remark.PadRight(64, '0');
-            using (Stream stream = wc.OpenRead(UriBase + "/street_light.set_remark?dev=" + devid + "&remark=" + result))
+            using (Stream stream = wc.OpenRead(UriBase + "/lighting.set_remark?dev=" + devid + "&remark=" + result))
             {
                 while (stream.ReadByte() != -1) ;
             }
@@ -615,15 +611,15 @@ namespace CeraDevices
                 return dev;
             }
         }
-        [Display(Order = 2)]
-        public string RmkID
-        {
-            get
-            {
-                return DevID;  //MAC.Substring(12, 4);
-                //  return cmt.Substring(0, 4);
-            }
-        }
+        //[Display(Order = 2)]
+        //public string RmkID
+        //{
+        //    get
+        //    {
+        //        return DevID;  //MAC.Substring(12, 4);
+        //        //  return cmt.Substring(0, 4);
+        //    }
+        //}
         [DataMember(Name = "mac")]
         public string MAC
         {
@@ -638,149 +634,141 @@ namespace CeraDevices
 
         }
 
-        [Display(Order = 3)]
-        public int CurrentDimLevel
+        //[Display(Order = 3)]
+        //public int CurrentDimLevel
+        //{
+        //    get
+        //    {
+        //        return w;
+        //    }
+        //}
+        //[Display(Order = 4)]
+        //public double V
+        //{
+        //    get
+        //    {
+        //        return pm[0].v * 1e-6;
+        //    }
+        //    set
+        //    {
+        //        pm[0].v = (int)(value / 1e-6);
+        //    }
+        //}
+        //[Display(Order = 5)]
+        //public double A
+        //{
+        //    get
+        //    {
+        //        return pm[0].a * 1e-6;
+        //    }
+        //    set
+        //    {
+        //        pm[0].a = (int)(value / 1e-6);
+        //    }
+        //}
+            [DataMember(Name = "pan")]
+        public string PAN
         {
-            get
-            {
-                return (int)l[0];
-            }
-        }
-        [Display(Order = 4)]
-        public double V
-        {
-            get
-            {
-                return pm[0].v * 1e-6;
-            }
-            set
-            {
-                pm[0].v = (int)(value / 1e-6);
-            }
-        }
-        [Display(Order = 5)]
-        public double A
-        {
-            get
-            {
-                return pm[0].a * 1e-6;
-            }
-            set
-            {
-                pm[0].a = (int)(value / 1e-6);
-            }
-        }
-        [Display(Order = 6)]
-        public double W
-        {
-            get
-            {
-                return pm[0].w * 1e-6;
-            }
-            set
-            {
-                pm[0].w = (int)(value / 1e-6);
-            }
-        }
-        [Display(Order = 7)]
-        public double PF
-        {
-            get
-            {
-                return pm[0].pf * 1e-6;
-            }
-
-            set
-            {
-
-                pm[0].pf = (int)(value / 1e-6);
-            }
-        }
-        [Display(Order = 8)]
-        public double KWHP
-        {
-            get
-            {
-                return pm[0].kwh_p * 1e-3;
-            }
-            set
-            {
-                pm[0].kwh_p = (uint)(value / 1e-3);
-            }
-
-        }
-        [Display(Order = 9)]
-        public double KWHN
-        {
-            get
-            {
-                return pm[0].kwh_n * 1e-3;
-            }
-
-            set
-            {
-                pm[0].kwh_n = (uint)(value / 1e-3);
-            }
-
-        }
-        [Display(Order = 10)]
-        public double F
-        {
-            get
-            {
-                return pm[0].f * 1e-2;
-            }
-
-            set
-            {
-                pm[0].f = (int)(value / 1e-2);
-            }
-
+            get;
+            set;
         }
 
-        public bool Visible
+         [DataMember(Name = "w")]
+         public int CurrentDimLevel //dimlevel
         {
-            get
-            {
-#if Version1
-                return visibility ? false : true;
-#else
-                return visibility == 0 ? false : true;
-#endif
-            }
+            get;
+            set;
         }
+        //[Display(Order = 7)]
+        //public double PF
+        //{
+        //    get
+        //    {
+        //        return pm[0].pf * 1e-6;
+        //    }
+
+        //    set
+        //    {
+
+        //        pm[0].pf = (int)(value / 1e-6);
+        //    }
+        //}
+        //[Display(Order = 8)]
+        //public double KWHP
+        //{
+        //    get
+        //    {
+        //        return pm[0].kwh_p * 1e-3;
+        //    }
+        //    set
+        //    {
+        //        pm[0].kwh_p = (uint)(value / 1e-3);
+        //    }
+
+        //}
+        //[Display(Order = 9)]
+        //public double KWHN
+        //{
+        //    get
+        //    {
+        //        return pm[0].kwh_n * 1e-3;
+        //    }
+
+        //    set
+        //    {
+        //        pm[0].kwh_n = (uint)(value / 1e-3);
+        //    }
+
+        //}
+        //[Display(Order = 10)]
+        //public double F
+        //{
+        //    get
+        //    {
+        //        return pm[0].f * 1e-2;
+        //    }
+
+        //    set
+        //    {
+        //        pm[0].f = (int)(value / 1e-2);
+        //    }
+
+        //}
+         
+        [DataMember(Name = "visibility")]
+         public int Visible
+         {
+             get;
+             set;
+         }
 
         
-        public double Temperature
-        {
-            get
-            {
-                return (t[0] ?? -999) / 100.0;
-            }
-        }
+        //public double Temperature
+        //{
+        //    get
+        //    {
+        //        return (t[0] ?? -999) / 100.0;
+        //    }
+        //}
 
-        public double LightSensor  //0~100
-        {
-            get
-            {
-                return (r[0] ?? -999) / 100.0;
-            }
-        }
+        //public double LightSensor  //0~100
+        //{
+        //    get
+        //    {
+        //        return (r[0] ?? -999) / 100.0;
+        //    }
+        //}
 
-        public bool IsScheduleEnable
-        {
-            get
-            {
-                return this.sch.en;
-            }
-        }
+        //public bool IsScheduleEnable
+        //{
+        //    get
+        //    {
+        //        return this.sch.en;
+        //    }
+        //}
 
-        [DataMember]
-#if Version1
-        public bool visibility { get; set; }
-#else
-        public int visibility { get; set; }
-#endif
+       
+
         [DataMember]
         [Display(AutoGenerateField = false)]
         public string dev { get; set; }
@@ -799,51 +787,51 @@ namespace CeraDevices
         [DataMember]
 
         public string rtc { get; set; }
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public int?[] l { get; set; } //dim level
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public int?[] r { get; set; } //sensor
-        [DataMember]
+        //[DataMember]
+        //[Display(AutoGenerateField = false)]
+        //public int?[] l { get; set; } //dim level
+        //[DataMember]
+        //[Display(AutoGenerateField = false)]
+        //public int?[] r { get; set; } //sensor
+        //[DataMember]
 
-        public int?[] t { get; set; } //temperature
-        [DataMember]
-        public Schedule sch { get; set; }
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public PowerMeter[] pm { get; set; }
-        [DataMember]
-        [Display(AutoGenerateField = false)]
-        public string cmt { get; set; }
+        //public int?[] t { get; set; } //temperature
+        //[DataMember]
+        //public Schedule sch { get; set; }
+        //[DataMember]
+        //[Display(AutoGenerateField = false)]
+        //public PowerMeter[] pm { get; set; }
+        //[DataMember]
+        //[Display(AutoGenerateField = false)]
+        //public string cmt { get; set; }
 
-        public void SetScheduleEnable(bool enable)
-        {
-            this.sch.en = enable;
-        }
-        public string GetScheduleSegTimeString()
-        {
+        //public void SetScheduleEnable(bool enable)
+        //{
+        //    this.sch.en = enable;
+        //}
+        //public string GetScheduleSegTimeString()
+        //{
 
-            return this.sch.GetScheduleSegTimeString();
-            //string timestr;
-            //timestr = sch.Segnments[0].Time.ToString();
-            //for (int i = 1; i < sch.Segnments.Length; i++)
-            //    timestr += "," + sch.Segnments[i].Time;
+        //    return this.sch.GetScheduleSegTimeString();
+        //    //string timestr;
+        //    //timestr = sch.Segnments[0].Time.ToString();
+        //    //for (int i = 1; i < sch.Segnments.Length; i++)
+        //    //    timestr += "," + sch.Segnments[i].Time;
 
 
-            //return timestr.TrimEnd(new char[] { ',' }) ;
-        }
+        //    //return timestr.TrimEnd(new char[] { ',' }) ;
+        //}
 
-        public string GetScheduleSegLevelString()
-        {
-            return this.sch.GetScheduleSegLevelString();
-            //string levelstr;
-            //levelstr = sch.Segnments[0].Level.ToString();
-            //for (int i = 1; i < sch.Segnments.Length; i++)
-            //    levelstr += "," + sch.Segnments[i].Level;
-            //return levelstr.TrimEnd(new char[]{','});
+        //public string GetScheduleSegLevelString()
+        //{
+        //    return this.sch.GetScheduleSegLevelString();
+        //    //string levelstr;
+        //    //levelstr = sch.Segnments[0].Level.ToString();
+        //    //for (int i = 1; i < sch.Segnments.Length; i++)
+        //    //    levelstr += "," + sch.Segnments[i].Level;
+        //    //return levelstr.TrimEnd(new char[]{','});
 
-        }
+        //}
 
 
     }
@@ -1070,12 +1058,10 @@ namespace CeraDevices
         [DataMember]
         public string mac { get; set; }
         [DataMember]
-#if Version1
-       public bool visibility { get; set; }
-#else
+ 
         public int visibility { get; set; }
 
-#endif
+ 
 
     }
     [DataContract]
@@ -1103,12 +1089,37 @@ namespace CeraDevices
         public string rf_channel { get; set; }
     }
 
-     [DataContract]
+      [DataContract]
       public class CoordinatorResult
       {
-         [DataMember]
-         public bool success { get; set; }
+          [DataMember]
+          public bool success { get; set; }
       }
 
+    public      interface ILightingCoordinator
+    {
+        void AddDeviceByMAC(string MAC);
+        void ChangeRFChanel(int chanelno);
+          CorrdinatorInfo GetDeviceInfo();
+        DeviceInfo[] GetDeviceList();
+        System.Threading.Tasks.Task<DeviceInfo[]> GetDeviceListAsync();
+         StreetLightInfo[] GetStreetLightList();
+        StreetLightInfo[] GetStreetLightList(string devid);
+          System.Threading.Tasks.Task<StreetLightInfo[]> GetStreetLightListAsync();
+        System.Threading.Tasks.Task<StreetLightInfo[]> GetStreetLightListAsync(string devid);
+         StreetLightInfo[] GetVisibleStreetLightList();
+        System.Threading.Tasks.Task<StreetLightInfo[]> GetVisibleStreetLightListAsync();
+        void Kick(string dev_id);
+        void PermitJoinNode(int secs);
+        void SetDeviceDimLevel(string devid, int level);
+        void SetDeviceDimLevelAsync(string devid, int level);
+        void SetDeviceRTC(string devid, DateTime dt);
+        System.Threading.Tasks.Task SetDeviceRTCAsync(string devid, DateTime dt);
+        void SetDeviceSchedule(string devid, string timeStr, string levelStr);
+        void SetDeviceScheduleAsync(string devid, string timeStr, string levelStr);
+          void SetDeviceScheduleEnable(string devid, bool enable);
+        void SetDeviceScheduleEnableAsync(string devid, bool enable);
+        void SetStreetLightRemark(string devid, string remark);
+    }
     }
 

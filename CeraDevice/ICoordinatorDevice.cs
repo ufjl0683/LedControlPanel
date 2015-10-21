@@ -6,12 +6,12 @@ namespace CeraDevices.Coordinator2
     {
         void AddDeviceByMAC(string MAC);
         void ChangeRFChanel(int chanelno);
-        CorrdinatorInfo GetDeviceInfo();
+          CorrdinatorInfo GetDeviceInfo();
         DeviceInfo[] GetDeviceList();
         System.Threading.Tasks.Task<DeviceInfo[]> GetDeviceListAsync();
-         CeraDevices.StreetLightInfo[] GetStreetLightList();
+          CeraDevices.StreetLightInfo[] GetStreetLightList();
         StreetLightInfo[] GetStreetLightList(string devid);
-        System.Threading.Tasks.Task<StreetLightInfo[]> GetStreetLightListAsync();
+          System.Threading.Tasks.Task<StreetLightInfo[]> GetStreetLightListAsync();
         System.Threading.Tasks.Task<StreetLightInfo[]> GetStreetLightListAsync(string devid);
         StreetLightInfo[] GetVisibleStreetLightList();
         System.Threading.Tasks.Task<StreetLightInfo[]> GetVisibleStreetLightListAsync();
@@ -23,7 +23,7 @@ namespace CeraDevices.Coordinator2
         System.Threading.Tasks.Task SetDeviceRTCAsync(string devid, DateTime dt);
         void SetDeviceSchedule(string devid, string timeStr, string levelStr);
         void SetDeviceScheduleAsync(string devid, string timeStr, string levelStr);
-        void SetDeviceScheduleEnable(string devid, bool enable);
+          void SetDeviceScheduleEnable(string devid, bool enable);
         void SetDeviceScheduleEnableAsync(string devid, bool enable);
         void SetStreetLightRemark(string devid, string remark);
     }

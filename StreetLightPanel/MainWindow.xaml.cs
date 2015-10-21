@@ -41,7 +41,9 @@ namespace StreetLightPanel
 
         void InitLed2dPositoin()
         {
-            int LedWidth = 15;
+
+           // int LedWidth = 15; //法鼓山
+            int LedWidth = 45;  //海洋大學
             for(int i=0;i<App.Light2DInfo.GetLength(0);i++)
             {
                 
@@ -53,9 +55,9 @@ namespace StreetLightPanel
                     chk.VerticalAlignment = System.Windows.VerticalAlignment.Top;
                     int x, y;
                     x=int.Parse(App.Light2DInfo[i,1]);
-                      y=int.Parse(App.Light2DInfo[i,2]);
+                    y=int.Parse(App.Light2DInfo[i,2]);
                     chk.Margin = new Thickness( x- LedWidth / 2, y - LedWidth / 2, 0, 0);
-                  chk.Tag=  chk.Content = App.Light2DInfo[i,0];
+                    chk.Tag=  chk.Content = App.Light2DInfo[i,0];
                     chk.MouseRightButtonUp += chk_MouseRightButtonUp;
 
                    // chk.Background = new SolidColorBrush(Colors.Yellow);
