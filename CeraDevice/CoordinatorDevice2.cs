@@ -16,6 +16,8 @@ namespace CeraDevices
     public class CoordinatorDevice2:ICoordinatorDevice
     {
         private string UriBase = "http://10.10.1.1:8080";
+        private string WeatherUriBase = "http://10.10.1.1:9000";
+
         //     MyWebClient wc = new MyWebClient();
 
 
@@ -24,9 +26,62 @@ namespace CeraDevices
             UriBase = "http://" + ip + ":" + port;
         }
 
+        public CoordinatorDevice2(string ip, int port,int weatherport)
+        {
+            UriBase = "http://" + ip + ":" + port;
+            WeatherUriBase = "http://" + ip + ":" + weatherport;
+        }
         public CoordinatorDevice2(string baseUrl)
         {
             UriBase = baseUrl;
+        }
+
+        public CoordinatorDevice2(string baseUrl,string weatherUri)
+        {
+            UriBase = baseUrl;
+            WeatherUriBase = weatherUri;
+        }
+
+        public virtual WeatherInfo GetWeatherInfo()
+        {
+
+            MyWebClient wc = new MyWebClient();
+            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(WeatherInfoBase));
+
+            Stream stream;
+            WeatherInfoBase retInfo = jsonsr.ReadObject(stream = wc.OpenRead(WeatherUriBase + "/env_sensor.get_dev_info")) as WeatherInfoBase;
+            stream.Close();
+            stream.Dispose();
+            retInfo.info.Humidity *= 0.001;
+            retInfo.info.Temperature *= 0.1;
+            retInfo.info.PM25 *= 0.1;
+            retInfo.info.WindDirection *= 0.1;
+            retInfo.info.WindSpeed *= 0.1;
+            retInfo.info.WaterLevel *= 0.1;
+            retInfo.info.RainFall *= 0.1;
+            return retInfo.info;
+        }
+
+
+        public virtual async  Task<WeatherInfo> GetWeatherInfoAsync()
+        {
+
+            System.Runtime.Serialization.Json.DataContractJsonSerializer jsonsr = new System.Runtime.Serialization.Json.DataContractJsonSerializer(typeof(WeatherInfoBase));
+            //          Command /get_dev_list /get_dev_list /get_dev_list
+            //Parameters - - -
+            //Response Body {  list: [  {    addr: “”,    type: “”,    pan: “”,    mac: “”,    visibility: 1,  },...] }
+            //array(object)
+            //string string string string int
+            //device id
+            //device id device type device pan id MAC Address visibility
+            WeatherInfoBase info  = null;
+            MyWebClient wc = new MyWebClient();
+            using (Stream stream = await wc.OpenReadTaskAsync(WeatherUriBase + "/env_sensor.get_dev_info"))
+            {
+                info = jsonsr.ReadObject(stream) as WeatherInfoBase; ;
+            }
+            return info.info;
+
         }
         public  virtual  CorrdinatorInfo GetDeviceInfo()   //version 2
         {
@@ -279,7 +334,7 @@ namespace CeraDevices
             //device id
             //device id device type device pan id MAC Address visibility
             DeviceInfoListBase infolist = null;
-            using (Stream stream = wc.OpenRead(UriBase + "/get_dev_list"))
+            using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_info"))
             {
                 infolist = jsonsr.ReadObject(stream) as DeviceInfoListBase; ;
             }
@@ -344,7 +399,7 @@ namespace CeraDevices
                 }
             else
             {
-                using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_list?dev="+devid))
+                using (Stream stream = wc.OpenRead(UriBase + "/street_light.get_dev_info?dev="+devid))
                 {
                     infolist = jsonsr.ReadObject(stream) as StreetLightInfoListBase; ;
                 }
@@ -584,7 +639,48 @@ namespace CeraDevices
     }
 
 
+     [DataContract]
+     public class WeatherInfoBase
+        {
+            [DataMember]
+            public bool success { get; set; }
+            [DataMember(Name = "object")]
+            public WeatherInfo info { get; set; }
 
+        }
+
+//    t: 0,	int	temperature sensor (uint:0.1 )
+//h: 0,	int	humidity sensor (uint:0.1 )
+//w_dir: 0,	int	wind direction(degree) (uint:0.1 )
+//w_speed: 0,	int	wind speed(m/s) (uint:0.1 )
+//pm25: 0,	int	PM2.5(ug/m3) (uint:0.1 )
+//rain_10m: 0,	int	rain gauge (mm/10 minute) (uint:0.1 )
+//water_level:0,	int	water level(cm) (uint:0.1 )
+
+     [DataContract]
+     public class WeatherInfo
+     {
+         [DataMember(Name = "t")]
+         public double Temperature { get; set; }
+         [DataMember(Name = "h")]
+         public double Humidity { get; set; }
+         [DataMember(Name = "w_dir")]
+         public double WindDirection { get; set; }
+
+         [DataMember(Name = "w_speed")]
+         public double WindSpeed { get; set; }
+
+         [DataMember(Name = "pm25")]
+         public double PM25 { get; set; }
+
+         [DataMember(Name = "rain_10m")]
+         public double RainFall { get; set; }
+
+
+         [DataMember(Name = "water_level")]
+         public double WaterLevel { get; set; }
+
+     }
 
     [DataContract]
     public class StreetLightInfoList

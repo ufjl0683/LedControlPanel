@@ -435,7 +435,8 @@ namespace StreetLightPanel
             });
 
 #else
-            coor_mgr =new DeviceManager(new ICoordinatorDevice[]{ new CoordinatorDevice2("http://10.10.2.1:8080")});
+            coor_mgr = new DeviceManager(new ICoordinatorDevice[] { new CoordinatorDevice2("http://10.10.2.1:8080") });
+          //  coor_mgr = new DeviceManager(new ICoordinatorDevice[] { new CoordinatorDevice2("http://122.116.43.100:8080") });
 #endif
             #region 綠創園區
           //  coor_mgr = new DeviceManager(new CeraDevices.CoordinatorDevice[] { new CeraDevices.CoordinatorDevice("http://172.16.23.92:8080") });

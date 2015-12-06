@@ -47,7 +47,7 @@ namespace CeraDevices
         public async Task<StreetLightInfo[]> GetStreetLightListAsync()
         {
             List<StreetLightInfo> list = new List<StreetLightInfo>();
-            foreach (CoordinatorDevice coor in Coordinators)
+            foreach (ICoordinatorDevice coor in Coordinators)
             {
                 try
                 {
@@ -63,6 +63,11 @@ namespace CeraDevices
 
             return list.ToArray();
 
+        }
+
+        public ICoordinatorDevice[] GetCoordinatorList()
+        {
+            return Coordinators;
         }
         public StreetLightInfo[]  GetStreetLightList()
         {

@@ -464,6 +464,12 @@ namespace CeraDevices
 
 
 
+
+
+        public WeatherInfo GetWeatherInfo()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

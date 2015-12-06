@@ -26,5 +26,6 @@ namespace CeraDevices.Coordinator2
           void SetDeviceScheduleEnable(string devid, bool enable);
         void SetDeviceScheduleEnableAsync(string devid, bool enable);
         void SetStreetLightRemark(string devid, string remark);
+        WeatherInfo GetWeatherInfo();
     }
 }

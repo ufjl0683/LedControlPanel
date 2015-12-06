@@ -28,7 +28,7 @@ namespace StreetLightPanel
         {
             InitializeComponent();
          this.devid = devid;
-         this.Title = title;
+         this.Title = title??"";
         
         }
 

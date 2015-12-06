@@ -1,0 +1,17 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Loaded="Window_Loaded"
+        xmlns:MapControls="clr-namespace:StreetLightPanel.MapControls" x:Class="WpfTest.MainWindow"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+
+        <MapControls:WeatherControl Humidity="{Binding ElementName=slider3,Path=Value}"  Temperature="{Binding ElementName=slider2,Path=Value}"  WindSpeed="{Binding ElementName=slider1,Path=Value}"  WindDirection="{Binding ElementName=slider,Path=Value}" x:Name="weatherctl" Margin="337,151,0,0" HorizontalAlignment="Left" Width="181" Height="160" VerticalAlignment="Top" PM25="{Binding Value, ElementName=slider_Copy}" WaterLevel="{Binding Value, ElementName=slider_Copy1}" />
+        <Slider HorizontalAlignment="Left" Height="39" Margin="39,16,0,0" VerticalAlignment="Top" x:Name="slider" Width="290" Maximum="360"/>
+        <Slider HorizontalAlignment="Left" Height="39" Margin="39.8,44.8,0,0" VerticalAlignment="Top" x:Name="slider1" Width="290" Maximum="33"/>
+        <Slider HorizontalAlignment="Left" Height="39" Margin="39,70,0,0" VerticalAlignment="Top" x:Name="slider2" Width="290" Maximum="60" Minimum="-10"/>
+        <Slider HorizontalAlignment="Left" Height="39" Margin="40,98,0,0" VerticalAlignment="Top" x:Name="slider3" Width="290" Maximum="1" Minimum="0"/>
+        <Slider HorizontalAlignment="Left" Height="39" Margin="40,137,0,0" VerticalAlignment="Top" x:Name="slider_Copy" Width="276" Maximum="350" RenderTransformOrigin="1.156,2.013"/>
+        <Slider HorizontalAlignment="Left" Height="39" Margin="39,181,0,0" VerticalAlignment="Top" x:Name="slider_Copy1" Width="276" Maximum="50" RenderTransformOrigin="1.156,2.013"/>
+
+    </Grid>
+</Window>
