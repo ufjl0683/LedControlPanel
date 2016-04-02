@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wcfShschool", "wcfShschool\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{699EE706-4ACA-40D3-9631-B90F02B15031}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevices", "OfficeDevices\OfficeDevices.csproj", "{EEEAAD3A-FF3C-4E6A-AE4B-FF9991D25BB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OfficeDevices", "..\..\OfficeLight\OfficeDevices\OfficeDevices.csproj", "{EEEAAD3A-FF3C-4E6A-AE4B-FF9991D25BB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -12,18 +12,24 @@ namespace CommTest
     {
         static object lockobj = new object();
         static System.Collections.Generic.List<ushort> addr = new List<ushort>();
-        static   void Main(string[] args)
+        static async  void testled()
+        {
+             CoordinatorDevice2 dev = new CoordinatorDevice2("192.168.0.99", 8080);
+            StreetLightInfo[] infos= await dev.GetStreetLightListAsync("0b81");
+        }
+        static     void Main(string[] args)
         {
 
-            CoordinatorDevice2 dev = new CoordinatorDevice2("10.10.1.1", 8080);
-            CorrdinatorInfo info = dev.GetDeviceInfo();
-            DeviceInfo[] infos = dev.GetDeviceList();
-            Console.WriteLine(infos.Length);
-            task(dev);
-            Console.WriteLine(info.pan_id);
-                          dev.PermitJoinNode(60);
-                          StreetLightInfo[] sinfos = dev.GetStreetLightList();
-            Console.WriteLine(sinfos.Length);
+            testled();
+          
+            //CorrdinatorInfo info = dev.GetDeviceInfo();
+            //DeviceInfo[] infos = dev.GetDeviceList();
+            //Console.WriteLine(infos.Length);
+            //task(dev);
+            //Console.WriteLine(info.pan_id);
+            //              dev.PermitJoinNode(60);
+            //              StreetLightInfo[] sinfos = dev.GetStreetLightList();
+            //Console.WriteLine(sinfos.Length);
           // string [,]q=new string [,]{{"a","b"},{"c","d"}};
 
          //   string res = GenerateSteetLightSetting("Taipei.csv");

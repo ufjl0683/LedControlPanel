@@ -80,6 +80,13 @@ namespace CeraDevices
             {
                 info = jsonsr.ReadObject(stream) as WeatherInfoBase; ;
             }
+            info.info.Humidity *= 0.001;
+            info.info.Temperature *= 0.1;
+            info.info.PM25 *= 0.1;
+            info.info.WindDirection *= 0.1;
+            info.info.WindSpeed *= 0.1;
+            info.info.WaterLevel *= 0.1;
+            info.info.RainFall *= 0.1;
             return info.info;
 
         }
@@ -658,28 +665,138 @@ namespace CeraDevices
 //water_level:0,	int	water level(cm) (uint:0.1 )
 
      [DataContract]
-     public class WeatherInfo
+     public class WeatherInfo : INotifyPropertyChanged
      {
-         [DataMember(Name = "t")]
-         public double Temperature { get; set; }
-         [DataMember(Name = "h")]
-         public double Humidity { get; set; }
-         [DataMember(Name = "w_dir")]
-         public double WindDirection { get; set; }
+         double _Temperature;
+         double _Humidity;
+         double _WindDirection;
+         double _WindSpeed;
+         double _PM25;
+         double _RainFall;
+         double _WaterLevel;
 
+         [DataMember(Name = "t")]
+        
+         public double Temperature {
+             get { return _Temperature; }
+             set
+             {
+                 if (value != _Temperature)
+                 {
+                     value = _Temperature;
+                     if (this.PropertyChanged != null)
+                     {
+                         this.PropertyChanged(this, new PropertyChangedEventArgs("Temperature"));
+                     }
+                 }
+             }
+           
+         }
+
+         [DataMember(Name = "h")]
+         public double Humidity
+         {
+             get { return _Humidity; }
+             set
+             {
+                 if (value != _Humidity)
+                 {
+                     value = _Humidity;
+                     if (this.PropertyChanged != null)
+                     {
+                         this.PropertyChanged(this, new PropertyChangedEventArgs("Humidity"));
+                     }
+                 }
+             }
+         }
+
+        
+         [DataMember(Name = "w_dir")]
+         public double WindDirection
+         {
+             get { return _WindDirection; }
+             set
+             {
+                 if (value != _WindDirection)
+                 {
+                     value = _WindDirection;
+                     if (this.PropertyChanged != null)
+                     {
+                         this.PropertyChanged(this, new PropertyChangedEventArgs("WindDirection"));
+                     }
+                 }
+             }
+         }
+       
          [DataMember(Name = "w_speed")]
-         public double WindSpeed { get; set; }
+         public double WindSpeed
+         {
+             get { return _WindSpeed; }
+             set
+             {
+                 if (value != _WindSpeed)
+                 {
+                     value = _WindSpeed;
+                     if (this.PropertyChanged != null)
+                     {
+                         this.PropertyChanged(this, new PropertyChangedEventArgs("WindSpeed"));
+                     }
+                 }
+             }
+         }
 
          [DataMember(Name = "pm25")]
-         public double PM25 { get; set; }
+         public double PM25 {
+             get { return _PM25; }
+             set
+             {
+                 if (value != _PM25)
+                 {
+                     value = _PM25;
+                     if (this.PropertyChanged != null)
+                     {
+                         this.PropertyChanged(this, new PropertyChangedEventArgs("PM25"));
+                     }
+                 }
+             }
+         }
 
          [DataMember(Name = "rain_10m")]
-         public double RainFall { get; set; }
+         public double RainFall {
+             get { return _RainFall; }
+             set
+             {
+                 if (value != _RainFall)
+                 {
+                     value = _RainFall;
+                     if (this.PropertyChanged != null)
+                     {
+                         this.PropertyChanged(this, new PropertyChangedEventArgs("RainFall"));
+                     }
+                 }
+             }
+         
+         }
 
 
          [DataMember(Name = "water_level")]
-         public double WaterLevel { get; set; }
+         public double WaterLevel
+         {
+             get { return _WaterLevel; }
+             set
+             {
+                 if (value != _WaterLevel)
+                 {
+                     value = _WaterLevel;
+                     if (this.PropertyChanged != null)
+                     {
+                         this.PropertyChanged(this, new PropertyChangedEventArgs("WaterLevel"));
+                     }
+                 }
+             }
+         }
 
+         public event PropertyChangedEventHandler PropertyChanged;
      }
 
     [DataContract]
