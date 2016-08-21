@@ -43,7 +43,7 @@ namespace StreetLightPanel
         {
 
            // int LedWidth = 15; //法鼓山
-            int LedWidth = 45;  //海洋大學
+            int LedWidth = 32;  //海洋大學
             for(int i=0;i<App.Light2DInfo.GetLength(0);i++)
             {
                 

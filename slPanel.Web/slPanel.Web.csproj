@@ -75,7 +75,6 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ClientBin\slPanel.xap" />
     <Content Include="Images\2\level-1jpg.jpg" />
     <Content Include="Images\2\level.jpg" />
     <Content Include="Silverlight.js" />
@@ -110,6 +109,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ClientBin\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

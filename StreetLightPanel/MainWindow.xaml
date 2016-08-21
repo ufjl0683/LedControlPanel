@@ -119,13 +119,13 @@
         <ScrollViewer Margin="0,50,0,0" HorizontalScrollBarVisibility="Auto" SizeChanged="scrollViewer1_SizeChanged" x:Name="scrollViewer1"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PanningMode="Both" >
             <Viewbox    Stretch="Uniform" x:Name="vbImage">
                 <Grid x:Name="grdDeviceLayer"      >
-                    <Image x:Name="imgPic" Stretch="None" Source="Center.jpg"   HorizontalAlignment="Left" VerticalAlignment="Top"  />
+                    <Image x:Name="imgPic" Stretch="None" Source="Center.png"   HorizontalAlignment="Left" VerticalAlignment="Top"  />
                 </Grid>
             </Viewbox>
             <!--<Image Source="/Center.jpg" Stretch="None" />-->
         </ScrollViewer>
         <Border HorizontalAlignment="Left" Height="130" Margin="0,0,0,0" VerticalAlignment="Bottom" Width="204" BorderBrush="#FFF3F3F3" BorderThickness="3" >
-            <Image x:Name="bdrOverView" Source="Center.jpg" MouseDown="bdrOverView_MouseDown"/>
+            <Image x:Name="bdrOverView" Source="Center.png" MouseDown="bdrOverView_MouseDown"/>
 
         </Border>
         <Button Content="全選" HorizontalAlignment="Left" Height="45" Margin="237,0,0,0" VerticalAlignment="Top" Width="81" Click="Button_Click" FontSize="16"/>

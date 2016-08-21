@@ -20,7 +20,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Version1</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;Version2</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -148,7 +148,11 @@
     <None Include="CenterImageBak\點路燈位置圖1-輔助路牌 之 平面圖 --簡潔淡化版99-12-1.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Center.jpg" />
+    <None Include="CenterImageBak\01_育樂館%28海大%29.png" />
+    <None Include="CenterImageBak\02_河工一館B1%28海大%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Center.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
